@@ -1,4 +1,4 @@
-baseurl = "https://www.cultureofinsight.com/"
+baseurl = "/"
 title = "Culture of Insight"
 theme = "hugo-universal-theme"
 languageCode = "en-us"

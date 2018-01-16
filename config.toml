@@ -7,7 +7,7 @@ defaultContentLanguage = "en"
 # Enable comments by entering your Disqus shortname
 disqusShortname = ""
 # Enable Google Analytics by entering your tracking code
-googleAnalytics = ""
+googleAnalytics = "UA-40168473-1"
 
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
@@ -69,7 +69,7 @@ paginate = 10
     viewMorePostLink = "/blog/"
     author = "Paul Campbell"
     defaultKeywords = ["R", "Shiny", "dashboards"]
-    defaultDescription = ""
+    defaultDescription = "London Based Data Consultancy"
 
     # Google Maps API key (if not set will default to not passing a key.)
     #googleMapsApiKey = ""
@@ -98,7 +98,7 @@ paginate = 10
     # Format dates with Go's time formatting
     date_format = "January 2, 2006"
 
-    logo = "img/cofi_logo.png"
+    logo = "img/logo.png"
     address = """<p><strong>Culture of Insight Ltd.</strong>
         <br>Holborn Studios
         <br>49-50 Eagle Wharf Road

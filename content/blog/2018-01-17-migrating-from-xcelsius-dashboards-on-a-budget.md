@@ -52,4 +52,4 @@ The first is [DecisionPoint by Antivia](https://www.antivia.com/decisionpoint-ov
 
 ## Get in touch 
 
-Culture of Insight can deliver you a successful XCelsius migration without having to change how you work, or the kind of prices you pay. Check us out at [cultureofinsight.com](https://cultureofinsight.com) or get in touch via [email](mailto:paul@cultureofinsight.com) or [twitter](twitter.com/datasetfree) for a chat. 
+Culture of Insight can deliver you a successful XCelsius migration without having to change how you work, or the kind of prices you pay. Check us out at [cultureofinsight.com](https://cultureofinsight.com) or get in touch via [email](mailto:paul@cultureofinsight.com) or [twitter](https://twitter.com/datasetfree) for a chat. 

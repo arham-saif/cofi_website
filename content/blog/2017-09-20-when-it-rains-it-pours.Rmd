@@ -1,0 +1,279 @@
+---
+title: "When It Rains, It Pours"
+author: "Paul Campbell"
+date: '2017-10-03'
+slug: when-it-rains-it-pours
+twitterImg: img/floods.png
+description: "A dive into some global flooding data..."
+tags:
+- mapping
+- data visualisation
+- R
+- open data
+categories: []
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align="center", cache = TRUE)
+```
+
+## A Dive Into Some Global Flooding Data 
+
+I always like to keep a look out for interesting open data sets. One great resource for such things is Jeremy Singer-Vine's <a href="http://tinyletter.com/data-is-plural" target="_blank">Data is Plural</a> weekly newsletter that brings together a collection of *"useful, curious datasets"* for us all to enjoy and wrangle with.
+
+One that cropped up last week was <a href="http://floodobservatory.colorado.edu/index.html" target="_blank">The Dartmouth Flood Observatory’s</a> <a href="http://floodobservatory.colorado.edu/Archives/index.html" target="_blank">Global Archive of Large Flood Events.</a> It contains data about 4,500+ floods, dating back to 1985, is updated often, and is available in Excel, XML, HTML, and geospatial formats `r emo::ji("clap")`. The variables include each flood’s location, timespan, severity, main cause, and estimated impact so there's plenty to explore...
+
+---
+
+### Examining the Data
+
+I downloaded the data in geospatial form from the link above and read it into R as a nice tidy simple features object with the `sf` package like so:
+
+```{r message=FALSE, warning=FALSE, paged.print=TRUE}
+library(tidyverse)
+library(sf)
+library(lubridate)
+library(hrbrthemes)
+library(dygraphs)
+library(leaflet)
+library(leaflet.extras)
+library(widgetframe)
+
+floods_sf <- st_read("../../Data/blog_data/floods/FloodArchive_region.shp", stringsAsFactors = FALSE, quiet = TRUE)
+
+# get a tibble version sans geometry 
+floods <- as_tibble(floods_sf) %>% select(-geometry)
+
+glimpse(floods)
+```
+
+Now, the eagle eyed amongst us may have spotted that we already have a typo in the first few rows of data. `Phillipines` should be *Phillippines*. Ergo, it looks like we have a 4520 row, manually entered dataset and we needs must stay vigilant and on the lookout for errors. But we wouldn't want it any other way `r emo::ji("sweat_smile")`. 
+
+Because we have the start and end point of each flood, one thing that may be of interest is the average duration of a flood. Let us then compute the duration of each flood:
+
+```{r}
+floods <- floods %>% 
+  mutate(DURATION = as.numeric(ENDED - BEGAN))
+
+mean(floods$DURATION, na.rm = TRUE)
+```
+
+An average flood time of -136.209 days. Something fishy is going here.
+
+We must have computed some negative durations which should not be possible, if we're going by most people's  perception of time, so let's find out where the error is:
+
+```{r}
+filter(floods, DURATION < 0) %>% glimpse()
+```
+
+And there it is! *The Great Kenyan Flood of April 2016 - April 206* lasting a whole -661,081 days. Assuming the end date should be 2016-04-22, we can fix using `case_when` like so:
+
+```{r}
+# probably quicker ways to do this but I like making a case for case_when (h/t hrbrmstr)
+floods <- floods %>% 
+  mutate(ENDED = case_when(
+           ID == 4352 ~ as_date("2016-04-22"),
+           TRUE ~ ENDED),
+         DURATION = as.numeric(ENDED - BEGAN))
+
+# now lets try our average duration again
+mean(floods$DURATION, na.rm = TRUE)
+```
+
+That looks more reasonable! Around 10 days.
+
+---
+
+### Make some charts
+
+It might also be interesting to see if this differs across the regions of the world. To do this we can try and code a new region variable based on the `COUNTRY` variable we already have using the `countrycode` package. Typos will cause `NAs` here but it's a sacrifice I'm willing to make, as fixing all typos in the data is outwith the scope of this blogpost.
+
+```{r message=FALSE, warning=FALSE}
+# first I'll run a function on the country labels to get rid of any strange encoding
+floods$COUNTRY <- sapply(floods$COUNTRY, function(row) iconv(row, "latin1", "ASCII", sub=""))
+
+# then run the countrycode function
+floods$REGION <- countrycode::countrycode(floods$COUNTRY, "country.name", "region")
+
+region_sums <- floods %>%
+  filter(!is.na(REGION), !is.na(DURATION)) %>% 
+  group_by(REGION) %>% 
+  summarise(count = n(), deaths = sum(DEAD), displaced = sum(DISPLACED), av_duration = mean(DURATION)) %>% 
+  gather(stat, value, count:av_duration)
+```
+
+```{r echo=FALSE, fig.height=6, fig.width=8}
+ggplot(filter(region_sums, stat %in% c("av_duration", "count"))) +
+  facet_wrap(~ stat, scales = "free_x", ncol = 2) +
+  geom_col(aes(reorder(REGION, value), value), fill = "SteelBlue") +
+  coord_flip() +
+  theme_ipsum_rc(grid = "XY") +
+  labs(title = "Global Flood Figures By Region", subtitle = "1985-2017", x = NULL, y = NULL)
+
+ggplot(filter(region_sums, stat %in% c("deaths", "displaced"))) +
+  facet_wrap(~ stat, scales = "free_x", ncol = 2) +
+  geom_col(aes(reorder(REGION, value), value), fill = "SteelBlue") +
+  coord_flip() +
+  theme_ipsum_rc(grid = "XY") +
+  scale_y_continuous(labels = scales::unit_format(unit = "K", scale = 1/1000, sep = "")) +
+  labs(x = NULL, y = NULL, caption = "Culture of Insight / @PaulCampbell91 / Source: Dartmouth Flood Observatory")
+```
+
+---
+
+### Time for some time-series
+
+Aggregating the data by year, we can get a look at global trends...
+
+```{r}
+flood_sums <- as_tibble(floods) %>%
+  filter(!is.na(BEGAN), !is.na(DEAD)) %>% 
+  mutate(year = make_date(year(BEGAN), 01, 01)) %>% 
+  group_by(year) %>% 
+  summarise(floods = n(), deaths = sum(DEAD), displaced = sum(DISPLACED))
+
+# convert to xts time-series objects to allow plotting with dygraphs
+ts_floods <- xts::xts(flood_sums$floods, flood_sums$year)
+ts_deaths <- xts::xts(flood_sums$deaths, flood_sums$year)
+ts_displaced <- xts::xts(flood_sums$displaced, flood_sums$year)
+```
+
+<br>
+
+```{r echo=FALSE}
+fts <- dygraph(ts_floods, main = "Global Floods", width = "100%", height = "300px") %>% 
+  dySeries("V1", label = "Floods", color = "SteelBlue") %>%
+  dyOptions(fillGraph = TRUE, fillAlpha = 0.4) #%>% 
+  #dyCSS("../../dygraphs.css") 
+fts
+#frameWidget(fts, height = 301)
+```
+
+<br>
+
+```{r echo=FALSE}
+dts <- dygraph(ts_deaths, main = "Global Flood Deaths", width = "100%", height = "300px") %>%
+  dySeries("V1", label = "Deaths", color = "SteelBlue") %>%
+    dyAxis("y",
+         valueFormatter = 'function(d){return d.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",");}',
+         axisLabelFormatter = 'function(d){return d.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",");}') %>%
+  dyOptions(fillGraph = TRUE, fillAlpha = 0.4) #%>% 
+  #dyCSS("../../dygraphs.css")
+dts
+#frameWidget(dts, height = 300)
+```
+
+<br>
+
+```{r echo=FALSE}
+dsts <- dygraph(ts_displaced, main = "Global Flood Displacements", width = "100%", height = "300px") %>% 
+  dySeries("V1", label = "Displacements", color = "SteelBlue") %>%
+  dyAxis("y",
+         valueFormatter = 'function(d){return d.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",");}',
+         axisLabelFormatter = 'function(d){return d.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",");}') %>%
+  dyOptions(fillGraph = TRUE, fillAlpha = 0.4) #%>% 
+  #dyCSS("../../dygraphs.css") 
+dsts
+#frameWidget(dsts, height = 300)
+```
+
+<br>
+
+There looks to have been downward trend in all 3 metrics from around 2008 but it will be interesting to see if recent events will cause another spike...
+
+---
+
+### Mapping
+
+Now for the real fun. You may have noticed that we've been provided with point data (long, lat coordinates) for each flood. This is good because we can use it to map kernel density estimates and display the results as a heatmap. The idea is to highlight areas of the world that have the highest probability of being flooded based on the data of the previous 27 years. 
+
+Playing around with themes, layering, colours and alpha levels can really make a map more impactful and relevant to the subject matter.
+
+```{r eval=FALSE, fig.height=8, fig.width=12}
+world <- map_data("world") %>% 
+  filter(region != "Antarctica")
+
+ggplot() +
+  stat_density2d(data = floods, aes(LONG, LAT, fill = ..level..), alpha = .5, geom = "polygon") +
+  geom_map(data = world, map = world, aes(long, lat, map_id=region), fill="#f5f5f550", colour = "white", size = 0.1) +
+  ggalt::coord_proj("+proj=robin") +
+  scale_fill_gradientn("kernel density estimate ", colours = RColorBrewer::brewer.pal(7, "Blues")) +
+  theme_ipsum_rc(axis = FALSE, base_family = "Iosevka", caption_size = 12) +
+  labs(x = NULL, y = NULL, title = "Where Floods Happen", subtitle = "1985-2017", 
+       caption = "Culture of Insight / @PaulCampbell91 / Source: Dartmouth Flood Observatory") +
+  guides(fill=guide_colourbar(label.position = "top", title.vjust = 0)) +
+  theme(legend.position = c(0.3, -0.035), legend.direction = "horizontal", legend.key.width = unit(2, "line"),
+        legend.key.height = unit(0.7, "lines"), axis.text = element_blank(), panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(), plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.9))
+```
+
+<a href="/img/floods.png" target="_blank"><img src="/img/floods.png" alt="gif" style="width: 100%;"/></a>
+*click for full screen version*
+
+This confirms that the South-East Asia region has suffered the most from flooding the last ~30 years, as we saw in the initial charts.
+
+The Dartmouth Flood Observatory have also provided spatial polygons to represent each flood and we'd be fools not to try and do some viz justice to this admirable work. Plotting them all on a map at once leads to severe overplotting so I'll animate the time dimension and take a look at flood areas over time.
+
+```{r eval=FALSE}
+
+world2 <- rnaturalearth::ne_countries(returnclass = "sf") %>% 
+  filter(!name %in% c("Fr. S. Antarctic Lands", "Antarctica"))
+
+flood_map <-  floods_sf %>% 
+  mutate(YEAR = year(BEGAN)) %>% 
+  ggplot() +
+  geom_sf(data = world2, fill = "lightgreen", alpha = .6) +
+  geom_sf(aes(frame = YEAR), fill = "lightblue") +
+  scale_fill_gradientn("Deaths ", colours = RColorBrewer::brewer.pal(4, "Blues")) +
+  coord_sf(crs = "+proj=robin", datum = NA) +
+  theme_ipsum_rc(axis = FALSE) +
+  labs(x = NULL, y = NULL, title = "Global Floods",
+       caption = "Culture of Insight / @PaulCampbell91 / Source: Dartmouth Flood Observatory") +
+  guides(fill=guide_colourbar(label.position = "top", title.vjust = 0)) +
+  theme(legend.position = c(0.9, 1.01), legend.direction = "horizontal", legend.key.width = unit(2, "line"), 
+        legend.key.height = unit(0.7, "lines"), axis.text = element_blank(), panel.grid.minor = element_blank(), 
+        panel.grid.major = element_blank(), panel.background = element_rect(fill = "lightblue"))
+
+animation::ani.options(interval = 1)
+gganimate::gganimate(flood_map, ani.width =  1000, ani.height = 570, title_frame = TRUE)
+```
+
+<a href="/img/floods.gif" target="_blank"><img src="/img/floods.gif" alt="gif" style="width: 100%;"/></a>
+
+---
+
+Finally, using the LON LAT coordinates again, we can easily create an interactive leaflet map with tooltip details for every flood in the dataset. Click on the clusters to zoom into that area and have an explore.
+
+```{r echo=FALSE}
+floods$MAINCAUSE <- sapply(floods$MAINCAUSE, function(row) iconv(row, "latin1", "ASCII", sub=""))
+
+tooltip <- paste0("Began: ", floods$BEGAN,
+                  "<br>Ended: ", floods$ENDED,
+                  "<br>Cause: ", floods$MAINCAUSE,
+                  "<br>Severity: ", floods$SEVERITY,
+                  "<br>Deaths: ", floods$DEAD) %>% 
+  lapply(htmltools::HTML)
+
+leaflet(floods, width = "100%", height = 600) %>%
+    addProviderTiles(providers$Esri.WorldStreetMap) %>%
+    setView(zoom = 2, lng = 6.574944, lat = 1.457527) %>% 
+    addCircleMarkers(lng = ~LONG, lat = ~LAT, clusterOptions = markerClusterOptions(),
+                   label = tooltip, color = "SteelBlue",
+                   stroke = FALSE, fillOpacity = 0.8) %>% 
+  leaflet.extras::addFullscreenControl() #%>% 
+  #frameWidget(options = frameOptions(allowfullscreen = TRUE))
+```
+*click the full-screen button to get a more immersive experience!*
+
+---
+
+Thanks to the Dartmouth Flood Observatory for compiling and maintaining this excellent dataset full of rich Geo information. They really made it easy to make some interesting maps and learn a bit more about the way flooding has affected the world in recent times.
+
+Let me know if you have any other ideas of how to best visualise this informaiton. It's always good to see alternative perspectives of the same data. Drop a note in the comment section or catch me on [twitter](https://twitter.com/paulcampbell91).
+
+*Cheers!*
+
+---
+
+To keep things relatively concise, not all code is shown in this blogpost. You can check the full Rmarkdown file [here.](https://github.com/cultureofinsight/blog/blob/master/content/post/2017-09-20-when-it-rains-it-pours.Rmd)

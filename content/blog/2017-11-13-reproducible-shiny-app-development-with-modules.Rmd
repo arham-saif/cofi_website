@@ -1,0 +1,240 @@
+---
+title: Reproducible Shiny App Development with Modules
+author: Paul Campbell
+date: '2018-01-05'
+slug: reproducible-shiny-app-development-with-modules
+twitterImg: img/module_2.png
+description: "Tame your shiny app code by incorporating modules into your workflow..."
+categories:
+  - Tutorials
+tags:
+  - R
+  - shiny
+  - dashboards
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+	eval = FALSE,
+	fig.align = "center",
+	cache = TRUE
+)
+```
+
+Happy New Year to one and all!
+
+As data scientists/analysts/researchers/programmers/anything else on that crazy data science Venn diagram, I'm assuming all of our new years resolutions involve visualising our data with more sophistication and finesse. So with that in mind, I thought it was high time for a post about the joys of modularizing your shiny app code. 
+
+> New Year, new improved workflows with emphasis on efficiency & reproducibility, amiright? 
+
+### Keeping Track
+
+There was some good chatter in the <a href="https://community.rstudio.com/t/best-practices-shiny-development/1694" target="_blank">Rstudio Community forum</a> a while back in relation to best practices for shiny app development. Anyone who has been tasked with writing a relatively large shiny app will know that the code can become unwieldy rather quickly, so it's always good to keep on top of how others out in there the shiny app dev ether go about organising their workflows. 
+
+The main take-away was to focus on _modularizing_ any code chunks that are repeated often in the application. Having spent a bit of time learning and applying modules to various apps, I thought I'd jot down a quick example of a sample module in action. It can be quite tricky to wrap your head around what exactly a module is and how it communicates with the rest of your app. So, as with most blog posts, this is an exercise in clarifying that understanding and (hopefully) a help for others to get started on the rewarding path of a modularized application.
+
+### Legitimate Resources
+
+The nuts & bolts of module fundamentals are outwith the scope of this post, so I'd strongly advise you to check out the Rstudio resources below if you haven't done so already. The therapeutically reassuring tones of Master Instructor <a href="https://twitter.com/StatGarrett" target="_blank">Garrett Grolemund</a> are always a safe bet to keep you on the right track.
+
+  1. <a href="http://shiny.rstudio.com/articles/modules.html" target="_blank">Modularizing Shiny app code (article)</a>
+  2. <a href="https://www.rstudio.com/resources/webinars/understanding-shiny-modules/" target="_blank">Understanding Shiny modules (webinar)</a>
+  3. <a href="https://www.rstudio.com/resources/videos/modularizing-shiny-app-code/" target="_blank">Modularizing Shiny app code (video lecture)</a>
+
+### A Note on Function Arguments
+
+One thing that can be tricky is figuring out what you can pass to a module function, and in what form. Here's a short list of rules I have discovered hold true (please correct me if I'm wrong):
+  
+  - Any inputs created in the module UI function can be used in the module server function just as you would in a regular shiny app (i.e. `filtered_data <- filter(data, x == input$input1)`)
+  - If you want to use inputs from your main app in the module: 
+    * create a reactive variable in your main server function like so: `user_input <- reactive(input$input1)`
+    * Pass it to the callModule function as a non-reactive: `callModule(module_name, id, input = user_input)`
+    * Use input as a reactive in your module by calling input with parentheses attached: `input()`
+  - Same goes for any other reactive objects from your server function (reactive datasets etc)
+  - Pass non-reactive objects from your server function or global environment in the callModule function as above but use them in your module as non-reactive without parentheses
+  
+### It's all in the Namespace
+
+The real magic of the module is it's ability to create a _namespace_ that is distinct from the rest of your application. If you've written shiny apps before you'll know that no 2 elements can share the same id. This becomes problematic as apps start growing in size. Making a change to `plotOutput("plot37")` in the UI then attempting to find the accompanying `output$plot37` server code is a less than satisfying workflow. So let's develop a more satisfying one...
+
+### Worked Example
+
+Now let's work through a case where a module could be beneficial. Consider the following dataset showing some demographic data of a sample group:
+
+```{r echo=FALSE, eval=TRUE, message=FALSE, warning=FALSE}
+library(tidyverse)
+
+demographics <- tibble(
+  category = c(rep("Gender", 2), rep("Age", 7), rep("Social Grade", 5)),
+  demographic = c("Male", "Female", "15-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75+", LETTERS[1:5]),
+  #count = c(11036, 11660, 4458, 5139, 4566, 4361, 2252, 1300, 620, 1091, 6769, 6987, 2618, 1124),
+  percent = c(48.706585, 51.293415, 18.676534, 21.136115, 19.066600, 18.326197, 10.709079, 7.270722, 
+              4.814752, 8.143243, 33.772399, 34.756400, 15.035762, 8.292197)
+  )
+
+knitr::kable(demographics)
+```
+
+<br>
+
+We have the data in a tidy format with all demographics observations in one variable column, split into separate categories in another column, with the percentage numbers in the third column all adding up to 100 for each category. Now say we want to visualise this information in a dashboard, how should we go about it?
+
+It makes sense to split the data by category and visualise each in a chart. There a lots of charts to choose from but to keep it simple we'll stick to bar charts (if you're some kind of data viz sadist, you might consider the 3D Pie Chart here). 
+
+Using the reactive power of shiny, we could just build one chart and use a user input to filter what demographic category data is fed into it. _However,_ let's say we have been instructed that all demographics charts should be shown on one page with a scrolling layout. Again, not too painful considering we only have 3 categories in this sample data. But what if we had 20 categories to chart? That's a lot of copy & pasting of UI and Server code. If we are astute programmers and heed this well versed rule of thumb:
+
+> If you have to copy and paste something more than twice, write a function...
+
+We should be writing a function for this process. In this case, a special type of function: a shiny module.
+
+### The Goal
+
+Our goal is going to be to have a UI & Server modules function that can:
+
+  1. Render a shinydashboard `tabBox` UI element that has a title and two tabs
+  2. Render a Highcharts[^*] bar chart in one tab
+  3. A Data table in the other to show the data in a tabular form
+  4. Send a filtered chunk of data to the chart and table
+  
+Once we have a working module we're going to dynamical render the tabBoxes in our app with one `purrr` `map` function in the UI and one in the Server. With our sample data, this will produce 3 tabBoxes, one for each demographic category, with the appropriate data in the charts and tables. But if we had data with say 20 or 100 categories, we would get 20 or 100 functioning tabBoxes in our app - all with one line of code in the UI + Server! (you probably don't want an app with 100 charts on one page, but it's cool that we could do it if we wanted to)
+
+### The Module Functions
+
+#### UI
+
+So where do we start? Let's build a UI module function first. This will look very similar to the standard UI code you would put in a regular app, except it will be part of a function that must take an `id` argument and any other arguments you wish to use. Here's how mine looks:
+
+```{r}
+chartTableBoxUI <- function(id, div_width = "col-xs-12 col-sm-6 col-md-4") {
+  
+  ns <- NS(id)
+  
+  div(class = div_width,
+         tabBox(width = 12, title = id,
+                tabPanel(icon("bar-chart"),
+                         highchartOutput(ns("chart") )
+                ),
+                tabPanel(icon("table"),
+                         DT::dataTableOutput(ns("table"))
+                )
+         )
+  )
+  
+}
+```
+
+As you can see, the primary difference to regular UI code is the inclusion of the `ns` variable. This takes the `id` you pass to the function and uses it to create a unique namespace for the module. Wrapping the id of our `highcharterOutput` and `DT::datatableOutput` in the `ns()` function means that we do not have to create unique ids for each UI element in every module we call, which is a real godsend.
+
+The `div_width` argument gives us the option changing the proportion of each row the tabBox will take up using bootstrap's grid system. In this case, `"col-xs-12 col-sm-6 col-md-4"` means that there will be 3 boxes per row on a normal screen, 2 on an iPad sized screen, and 1 on a mobile screen. This gives us the option of changing the width of our tabBoxes within each module call - we might want a larger width for categories with more than 8 observations, for example. Using this `div(class = ...` approach is also a tad more reactive than shiny's standard `column(width = ...` argument.
+
+#### Server
+
+The server side function must take the arguments `input`, `output` and `session`, but you don't need to assign these to anything, shiny is smart and deals with that for us. We'll then add a `data` argument that we will use to feed in our demographics data to each module, and a `dem_group` argument which will be a unique category value to filter the data with:
+
+```{r}
+chartTableBox <- function(input, output, session, data, dem_group) {
+  
+  module_data <- reactive({
+    data %>% filter(category == dem_group)
+  })
+  
+  output$chart <- renderHighchart({
+    
+    hchart(module_data(), "column", hcaes(x = demographic, y = percent)) %>%
+      hc_xAxis(title = list(text = "")) %>% 
+      hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%  
+      hc_tooltip(valueDecimals = 1, valueSuffix = " %")
+
+  })
+  
+  output$table <- renderDataTable({
+    
+    dt_data <- module_data() %>% 
+      select(demographic, percent) %>% 
+      mutate(percent = (percent / 100))
+    
+    DT::datatable(dt_data, style = "bootstrap", class = "display", 
+                  options=list(scrollX=TRUE, dom = 't')) %>% 
+      formatPercentage('percent', 0)
+    
+  })
+  
+}
+```
+
+We now have the module code that we can call in our main application. It's a good idea to save both of these functions in a separate file named `modules.R` and use `source("modules.R"")` from your app script to load the functions into the global environment (assuming it's located in the same directory as your main app file).
+
+### The Shiny App
+
+Now let's code up a basic shinydashboard skeleton, load our sample data, source our modules then call them in the UI and Server and see if we can generate a tabBox loaded with demographic **age** data!
+
+```{r}
+library(shiny)
+library(shinydashboard)
+library(tidyverse)
+library(highcharter)
+library(DT)
+
+# sample data
+demographics <- tibble(
+  category = c(rep("Gender", 2), rep("Age", 7), rep("Social", 5)),
+  demographic = c("Male", "Female", "15-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75+", LETTERS[1:5]),
+  percent = c(48.706585, 51.293415, 18.676534, 21.136115, 19.066600, 18.326197, 10.709079, 7.270722, 
+              4.814752, 8.143243, 33.772399, 34.756400, 15.035762, 8.292197)
+)
+
+# source modules
+source("modules.R")
+
+ui <- dashboardPage(
+  dashboardHeader(title = "Shiny Modules"),
+  dashboardSidebar(disable = TRUE),
+  dashboardBody(
+    fluidRow(chartTableBoxUI(id = "Age")) # render the tabBox inside a fluidRow
+  )
+)
+
+server <- function(input, output, session) {
+  callModule(chartTableBox, id = "Age", data = demographics, dem_group = "Age")
+}
+
+shinyApp(ui, server)
+```
+
+If all went to plan our app should look something like this:
+
+<img src="/img/module_1.png" style="width: 100%;"/>
+
+### Purrrifying Module Deployment
+
+OK, so our module is working when we explicitly tell it what demographic category to chart. But as mentioned earlier, if we had say 20 categories in the data that all needed charting we would have to write our `chartTableBoxUI` function out 20 times in UI with a unique id for each, and write 20 `callModule` functions citing the same id and passing it to the `dem_filter` argument - not ideal. Thankfully however, we can use a `map` function from the `purrr` package (or `lapply` in base R) to iterate over all unique categories in our data and feed them into our modules, hurrah!
+
+Just replace the `chartTableBox` function in the ui with:
+
+```{r}
+map(unique(demographics$category), ~ chartTableBoxUI(id = .x))
+```
+
+And the `callModule` function in the server with:
+
+```{r}
+map(unique(demographics$category), ~ callModule(chartTableBox, id = .x, data = demographics, dem_group = .x))
+```
+
+And we have a shiny app capable of rendering interactive charts and tables for as many categories as your data can muster, with only one line of UI and Server code. Aside from the dramatic reduction in lines of code required to produce these UI elements and server side processes, we also have the benefit of being able to change all chart and table functionality/aesthetics simply by editing one module function.
+
+With the sample data used, our app will now look like this (with an added header):
+
+<a href="https://cultureofinsight.shinyapps.io/module_example" rel="module_app" target="_blank"><img src="/img/module_2.png" alt="module_app" style="width: 100%; margin: 0 auto;"/></a>
+*Yay! Click the image to launch the app. You can check the full source code via the github link on there.*
+
+### Wrap-Up
+
+That's all for now. Go forth and tame your shiny apps with gay abandon. And if you have any module examples of your own, it would be great to see them!
+
+If, however, you'd rather someone else did it for you... [get in touch.](/contact) We're available to hire for all things data. If you have a web-application in mind that you need built, fill out <a href="https://www.blog.cultureofinsight.com/data_apps/">this form</a> and we'll get back to you as soon as we can.
+
+All the best for 2018!
+
+[^*]: Note that Highcharts is a Highsoft product and not free for commercial and Governmental use.

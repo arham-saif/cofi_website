@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Decision Point on Culture of Insight</title>
+    <link>/tags/decision-point/</link>
+    <description>Recent content in Decision Point on Culture of Insight</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2018 Culture of Insight. All Rights Reserved.</copyright>
+    <lastBuildDate>Wed, 17 Jan 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/decision-point/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Migrating from Xcelsius Dashboards on a Budget</title>
+      <link>/blog/2018/01/17/2018-01-17-migrating-from-xcelsius-dashboards-on-a-budget/</link>
+      <pubDate>Wed, 17 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/2018/01/17/2018-01-17-migrating-from-xcelsius-dashboards-on-a-budget/</guid>
+      <description>The Death of Flash SAP XCelsius was the Ford Fiesta of the BI industry. Inexpensive to run, simple to implement. Businesses could get dashboards up and running in days or hours. We’ve helped clients design over 1,000 XCelsius dashboards over time, so we know how practical and adaptable they were.
+But then the industry went and killed Flash. Old XCelsius dashboards, which worked perfectly well last month and posed no threat to anyone’s IT security, are now downloaded and treated as high-risk by browsers, or blocked outright.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Data Visualisation on Culture of Insight</title>
+    <link>/tags/data-visualisation/</link>
+    <description>Recent content in Data Visualisation on Culture of Insight</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2018 Culture of Insight. All Rights Reserved.</copyright>
+    <lastBuildDate>Thu, 12 Oct 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/data-visualisation/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>How Market Research Can Tidy Up</title>
+      <link>/blog/2017/10/12/2017-10-12-how-market-research-can-tidy-up/</link>
+      <pubDate>Thu, 12 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/2017/10/12/2017-10-12-how-market-research-can-tidy-up/</guid>
+      <description>Synopsis Market Research is great at compiling the right data, but not so good at making it easy to use. This isn’t about “storytelling”. It’s about the data itself, and clarity on what delivering it actually means. Getting the data out of siloes like tabs and SPSS where it cannot adequately be mined, and out into the big wide world as Tidy Data.</description>
+    </item>
+    
+    <item>
+      <title>When It Rains, It Pours</title>
+      <link>/blog/2017/10/03/2017-09-20-when-it-rains-it-pours/</link>
+      <pubDate>Tue, 03 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/2017/10/03/2017-09-20-when-it-rains-it-pours/</guid>
+      <description>A Dive Into Some Global Flooding Data I always like to keep a look out for interesting open data sets. One great resource for such things is Jeremy Singer-Vine’s Data is Plural weekly newsletter that brings together a collection of “useful, curious datasets” for us all to enjoy and wrangle with.
+One that cropped up last week was The Dartmouth Flood Observatory’s Global Archive of Large Flood Events.</description>
+    </item>
+    
+  </channel>
+</rss>

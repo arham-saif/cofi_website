@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="robots" content="all,follow">
+  <meta name="googlebot" content="index,follow,snippet,archive">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reproducible Shiny App Development with Modules</title>
+  <meta name="author" content="" />
+
+  
+  <meta name="keywords" content="R, Shiny, dashboards">	
+  
+
+  
+  <meta name="description" content="Tame your shiny app code by incorporating modules into your workflow...">
+  
+
+  <meta name="generator" content="Hugo 0.31" />
+
+  <link href='//fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,500,700,800' rel='stylesheet' type='text/css'>
+
+  
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  
+  <link href="/css/animate.css" rel="stylesheet">
+
+  
+  
+    <link href="/css/style.turquoise.css" rel="stylesheet" id="theme-stylesheet">
+  
+
+
+  
+  <link href="/css/custom.css" rel="stylesheet">
+  
+  
+  <link rel="stylesheet" href="/css/solarized-dark.css" rel="stylesheet" id="theme-stylesheet">
+  <script src="/js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  
+  
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  
+
+  
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
+  <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
+  
+
+  <link href="/css/owl.carousel.css" rel="stylesheet">
+  <link href="/css/owl.theme.css" rel="stylesheet">
+
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Culture of Insight">
+
+  
+  
+    <title>Reproducible Shiny App Development with Modules</title>
+    <meta property="og:title" content="Reproducible Shiny App Development with Modules">
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="Tame your shiny app code by incorporating modules into your workflow...">
+
+      
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:image" content="/img/module_2.png" >
+      <meta property='og:image' content="/img/module_2.png" >      
+      
+      
+    
+
+</head>
+
+
+  <body>
+
+    <div id="all">
+
+        <header>
+
+          <div class="navbar-affixed-top" data-spy="affix" data-offset-top="200">
+
+    <div class="navbar navbar-default yamm" role="navigation" id="navbar">
+
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand home" href="/">
+                    <img src="/img/logo.png" alt="Reproducible Shiny App Development with Modules logo" class="hidden-xs hidden-sm" style="height: 62px; padding-bottom: 15px;">
+                    <img src="/img/logo.png" alt="Reproducible Shiny App Development with Modules logo" class="visible-xs visible-sm" style="height: 62px; padding-bottom: 15px;">
+                    <span class="sr-only">Reproducible Shiny App Development with Modules - go to homepage</span>
+                </a>
+                <div class="navbar-buttons">
+                    <button type="button" class="navbar-toggle btn-template-main" data-toggle="collapse" data-target="#navigation">
+                      <span class="sr-only">Toggle Navigation</span>
+                        <i class="fa fa-align-justify"></i>
+                    </button>
+                </div>
+            </div>
+            
+
+            <div class="navbar-collapse collapse" id="navigation">
+                <ul class="nav navbar-nav navbar-right">
+                  
+                  <li class="dropdown">
+                    
+                    <a href="/">Home</a>
+                    
+                  </li>
+                  
+                  <li class="dropdown">
+                    
+                    <a href="/blog/">Blog</a>
+                    
+                  </li>
+                  
+                  <li class="dropdown">
+                    
+                    <a href="/contact/">Contact</a>
+                    
+                  </li>
+                  
+                </ul>
+            </div>
+            
+
+            <div class="collapse clearfix" id="search">
+
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search">
+                        <span class="input-group-btn">
+
+                    <button type="submit" class="btn btn-template-main"><i class="fa fa-search"></i></button>
+
+                </span>
+                    </div>
+                </form>
+
+            </div>
+            
+
+        </div>
+    </div>
+    
+
+</div>
+
+
+
+
+        </header>
+
+        <div id="heading-breadcrumbs">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Reproducible Shiny App Development with Modules</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+        <div id="content">
+            <div class="container">
+
+                <div class="row">
+
+                    
+
+                    <div class="col-md-9" id="blog-post">
+
+                        <p class="text-muted text-uppercase mb-small text-right">By <a href="#">Paul Campbell</a> | January 5, 2018</p>
+
+                        <div id="post-content">
+                          <p>Happy New Year to one and all!</p>
+<p>As data scientists/analysts/researchers/programmers/anything else on that crazy data science Venn diagram, I’m assuming all of our new years resolutions involve visualising our data with more sophistication and finesse. So with that in mind, I thought it was high time for a post about the joys of modularizing your shiny app code.</p>
+<blockquote>
+<p>New Year, new improved workflows with emphasis on efficiency &amp; reproducibility, amiright?</p>
+</blockquote>
+<section id="keeping-track" class="level3">
+<h3>Keeping Track</h3>
+<p>There was some good chatter in the <a href="https://community.rstudio.com/t/best-practices-shiny-development/1694" target="_blank">Rstudio Community forum</a> a while back in relation to best practices for shiny app development. Anyone who has been tasked with writing a relatively large shiny app will know that the code can become unwieldy rather quickly, so it’s always good to keep on top of how others out in there the shiny app dev ether go about organising their workflows.</p>
+<p>The main take-away was to focus on <em>modularizing</em> any code chunks that are repeated often in the application. Having spent a bit of time learning and applying modules to various apps, I thought I’d jot down a quick example of a sample module in action. It can be quite tricky to wrap your head around what exactly a module is and how it communicates with the rest of your app. So, as with most blog posts, this is an exercise in clarifying that understanding and (hopefully) a help for others to get started on the rewarding path of a modularized application.</p>
+</section>
+<section id="legitimate-resources" class="level3">
+<h3>Legitimate Resources</h3>
+<p>The nuts &amp; bolts of module fundamentals are outwith the scope of this post, so I’d strongly advise you to check out the Rstudio resources below if you haven’t done so already. The therapeutically reassuring tones of Master Instructor <a href="https://twitter.com/StatGarrett" target="_blank">Garrett Grolemund</a> are always a safe bet to keep you on the right track.</p>
+<ol type="1">
+<li><a href="http://shiny.rstudio.com/articles/modules.html" target="_blank">Modularizing Shiny app code (article)</a></li>
+<li><a href="https://www.rstudio.com/resources/webinars/understanding-shiny-modules/" target="_blank">Understanding Shiny modules (webinar)</a></li>
+<li><a href="https://www.rstudio.com/resources/videos/modularizing-shiny-app-code/" target="_blank">Modularizing Shiny app code (video lecture)</a></li>
+</ol>
+</section>
+<section id="a-note-on-function-arguments" class="level3">
+<h3>A Note on Function Arguments</h3>
+<p>One thing that can be tricky is figuring out what you can pass to a module function, and in what form. Here’s a short list of rules I have discovered hold true (please correct me if I’m wrong):</p>
+<ul>
+<li>Any inputs created in the module UI function can be used in the module server function just as you would in a regular shiny app (i.e. <code>filtered_data &lt;- filter(data, x == input$input1)</code>)</li>
+<li>If you want to use inputs from your main app in the module:
+<ul>
+<li>create a reactive variable in your main server function like so: <code>user_input &lt;- reactive(input$input1)</code></li>
+<li>Pass it to the callModule function as a non-reactive: <code>callModule(module_name, id, input = user_input)</code></li>
+<li>Use input as a reactive in your module by calling input with parentheses attached: <code>input()</code></li>
+</ul></li>
+<li>Same goes for any other reactive objects from your server function (reactive datasets etc)</li>
+<li>Pass non-reactive objects from your server function or global environment in the callModule function as above but use them in your module as non-reactive without parentheses</li>
+</ul>
+</section>
+<section id="its-all-in-the-namespace" class="level3">
+<h3>It’s all in the Namespace</h3>
+<p>The real magic of the module is it’s ability to create a <em>namespace</em> that is distinct from the rest of your application. If you’ve written shiny apps before you’ll know that no 2 elements can share the same id. This becomes problematic as apps start growing in size. Making a change to <code>plotOutput(&quot;plot37&quot;)</code> in the UI then attempting to find the accompanying <code>output$plot37</code> server code is a less than satisfying workflow. So let’s develop a more satisfying one…</p>
+</section>
+<section id="worked-example" class="level3">
+<h3>Worked Example</h3>
+<p>Now let’s work through a case where a module could be beneficial. Consider the following dataset showing some demographic data of a sample group:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">category</th>
+<th style="text-align: left;">demographic</th>
+<th style="text-align: right;">percent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Gender</td>
+<td style="text-align: left;">Male</td>
+<td style="text-align: right;">48.706585</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gender</td>
+<td style="text-align: left;">Female</td>
+<td style="text-align: right;">51.293415</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Age</td>
+<td style="text-align: left;">15-24</td>
+<td style="text-align: right;">18.676534</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Age</td>
+<td style="text-align: left;">25-34</td>
+<td style="text-align: right;">21.136115</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Age</td>
+<td style="text-align: left;">35-44</td>
+<td style="text-align: right;">19.066600</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Age</td>
+<td style="text-align: left;">45-54</td>
+<td style="text-align: right;">18.326197</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Age</td>
+<td style="text-align: left;">55-64</td>
+<td style="text-align: right;">10.709079</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Age</td>
+<td style="text-align: left;">65-74</td>
+<td style="text-align: right;">7.270722</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Age</td>
+<td style="text-align: left;">75+</td>
+<td style="text-align: right;">4.814752</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Social Grade</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">8.143243</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Social Grade</td>
+<td style="text-align: left;">B</td>
+<td style="text-align: right;">33.772399</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Social Grade</td>
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">34.756400</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Social Grade</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: right;">15.035762</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Social Grade</td>
+<td style="text-align: left;">E</td>
+<td style="text-align: right;">8.292197</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<p>We have the data in a tidy format with all demographics observations in one variable column, split into separate categories in another column, with the percentage numbers in the third column all adding up to 100 for each category. Now say we want to visualise this information in a dashboard, how should we go about it?</p>
+<p>It makes sense to split the data by category and visualise each in a chart. There a lots of charts to choose from but to keep it simple we’ll stick to bar charts (if you’re some kind of data viz sadist, you might consider the 3D Pie Chart here).</p>
+<p>Using the reactive power of shiny, we could just build one chart and use a user input to filter what demographic category data is fed into it. <em>However,</em> let’s say we have been instructed that all demographics charts should be shown on one page with a scrolling layout. Again, not too painful considering we only have 3 categories in this sample data. But what if we had 20 categories to chart? That’s a lot of copy &amp; pasting of UI and Server code. If we are astute programmers and heed this well versed rule of thumb:</p>
+<blockquote>
+<p>If you have to copy and paste something more than twice, write a function…</p>
+</blockquote>
+<p>We should be writing a function for this process. In this case, a special type of function: a shiny module.</p>
+</section>
+<section id="the-goal" class="level3">
+<h3>The Goal</h3>
+<p>Our goal is going to be to have a UI &amp; Server modules function that can:</p>
+<ol type="1">
+<li>Render a shinydashboard <code>tabBox</code> UI element that has a title and two tabs</li>
+<li>Render a Highcharts<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> bar chart in one tab</li>
+<li>A Data table in the other to show the data in a tabular form</li>
+<li>Send a filtered chunk of data to the chart and table</li>
+</ol>
+<p>Once we have a working module we’re going to dynamical render the tabBoxes in our app with one <code>purrr</code> <code>map</code> function in the UI and one in the Server. With our sample data, this will produce 3 tabBoxes, one for each demographic category, with the appropriate data in the charts and tables. But if we had data with say 20 or 100 categories, we would get 20 or 100 functioning tabBoxes in our app - all with one line of code in the UI + Server! (you probably don’t want an app with 100 charts on one page, but it’s cool that we could do it if we wanted to)</p>
+</section>
+<section id="the-module-functions" class="level3">
+<h3>The Module Functions</h3>
+<section id="ui" class="level4">
+<h4>UI</h4>
+<p>So where do we start? Let’s build a UI module function first. This will look very similar to the standard UI code you would put in a regular app, except it will be part of a function that must take an <code>id</code> argument and any other arguments you wish to use. Here’s how mine looks:</p>
+<pre class="r"><code>chartTableBoxUI &lt;- function(id, div_width = &quot;col-xs-12 col-sm-6 col-md-4&quot;) {
+  
+  ns &lt;- NS(id)
+  
+  div(class = div_width,
+         tabBox(width = 12, title = id,
+                tabPanel(icon(&quot;bar-chart&quot;),
+                         highchartOutput(ns(&quot;chart&quot;) )
+                ),
+                tabPanel(icon(&quot;table&quot;),
+                         DT::dataTableOutput(ns(&quot;table&quot;))
+                )
+         )
+  )
+  
+}</code></pre>
+<p>As you can see, the primary difference to regular UI code is the inclusion of the <code>ns</code> variable. This takes the <code>id</code> you pass to the function and uses it to create a unique namespace for the module. Wrapping the id of our <code>highcharterOutput</code> and <code>DT::datatableOutput</code> in the <code>ns()</code> function means that we do not have to create unique ids for each UI element in every module we call, which is a real godsend.</p>
+<p>The <code>div_width</code> argument gives us the option changing the proportion of each row the tabBox will take up using bootstrap’s grid system. In this case, <code>&quot;col-xs-12 col-sm-6 col-md-4&quot;</code> means that there will be 3 boxes per row on a normal screen, 2 on an iPad sized screen, and 1 on a mobile screen. This gives us the option of changing the width of our tabBoxes within each module call - we might want a larger width for categories with more than 8 observations, for example. Using this <code>div(class = ...</code> approach is also a tad more reactive than shiny’s standard <code>column(width = ...</code> argument.</p>
+</section>
+<section id="server" class="level4">
+<h4>Server</h4>
+<p>The server side function must take the arguments <code>input</code>, <code>output</code> and <code>session</code>, but you don’t need to assign these to anything, shiny is smart and deals with that for us. We’ll then add a <code>data</code> argument that we will use to feed in our demographics data to each module, and a <code>dem_group</code> argument which will be a unique category value to filter the data with:</p>
+<pre class="r"><code>chartTableBox &lt;- function(input, output, session, data, dem_group) {
+  
+  module_data &lt;- reactive({
+    data %&gt;% filter(category == dem_group)
+  })
+  
+  output$chart &lt;- renderHighchart({
+    
+    hchart(module_data(), &quot;column&quot;, hcaes(x = demographic, y = percent)) %&gt;%
+      hc_xAxis(title = list(text = &quot;&quot;)) %&gt;% 
+      hc_yAxis(title = list(text = &quot;&quot;), labels = list(format = &quot;{value}%&quot;)) %&gt;%  
+      hc_tooltip(valueDecimals = 1, valueSuffix = &quot; %&quot;)
+
+  })
+  
+  output$table &lt;- renderDataTable({
+    
+    dt_data &lt;- module_data() %&gt;% 
+      select(demographic, percent) %&gt;% 
+      mutate(percent = (percent / 100))
+    
+    DT::datatable(dt_data, style = &quot;bootstrap&quot;, class = &quot;display&quot;, 
+                  options=list(scrollX=TRUE, dom = &#39;t&#39;)) %&gt;% 
+      formatPercentage(&#39;percent&#39;, 0)
+    
+  })
+  
+}</code></pre>
+<p>We now have the module code that we can call in our main application. It’s a good idea to save both of these functions in a separate file named <code>modules.R</code> and use <code>source(&quot;modules.R&quot;&quot;)</code> from your app script to load the functions into the global environment (assuming it’s located in the same directory as your main app file).</p>
+</section>
+</section>
+<section id="the-shiny-app" class="level3">
+<h3>The Shiny App</h3>
+<p>Now let’s code up a basic shinydashboard skeleton, load our sample data, source our modules then call them in the UI and Server and see if we can generate a tabBox loaded with demographic <strong>age</strong> data!</p>
+<pre class="r"><code>library(shiny)
+library(shinydashboard)
+library(tidyverse)
+library(highcharter)
+library(DT)
+
+# sample data
+demographics &lt;- tibble(
+  category = c(rep(&quot;Gender&quot;, 2), rep(&quot;Age&quot;, 7), rep(&quot;Social&quot;, 5)),
+  demographic = c(&quot;Male&quot;, &quot;Female&quot;, &quot;15-24&quot;, &quot;25-34&quot;, &quot;35-44&quot;, &quot;45-54&quot;, &quot;55-64&quot;, &quot;65-74&quot;, &quot;75+&quot;, LETTERS[1:5]),
+  percent = c(48.706585, 51.293415, 18.676534, 21.136115, 19.066600, 18.326197, 10.709079, 7.270722, 
+              4.814752, 8.143243, 33.772399, 34.756400, 15.035762, 8.292197)
+)
+
+# source modules
+source(&quot;modules.R&quot;)
+
+ui &lt;- dashboardPage(
+  dashboardHeader(title = &quot;Shiny Modules&quot;),
+  dashboardSidebar(disable = TRUE),
+  dashboardBody(
+    fluidRow(chartTableBoxUI(id = &quot;Age&quot;)) # render the tabBox inside a fluidRow
+  )
+)
+
+server &lt;- function(input, output, session) {
+  callModule(chartTableBox, id = &quot;Age&quot;, data = demographics, dem_group = &quot;Age&quot;)
+}
+
+shinyApp(ui, server)</code></pre>
+<p>If all went to plan our app should look something like this:</p>
+<p><img src="/img/module_1.png" style="width: 100%;"/></p>
+</section>
+<section id="purrrifying-module-deployment" class="level3">
+<h3>Purrrifying Module Deployment</h3>
+<p>OK, so our module is working when we explicitly tell it what demographic category to chart. But as mentioned earlier, if we had say 20 categories in the data that all needed charting we would have to write our <code>chartTableBoxUI</code> function out 20 times in UI with a unique id for each, and write 20 <code>callModule</code> functions citing the same id and passing it to the <code>dem_filter</code> argument - not ideal. Thankfully however, we can use a <code>map</code> function from the <code>purrr</code> package (or <code>lapply</code> in base R) to iterate over all unique categories in our data and feed them into our modules, hurrah!</p>
+<p>Just replace the <code>chartTableBox</code> function in the ui with:</p>
+<pre class="r"><code>map(unique(demographics$category), ~ chartTableBoxUI(id = .x))</code></pre>
+<p>And the <code>callModule</code> function in the server with:</p>
+<pre class="r"><code>map(unique(demographics$category), ~ callModule(chartTableBox, id = .x, data = demographics, dem_group = .x))</code></pre>
+<p>And we have a shiny app capable of rendering interactive charts and tables for as many categories as your data can muster, with only one line of UI and Server code. Aside from the dramatic reduction in lines of code required to produce these UI elements and server side processes, we also have the benefit of being able to change all chart and table functionality/aesthetics simply by editing one module function.</p>
+<p>With the sample data used, our app will now look like this (with an added header):</p>
+<p><a href="https://cultureofinsight.shinyapps.io/module_example" rel="module_app" target="_blank"><img src="/img/module_2.png" alt="module_app" style="width: 100%; margin: 0 auto;"/></a> <em>Yay! Click the image to launch the app. You can check the full source code via the github link on there.</em></p>
+</section>
+<section id="wrap-up" class="level3">
+<h3>Wrap-Up</h3>
+<p>That’s all for now. Go forth and tame your shiny apps with gay abandon. And if you have any module examples of your own, it would be great to see them!</p>
+<p>If, however, you’d rather someone else did it for you… <a href="/contact">get in touch.</a> We’re available to hire for all things data. If you have a web-application in mind that you need built, fill out <a href="https://www.blog.cultureofinsight.com/data_apps/">this form</a> and we’ll get back to you as soon as we can.</p>
+<p>All the best for 2018!</p>
+</section>
+<section class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Note that Highcharts is a Highsoft product and not free for commercial and Governmental use.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+</ol>
+</section>
+
+                        </div>
+                        
+                        
+
+                    </div>
+                    
+
+                    
+
+                    
+
+                    <div class="col-md-3">
+
+                        
+
+                        
+
+
+
+
+
+
+
+<div class="panel panel-default sidebar-menu">
+
+    <div class="panel-heading">
+      <h3 class="panel-title">Categories</h3>
+    </div>
+
+    <div class="panel-body">
+        <ul class="nav nav-pills nav-stacked">
+            
+            <li><a href="/categories/tutorials">tutorials (1)</a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<div class="panel sidebar-menu">
+    <div class="panel-heading">
+      <h3 class="panel-title">Tags</h3>
+    </div>
+
+    <div class="panel-body">
+        <ul class="tag-cloud">
+            
+            <li><a href="/tags/dashboards"><i class="fa fa-tags"></i> dashboards</a>
+            </li>
+            
+            <li><a href="/tags/data-visualisation"><i class="fa fa-tags"></i> data-visualisation</a>
+            </li>
+            
+            <li><a href="/tags/decision-point"><i class="fa fa-tags"></i> decision-point</a>
+            </li>
+            
+            <li><a href="/tags/mapping"><i class="fa fa-tags"></i> mapping</a>
+            </li>
+            
+            <li><a href="/tags/open-data"><i class="fa fa-tags"></i> open-data</a>
+            </li>
+            
+            <li><a href="/tags/r"><i class="fa fa-tags"></i> r</a>
+            </li>
+            
+            <li><a href="/tags/reproducible-research"><i class="fa fa-tags"></i> reproducible-research</a>
+            </li>
+            
+            <li><a href="/tags/shiny"><i class="fa fa-tags"></i> shiny</a>
+            </li>
+            
+            <li><a href="/tags/tidy-data"><i class="fa fa-tags"></i> tidy-data</a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+
+
+
+
+
+                        
+
+                    </div>
+                    
+
+                    
+
+                </div>
+                
+
+            </div>
+            
+        </div>
+        
+
+        <footer id="footer">
+    <div class="container">
+
+        
+        <div class="col-md-4 col-sm-6">
+            <h4>Culture of Insight</h4>
+
+            Getting you to Insight faster in 2018
+
+            <hr class="hidden-md hidden-lg hidden-sm">
+
+        </div>
+        
+        
+
+        <div class="col-md-4 col-sm-6">
+
+             
+            <h4>Recent posts</h4>
+
+            <div class="blog-entries">
+                
+                <div class="item same-height-row clearfix">
+                    <div class="image same-height-always">
+                        <a href="/blog/2018/01/17/2018-01-17-migrating-from-xcelsius-dashboards-on-a-budget/">
+                          
+                            <img src="/img/xcelsius.png" class="img-responsive" alt="Migrating from Xcelsius Dashboards on a Budget">
+                          
+                        </a>
+                    </div>
+                    <div class="name same-height-always">
+                        <h5><a href="/blog/2018/01/17/2018-01-17-migrating-from-xcelsius-dashboards-on-a-budget/">Migrating from Xcelsius Dashboards on a Budget</a></h5>
+                    </div>
+                </div>
+                
+                <div class="item same-height-row clearfix">
+                    <div class="image same-height-always">
+                        <a href="/blog/2018/01/05/2017-11-13-reproducible-shiny-app-development-with-modules/">
+                          
+                            <img src="/img/module_2.png" class="img-responsive" alt="Reproducible Shiny App Development with Modules">
+                          
+                        </a>
+                    </div>
+                    <div class="name same-height-always">
+                        <h5><a href="/blog/2018/01/05/2017-11-13-reproducible-shiny-app-development-with-modules/">Reproducible Shiny App Development with Modules</a></h5>
+                    </div>
+                </div>
+                
+                <div class="item same-height-row clearfix">
+                    <div class="image same-height-always">
+                        <a href="/blog/2017/10/12/2017-10-12-how-market-research-can-tidy-up/">
+                          
+                            <img src="/img/data-science-pipeline.png" class="img-responsive" alt="How Market Research Can Tidy Up">
+                          
+                        </a>
+                    </div>
+                    <div class="name same-height-always">
+                        <h5><a href="/blog/2017/10/12/2017-10-12-how-market-research-can-tidy-up/">How Market Research Can Tidy Up</a></h5>
+                    </div>
+                </div>
+                
+            </div>
+
+            <hr class="hidden-md hidden-lg">
+             
+
+        </div>
+        
+
+        
+        <div class="col-md-4 col-sm-6">
+
+          <h4>Contact</h4>
+
+            <strong>Culture of Insight Ltd.</strong>
+        <br>Holborn Studios
+        <br>49-50 Eagle Wharf Road
+        <br>London
+        <br>N1 7ED
+      </p>
+      
+
+
+            <a href="/contact" class="btn btn-small btn-template-main">Go to contact page</a>
+
+            <hr class="hidden-md hidden-lg hidden-sm">
+
+        </div>
+        
+        
+
+    </div>
+    
+</footer>
+
+
+
+
+
+
+
+<div id="copyright">
+    <div class="container">
+        <div class="col-md-12">
+            
+            <p class="pull-left">&copy; 2018 Culture of Insight. All Rights Reserved.</p>
+            
+            <p class="pull-right">
+              Template by <a href="http://bootstrapious.com/free-templates">Bootstrapious</a>.
+              
+
+              Ported to Hugo by <a href="https://github.com/devcows/hugo-universal-theme">DevCows</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+    </div>
+    
+
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-40168473-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+<script src="//code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/Counter-Up/1.0/jquery.counterup.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-parallax/1.1.3/jquery-parallax.js"></script>
+
+<script src="//maps.googleapis.com/maps/api/js?v=3.exp"></script>
+
+<script src="/js/hpneo.gmaps.js"></script>
+<script src="/js/gmaps.init.js"></script>
+<script src="/js/front.js"></script>
+
+
+<script src="/js/owl.carousel.min.js"></script>
+
+
+  </body>
+</html>

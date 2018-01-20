@@ -1,0 +1,129 @@
+---
+title: How Market Research Can Tidy Up
+author: James Smythe
+date: '2017-10-12'
+slug: how-market-research-can-tidy-up
+twitterImg: img/data-science-pipeline.png
+description: "How to make your research data go further with tidy data, reproducible programming and analytical web-applications..."
+categories: []
+tags:
+  - dashboards
+  - data visualisation
+  - tidy data
+  - reproducible research
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, fig.align="center", cache = FALSE)
+```
+
+---
+
+## Synopsis
+
+Market Research is great at compiling the right data, but not so good at making it easy to use. This isn't about "storytelling". It's about the data itself, and clarity on what *delivering* it actually means. Getting the data out of siloes like tabs and SPSS where it cannot adequately be mined, and out into the big wide world as *Tidy Data*.
+
+<blockquote class="twitter-tweet tw-align-center" data-lang="en"><p lang="en" dir="ltr">Colleague: &quot;The data were not entered with analysis in mind.&quot;</p>&mdash; Noam Ross (@noamross) <a href="https://twitter.com/noamross/status/900435026147409926?ref_src=twsrc%5Etfw">August 23, 2017</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+---
+
+
+## The Problem
+
+Esomar recently reported that Global Market Research growth is at its highest since 2010, driven by new “market research” sectors such as web analytics and social media monitoring. But this joyful headline hides mixed emotions. How many huge traditional quant projects have been axed in recent years, as business gets used to the slick, self-service nature of new sources of data? Were they really not good value for money? Or was it all in the presentation?
+
+Market Research agencies have invested to meet the challenge, with the result that research is now much better at tech, but it still lags behind in its communcation of data. Analytics data is available in engaging dashboard formats at the click of a mouse whereas brand trackers still languish in massive tabulations files or SPSS, one file per month, waiting for an over-worked researcher to scroll through for the one key number, to pop into the MD’s monthly PowerPoint deck. Which he or she never reads.
+
+Tabs remain our default delivery medium. Usually because that’s what the client asks for, preferring to save on the presentation costs and do the analysis in-house. Tabs were born decades ago, from a need to summarise data without coding, in an era where we lacked the desktop computing skills to do this ourselves. With our pathological need to be complete, tab decks tend to be huge. They may be right, they may be complete, but they are not useful to the modern data user. 
+
+---
+
+## The Solution
+
+### Tidy Data
+
+The minimum standard we should be aiming for is **Tidy Data**. This <a href="https://www.jstatsoft.org/article/view/v059i10" target="_blank">concept</a>, championed by data scientist Hadley Wickham, is about data being shaped for analysis, modelling and visualisation. A Tidy Research Data table will have:
+
+1. one variable per column
+2. one case per row
+3. one table per project (one big rectangle of data)
+
+Compare this to the MR standard. Data often delivered in excel tabs formatted for print; split across sheets and tables, with titles, blank columns/rows and even images separating sections of data. 
+
+The implication is that these data tables constitute "delivery", the agency's final means of communicating the data without regard for where it goes next.
+
+This is undesirable for a number of reasons. Firstly, for anyone wanting to conduct further analysis on the data, their job just became *a lot* harder. Say you're an analyst with the task of summarising a batch of reports of media brands' website traffic. The data is delivered in multiple reports split by target audience or timescale. With the data in disparate locations, even calculating an average is far from a trivial pursuit. How do you write formulas for data across different files, tabs, and columns? You could, but if you want to get it right you probably shouldn't.
+
+In the optimal pipeline of analysis, from data source to communication, tidying shouldn't be the bit taking up time and creating risk of error. Understanding is where we need to invest our efforts:
+
+<br>
+
+<center>![](/img/data-science-pipeline.png)</center>
+*Source: [R For Data Science](http://r4ds.had.co.nz/introduction.html)*
+
+With data formatted inefficiently, even tidying will often be beyond the capabilities of the average research analyst, and the final communication becomes the spreadsheet itself or a powerpoint deck that takes weeks to build with lots of error prone copy + pasting. The **understanding** stage has been bypassed, and the optimal outcome missed.
+
+---
+
+### Visualising your data
+
+It's widely known that the human brain is much better at interpreting visuals as opposed to numbers and text. Here's a quick example:
+
+<blockquote class="twitter-tweet tw-align-center" data-cards="hidden" data-lang="en"><p lang="en" dir="ltr">Average oil price<br><br>2006: $61<br>2007: $69<br>2008: $94<br>2009: $61<br>2010: $77<br>2011: $107<br>2012: $109<br>2013: $106<br>2014: $96<br>2015: $49<br>2016: $41 <a href="https://t.co/dVyZKhaIEe">pic.twitter.com/dVyZKhaIEe</a></p>&mdash; The Spectator Index (@spectatorindex) <a href="https://twitter.com/spectatorindex/status/916385096801898496?ref_src=twsrc%5Etfw">October 6, 2017</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<blockquote class="twitter-tweet tw-align-center" data-lang="en"><p lang="en" dir="ltr">You could make a chart out of that, you know. They were invented just for that <a href="https://t.co/fWhzQxNE1p">https://t.co/fWhzQxNE1p</a></p>&mdash; Maarten Lambrechts (@maartenzam) <a href="https://twitter.com/maartenzam/status/916394129290018817?ref_src=twsrc%5Etfw">October 6, 2017</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+As Maarten rightly points out, this data seems ripe for plotting on an x + y axis. How quickly can you get a solid understanding of what the average oil price has been doing in the last 10 years from the tweet above? Now compare that with a quick glance at a chart of the same data, below:
+
+<br>
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(tibble)
+library(xts)
+library(dygraphs)
+
+oil_price <- tibble(year = seq(as.Date("2006/1/1"), as.Date("2016/1/1"), "years"), 
+                    price = c(61, 69, 94, 61, 77, 107, 109, 106, 96, 49, 41))
+
+ts <- xts(oil_price$price, oil_price$year)
+
+dygraph(ts, main = "Average Oil Price $", width = "100%", height = "300px") %>% 
+  dySeries(label = "Price", color = "black") %>%
+  dyAxis(name="x", axisLabelFormatter = "function(d){ return d.getFullYear() }") %>% 
+  dyOptions(fillGraph = TRUE, fillAlpha = 0.3, drawGrid = FALSE) %>% 
+  dyAnnotation("2014-1-1", text = "Hold on tight", width = 100, height = 25, tickHeight = 60, cssClass = "dygraph-axis-label", tooltip = "doesn't go well from here") %>% 
+  dyLegend(width = 300) #%>% 
+  #dyCSS("../../dygraphs.css")
+```
+
+<br>
+
+In the attention poor world, there's only going to be one winner. It's therefore vital that we start getting our data out of spreadsheets and into effective data visualisations if we want our research to realise its value. And there's no better place to do this than the modern day web-browser...
+
+---
+
+### Getting your data in the browser
+
+Browsers are where people expect to find information. And it should be no different when it comes to making sense of your data. Web-browsers are what the most cutting edge front-end technologies are built for, and utilising them to build rich web applications is getting easier and easier. The only real prerequisite is *tidy data!*
+
+At Culture of Insight, we increasingly use <a href="https://en.wikipedia.org/wiki/R_(programming_language)" target="_blank">R</a> to develop solutions for our clients' data projects. From <a href="https://www.youtube.com/watch?v=s3JldKoA0zw" target="_blank">reproducible workflows</a> to world reknowned graphing libraries, it literally sets data free where the many popular BI software apps build walled gardens, and charge extortionate fees. And with the <a href="https://shiny.rstudio.com/" target="_blank">shiny</a> package, all of this can be built into bespoke web applications that meet specific project needs and utilise the latest web technologies. 
+
+Here's a simple demo app we built by tidying up some **dummy** web-traffic data files, previously stored in formatted Excel reports. By munging all the data in one big beautiful tidy rectangle, the user can use filters and selectors in the browser to manipulate the data to their specifications. The absorbing interactivity allows users to quickly strip back to the data they're interested in and compare brand performance across a variety of metrics. It has has the depth of a thousand PowerPoint slides but the size of one.
+
+<a href="https://cultureofinsight.shinyapps.io/tidydata_dash" rel="comscore app" target="_blank"><img src="/img/tidydata_dash.gif" alt="comscore app" style="width: 100%; margin: 0 auto;"/></a>
+*click the image to launch the app*
+
+---
+
+### Summary
+
+Armed with your research data in a tidy format, you have the opportunity to stretch the value of your market research to its full potential by furthering analysis opportunities and delivering the results in more engaging ways. Prioritise the communication of the data to the same degree as the collection of the data and visualise it in the browser for maximum accesibility and impact.
+
+This may require a shift from the status quo of market research reporting, but the level of investment or thought required to do this is minimal, the potential benefits transformational.
+
+---
+
+*James Smythe is the MD of Culture of Insight, a media research and analytics app development company working for clients such as Sky, Exterion, Global Radio, Hachette Books, Shortlist Media, News UK and the Royal Shakespeare Company. <a href="https://twitter.com/datasetfree" target="_blank">@datasetfree</a> <a href="www.cultureofinsight.com" target="_blank">cultureofinsight.com</a>*

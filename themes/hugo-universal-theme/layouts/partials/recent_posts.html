@@ -22,8 +22,8 @@
                     <div class="box-image-text blog">
                         <div class="top">
                             <div class="image" style="overflow:hidden">
-                                {{ if isset .Params "banner" }}
-                                <img src="{{ .Site.BaseURL}}{{ .Params.banner }}" class="img-responsive" alt="" >
+                                {{ if .Params.twitterImg }}
+                                <img src="{{ .Site.BaseURL}}{{ .Params.twitterImg }}" class="img-responsive" alt="" >
                                 {{ else }}
                                 <img src="{{ .Site.BaseURL}}img/placeholder.png" class="img-responsive" alt="">
                                 {{ end }}
@@ -44,7 +44,7 @@
                             {{ end }}
                             {{ i18n "publishedOn" }} {{ .Date.Format .Site.Params.date_format }}
                             </p>
-                            <p class="intro">{{ .Summary }}</p>
+                            <p class="intro">{{ .Params.description }}</p>
                             <p class="read-more">
                               <a href="{{ .Permalink }}" class="btn btn-template-main">{{ i18n "continueReading" }}</a>
                             </p>

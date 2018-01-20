@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tidy Data on Culture of Insight</title>
+    <link>/tags/tidy-data/</link>
+    <description>Recent content in Tidy Data on Culture of Insight</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2018 Culture of Insight. All Rights Reserved.</copyright>
+    <lastBuildDate>Thu, 12 Oct 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/tidy-data/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>How Market Research Can Tidy Up</title>
+      <link>/blog/2017/10/12/2017-10-12-how-market-research-can-tidy-up/</link>
+      <pubDate>Thu, 12 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/2017/10/12/2017-10-12-how-market-research-can-tidy-up/</guid>
+      <description>Synopsis Market Research is great at compiling the right data, but not so good at making it easy to use. This isn’t about “storytelling”. It’s about the data itself, and clarity on what delivering it actually means. Getting the data out of siloes like tabs and SPSS where it cannot adequately be mined, and out into the big wide world as Tidy Data.</description>
+    </item>
+    
+  </channel>
+</rss>

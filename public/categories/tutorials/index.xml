@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tutorials on Culture of Insight</title>
+    <link>/categories/tutorials/</link>
+    <description>Recent content in Tutorials on Culture of Insight</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2018 Culture of Insight. All Rights Reserved.</copyright>
+    <lastBuildDate>Fri, 05 Jan 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/tutorials/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Reproducible Shiny App Development with Modules</title>
+      <link>/blog/2018/01/05/2017-11-13-reproducible-shiny-app-development-with-modules/</link>
+      <pubDate>Fri, 05 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/2018/01/05/2017-11-13-reproducible-shiny-app-development-with-modules/</guid>
+      <description>Happy New Year to one and all!
+As data scientists/analysts/researchers/programmers/anything else on that crazy data science Venn diagram, I’m assuming all of our new years resolutions involve visualising our data with more sophistication and finesse. So with that in mind, I thought it was high time for a post about the joys of modularizing your shiny app code.
+New Year, new improved workflows with emphasis on efficiency &amp;amp; reproducibility, amiright?</description>
+    </item>
+    
+  </channel>
+</rss>

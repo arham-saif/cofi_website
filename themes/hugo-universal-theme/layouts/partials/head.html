@@ -39,6 +39,11 @@
 
   <!-- Custom stylesheet - for your changes -->
   <link href="{{ .Site.BaseURL }}css/custom.css" rel="stylesheet">
+  
+  <!-- highlight js script + css -->
+  <link rel="stylesheet" href="{{"css/solarized-dark.css" | absURL}}" rel="stylesheet" id="theme-stylesheet">
+  <script src="{{ "js/highlight.pack.js" | absURL }}"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
 
   <!-- Responsivity for older IE -->
   {{ `
@@ -67,6 +72,7 @@
     <meta property="og:description" content="{{ .Site.Params.DefaultDescription }}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="{{ .Site.BaseURL }}img/cover_map.png" >
+    <meta property='og:image' content="{{ .Site.BaseURL }}img/cover_map.png" >
     {{ else }}
     <title>{{ .Title }}{{ with .Params.subtitle }} - {{ . }} {{ end }}</title>
     <meta property="og:title" content="{{ .Title }}">

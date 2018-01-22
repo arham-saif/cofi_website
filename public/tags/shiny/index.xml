@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2018 Culture of Insight. All Rights Reserved.</copyright>
-    <lastBuildDate>Wed, 17 Jan 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 22 Jan 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/shiny/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Building a Cryptocurrency Tracker with R</title>
+      <link>/blog/2018/01/22/2018-01-22-building-a-cryptocurrency-tracker-with-r/</link>
+      <pubDate>Mon, 22 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/2018/01/22/2018-01-22-building-a-cryptocurrency-tracker-with-r/</guid>
+      <description>TL;DR - check the tracker out here. 
+As a recent cryptocurrency &amp;lsquo;Investor&amp;rsquo; (0.13 ETH baby) I wanted to build a light tracker tool that could help me keep up with the mad market volatility in a more personalised manner.
+Of course, there&amp;rsquo;s no better tool for this task than the open-source programming language R, and the multitude of packages built for it that allows programmers with very modest levels of front-end development and sys-admin knowledge to go from nada to fully deployed, production quality web-application in a few hours.</description>
+    </item>
     
     <item>
       <title>Migrating from Xcelsius Dashboards on a Budget</title>

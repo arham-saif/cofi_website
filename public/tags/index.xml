@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2018 Culture of Insight. All Rights Reserved.</copyright>
-    <lastBuildDate>Wed, 17 Jan 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 22 Jan 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,7 +15,7 @@
     <item>
       <title>Dashboards</title>
       <link>/tags/dashboards/</link>
-      <pubDate>Wed, 17 Jan 2018 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 22 Jan 2018 00:00:00 +0000</pubDate>
       
       <guid>/tags/dashboards/</guid>
       <description></description>
@@ -51,7 +51,7 @@
     <item>
       <title>Open Data</title>
       <link>/tags/open-data/</link>
-      <pubDate>Tue, 03 Oct 2017 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 22 Jan 2018 00:00:00 +0000</pubDate>
       
       <guid>/tags/open-data/</guid>
       <description></description>
@@ -60,7 +60,7 @@
     <item>
       <title>R</title>
       <link>/tags/r/</link>
-      <pubDate>Wed, 17 Jan 2018 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 22 Jan 2018 00:00:00 +0000</pubDate>
       
       <guid>/tags/r/</guid>
       <description></description>
@@ -78,7 +78,7 @@
     <item>
       <title>Shiny</title>
       <link>/tags/shiny/</link>
-      <pubDate>Wed, 17 Jan 2018 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 22 Jan 2018 00:00:00 +0000</pubDate>
       
       <guid>/tags/shiny/</guid>
       <description></description>

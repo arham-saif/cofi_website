@@ -6,7 +6,7 @@
   <meta name="robots" content="all,follow">
   <meta name="googlebot" content="index,follow,snippet,archive">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Reproducible Research</title>
+  <title>Building a Cryptocurrency Tracker with R</title>
   <meta name="author" content="" />
 
   
@@ -14,7 +14,7 @@
   
 
   
-  <meta name="description" content="London Based Data Consultancy">	
+  <meta name="description" content="Keep track of your personal cryptocurrency investments with our tracker tool...">
   
 
   <meta name="generator" content="Hugo 0.31" />
@@ -62,15 +62,15 @@
 
   
   
-    <title>Reproducible Research</title>
-    <meta property="og:title" content="Reproducible Research">
+    <title>Building a Cryptocurrency Tracker with R</title>
+    <meta property="og:title" content="Building a Cryptocurrency Tracker with R">
     <meta property="og:type" content="article">
-    <meta property="og:description" content="London Based Data Consultancy">
+    <meta property="og:description" content="Keep track of your personal cryptocurrency investments with our tracker tool...">
 
       
-      <meta name="twitter:card" content="summary">
-      <meta name="twitter:image" content="/img/logo.png" >
-      <meta property='og:image' content="/img/logo.png" >
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:image" content="/img/crypto_tracker.png" >
+      <meta property='og:image' content="/img/crypto_tracker.png" >      
       
       
     
@@ -91,9 +91,9 @@
         <div class="container">
             <div class="navbar-header">
                 <a class="navbar-brand home" href="/">
-                    <img src="/img/logo.png" alt="Reproducible Research logo" class="hidden-xs hidden-sm" style="height: 62px; padding-bottom: 15px;">
-                    <img src="/img/logo.png" alt="Reproducible Research logo" class="visible-xs visible-sm" style="height: 62px; padding-bottom: 15px;">
-                    <span class="sr-only">Reproducible Research - go to homepage</span>
+                    <img src="/img/logo.png" alt="Building a Cryptocurrency Tracker with R logo" class="hidden-xs hidden-sm" style="height: 62px; padding-bottom: 15px;">
+                    <img src="/img/logo.png" alt="Building a Cryptocurrency Tracker with R logo" class="visible-xs visible-sm" style="height: 62px; padding-bottom: 15px;">
+                    <span class="sr-only">Building a Cryptocurrency Tracker with R - go to homepage</span>
                 </a>
                 <div class="navbar-buttons">
                     <button type="button" class="navbar-toggle btn-template-main" data-toggle="collapse" data-target="#navigation">
@@ -160,7 +160,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h1>Reproducible Research</h1>
+                <h1>Building a Cryptocurrency Tracker with R</h1>
             </div>
         </div>
     </div>
@@ -169,57 +169,60 @@
 
         <div id="content">
             <div class="container">
+
                 <div class="row">
+
                     
 
-                    <div class="col-md-9" id="blog-listing-medium">
+                    <div class="col-md-9" id="blog-post">
 
+                        <p class="text-muted text-uppercase mb-small text-right">By <a href="#">Paul Campbell</a> | January 22, 2018</p>
+
+                        <div id="post-content">
+                          
+
+<h3 id="tl-dr-check-the-tracker-out-here-https-cultureofinsight-shinyapps-io-crypto-tracker">TL;DR - check the tracker out <a href="https://cultureofinsight.shinyapps.io/crypto_tracker/">here</a>.</h3>
+
+<p><a href="https://cultureofinsight.shinyapps.io/crypto_tracker/" target="_blank"><img src="/img/crypto_tracker.png" style="width: 100%;" /></a></p>
+
+<p>As a recent cryptocurrency &lsquo;Investor&rsquo; (<em>0.13 ETH baby</em>) I wanted to build a light tracker tool that could help me keep up with the mad market volatility in a more personalised manner.</p>
+
+<p>Of course, there&rsquo;s no better tool for this task than the open-source programming language R, and the multitude of packages built for it that allows programmers with very modest levels of front-end development and sys-admin knowledge to go from nada to fully deployed, production quality web-application in a few hours. It really is a marvel.</p>
+
+<h3 id="functionality">Functionality</h3>
+
+<p>The desired functionality I set out to build into the application was thus:</p>
+
+<ul>
+<li>Scrape up to date crypto data from the web whenever the app is launched.</li>
+<li>Convert USD closing prices to GBP using recent exchange rate, also scraped from the web on app launch.</li>
+<li>Compute the users coin value and ROI based on the user defined parameters of: what cryptocurrency, how much of it they have, when they bought it, and what currency they want there returns to be reported in (USD or GBP).</li>
+<li>Visualise the results in 3 KPI boxes and one interactive time-series chart.</li>
+<li>Laugh/Cry at how much money you&rsquo;ve gained/lost in the last 24 hours.</li>
+</ul>
+
+<h3 id="the-process">The Process</h3>
+
+<p>For a &lsquo;tracker&rsquo; to be of any use, it needs to have up-to-date data being fed into it, ideally pulled in on a self-serving basis. That is, app functionality to go and get the data we want, when we want it, without requiring any user input or local data storage/maintenance.</p>
+
+<p>This means programming a web-scrape to trigger every time the app is launched, which was made easy by the <a href="https://github.com/JesseVent/crypto/">crypto R package</a> that scrapes data from <a href="https://coinmarketcap.com/">coinmarketcap</a>, providing the daily USD closing prices of any coins of our choosing (I opted to stick to BTC and ETH).</p>
+
+<p>Once the data is there, we utilise the powerful duo of <a href="https://shiny.rstudio.com/">shiny</a> and the <a href="https://www.tidyverse.org/">tidyverse</a> by providing reactive user input variables to data wrangling functions on the back end to compute values and ROI figures specific to the user. With the data now tailored to the needs of the end user, the results are visualised in a responsive HTML user interface that will look the part on desktop, tablet or mobile. <em>fin</em>.</p>
+
+<p>If you&rsquo;re interested in seeing the source code behind the app, you can check it over on <a href="https://github.com/PaulC91/crypto_tracker">github</a>.</p>
+
+<h3 id="why-am-i-telling-you-this">Why am I telling you this?</h3>
+
+<p>Good question! Well, if you&rsquo;ve made it this far, you might be interested in a bespoke web-application of your own. At Culture of Insight, we&rsquo;ve found that R usually succeeds where expensive off-the-shelf BI software falls short.</p>
+
+<p>We can build tools that <em>do things</em> with data rather than simply presenting it. So if you have any ideas that you think we could help with, please do <a href="https://cultureofinsight.com/contact/">get in touch</a>.</p>
+
+<p>Here&rsquo;s to the crypto being +20% rather than -20% today.</p>
+
+                        </div>
                         
                         
-                        <section class="post">
-                            <div class="row">
-                                <div class="col-md-4">
-                                  <div class="image">
-                                      <a href="/blog/2017/10/12/2017-10-12-how-market-research-can-tidy-up/">
-                                          
-                                          <img src="/img/data-science-pipeline.png" class="img-responsive" alt="">
-                                          
-                                      </a>
-                                  </div>
-                                </div>
-                                <div class="col-md-8">
-                                    <h2><a href="/blog/2017/10/12/2017-10-12-how-market-research-can-tidy-up/">How Market Research Can Tidy Up</a></h2>
-                                    <div class="clearfix">
-                                        <p class="author-category">
-                                          
-                                          By <a href="#">James Smythe</a>
-                                          
-                                          
-                                          
-                                          
 
-                                        </p>
-                                        <p class="date-comments">
-                                            <a href="/blog/2017/10/12/2017-10-12-how-market-research-can-tidy-up/"><i class="fa fa-calendar-o"></i> October 12, 2017</a>
-                                        </p>
-                                    </div>
-                                    <p class="intro">Synopsis Market Research is great at compiling the right data, but not so good at making it easy to use. This isn’t about “storytelling”. It’s about the data itself, and clarity on what delivering it actually means. Getting the data out of siloes like tabs and SPSS where it cannot adequately be mined, and out into the big wide world as Tidy Data.</p>
-                                    <p class="read-more"><a href="/blog/2017/10/12/2017-10-12-how-market-research-can-tidy-up/" class="btn btn-template-main">Continue reading</a>
-                                    </p>
-                                </div>
-                            </div>
-                        </section>
-                        
-
-                        <ul class="pager">
-                            
-                            <li class="previous disabled"><a href="#">&larr; Newer</a></li>
-                            
-
-                            
-                            <li class="next disabled"><a href="#">Older &rarr;</a></li>
-                            
-                        </ul>
                     </div>
                     
 
@@ -315,6 +318,7 @@
 
                 </div>
                 
+
             </div>
             
         </div>

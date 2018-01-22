@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/blog/2018/01/22/2018-01-22-building-a-cryptocurrency-tracker-with-r/</loc>
+    <lastmod>2018-01-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/blog/2018/01/17/2018-01-17-migrating-from-xcelsius-dashboards-on-a-budget/</loc>
     <lastmod>2018-01-17T00:00:00+00:00</lastmod>
   </url>
@@ -24,7 +29,7 @@
   
   <url>
     <loc>/blog/</loc>
-    <lastmod>2018-01-17T00:00:00+00:00</lastmod>
+    <lastmod>2018-01-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -39,13 +44,13 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2018-01-17T00:00:00+00:00</lastmod>
+    <lastmod>2018-01-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/tags/dashboards/</loc>
-    <lastmod>2018-01-17T00:00:00+00:00</lastmod>
+    <lastmod>2018-01-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -73,13 +78,13 @@
   
   <url>
     <loc>/tags/open-data/</loc>
-    <lastmod>2017-10-03T00:00:00+00:00</lastmod>
+    <lastmod>2018-01-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/tags/r/</loc>
-    <lastmod>2018-01-17T00:00:00+00:00</lastmod>
+    <lastmod>2018-01-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -91,13 +96,13 @@
   
   <url>
     <loc>/tags/shiny/</loc>
-    <lastmod>2018-01-17T00:00:00+00:00</lastmod>
+    <lastmod>2018-01-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/tags/</loc>
-    <lastmod>2018-01-17T00:00:00+00:00</lastmod>
+    <lastmod>2018-01-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   

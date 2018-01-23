@@ -5,6 +5,16 @@
 pre {
   background-color: #002b36;
   border: none;
+  font-size: 11px;
+}
+
+code {
+  font-size: 13px;
+  font-family: Iosevka, Inconsolata, monospace !important;
+}
+
+code.hljs {
+  font-family: Iosevka, Inconsolata, monospace !important;
 }
 
 /* Tomorrow Comment */

@@ -42,8 +42,10 @@
   
   <!-- highlight js script + css -->
   <link rel="stylesheet" href="{{"css/solarized-dark.css" | absURL}}" rel="stylesheet" id="theme-stylesheet">
+  <link rel="stylesheet" href="/css/iosevka.css" />
   <script src="{{ "js/highlight.pack.js" | absURL }}"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
+  <script>hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();</script>
 
   <!-- Responsivity for older IE -->
   {{ `

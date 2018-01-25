@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/blog/2018/01/25/2018-01-25-visualising-twitter-follower-overlap/</loc>
+    <lastmod>2018-01-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/blog/2018/01/22/2018-01-22-building-a-cryptocurrency-tracker-with-r/</loc>
     <lastmod>2018-01-22T00:00:00+00:00</lastmod>
   </url>
@@ -29,7 +34,7 @@
   
   <url>
     <loc>/blog/</loc>
-    <lastmod>2018-01-22T00:00:00+00:00</lastmod>
+    <lastmod>2018-01-25T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -44,7 +49,7 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2018-01-22T00:00:00+00:00</lastmod>
+    <lastmod>2018-01-25T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -78,13 +83,13 @@
   
   <url>
     <loc>/tags/open-data/</loc>
-    <lastmod>2018-01-22T00:00:00+00:00</lastmod>
+    <lastmod>2018-01-25T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/tags/r/</loc>
-    <lastmod>2018-01-22T00:00:00+00:00</lastmod>
+    <lastmod>2018-01-25T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -97,6 +102,12 @@
   <url>
     <loc>/tags/shiny/</loc>
     <lastmod>2018-01-22T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/social-media-analytics/</loc>
+    <lastmod>2018-01-25T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -115,6 +126,12 @@
   <url>
     <loc>/categories/tutorials/</loc>
     <lastmod>2018-01-05T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/web-scraping/</loc>
+    <lastmod>2018-01-25T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   

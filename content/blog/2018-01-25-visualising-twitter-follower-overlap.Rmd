@@ -1,0 +1,138 @@
+---
+title: Visualising Intersecting Sets Of Twitter Followers
+author: Paul Campbell
+date: '2018-01-25'
+slug: visualising-twitter-followers
+twitterImg: img/upsetr.png
+description: "Scraping twitter data to analyse follower cross-over"
+categories: []
+tags:
+  - open data
+  - web-scraping
+  - social-media-analytics
+  - R
+draft: true
+---
+
+### Twitter Analytics
+
+There has been a surge in a lot of great twitter analytics recently in the #rstats world, in part due to <a href="https://github.com/mkearney" target="_blank">Michael Kearney's</a> excellent <a href="https://github.com/mkearney/rtweet" target="blank">`rtweet`</a> package. It makes wrangling with the twitter API like water off a duck's back (twitter, bird, duck? sorry.). You almost feel like some sort of Zuckerberg-esque data tycoon when you realise the amount of data you can access with a few lines of code.
+
+If you're interested in doing some twitter scraping + visualising with R and want a top-notch resource, check out <a href="https://twitter.com/hrbrmstr" target="_blank">Bob Rudis'</a> work in progress <a href="https://rud.is/books/21-recipes/" target="blank">21 Recipes for Mining Twitter Data with rtweet</a>. Just like everything else Bob does, it's fantastic, and will get you from setting up your API token to making gorgeous network graphs in no time.
+
+---
+
+### UpSetR
+
+Today I won't be making a network graph, but something a bit different. I came across the <a href="https://github.com/hms-dbmi/UpSetR" target="blank">`UpSetR`</a> package a while ago and have been meaning to test it out for some time. It is a method for visualising _intersecting sets_. Sets are typically visualised with Venn diagrams, but these can become fairly illegible when _n_ sets starts creeping > 3. They also tend to consist of arbitrary assumptions with no underlying data behind the presumed intersections.
+
+<br>
+
+<a href="https://ironholds.org/arbitrary-things/" target="_blank"><img src="https://pbs.twimg.com/media/DK-zg_CWkAACTLc.jpg" alt="" style="display: block; margin: 0 auto;"></a>
+
+---
+
+### A better approach
+
+So let's combine some twitter scraping with _data driven_ intersecting set visualisation in the form of twitter follower overlap...
+
+`UpSetR` requires the data in a binary matrix format for it to compute the intersects, so we need to devise a method of creating one. To do so for a set of twitter handles we need to do the following:
+
+1. Scrape the `user_id` of every follower of each handle
+2. Create a de-duplicated master list of all followers
+3. For each handle, create a binary list indicating whether or not each follower in the master list follows that handle
+4. Combine the binary lists into one data frame
+
+---
+
+### Scraping the data we need
+
+I'm going to use a list of notable #rstats tweeters and `rtweets`'s `get_followers` function inside a `purrr::map_df` call to do this. Bear in mind that this can take some time depending on the number of followers you'll be requesting. Twitter rate limits cap the number of search results returned to 18,000 every 15 minutes. So if the `map` function will be requesting more than this, make sure you set `retryonratelimit = TRUE` and it will resume scraping when a fresh 15 minute window starts. Also, set `n = ...` to a number > than the max follower count for your selection of handles if you want to ensure you capture all followers.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message=FALSE, 
+                      fig.width = 10, fig.height = 6, fig.align = 'center',
+                      cache = TRUE)
+```
+
+```{r include=FALSE}
+library(rtweet)
+library(tidyverse)
+library(UpSetR)
+rstaters <- c("dataandme", "JennyBryan", "hrbrmstr", "xieyihui", "drob", "juliasilge", "thomasp85")
+
+followers <- readRDS("../../Data/blog_data/rstats_followers.rds") %>% filter(account %in% rstaters)
+```
+
+```{r eval=FALSE}
+library(rtweet)
+library(tidyverse)
+library(UpSetR)
+
+# get a list of twitter handles you want to compare (I left out Hadley because everyone follows him)
+rstaters <- c("dataandme", "JennyBryan", "hrbrmstr", "xieyihui", "drob", "juliasilge", "thomasp85")
+
+# scrape the user_id of all followers for each handle in the list and bind into 1 dataframe
+followers <- map_df(rstaters, ~ get_followers(.x, n = 20000, retryonratelimit = TRUE) %>% mutate(account = .x))
+```
+
+We should now have a long 2 column dataframe with `user_id` (followers) and the hande of who they are following in another. Let's take a peek.
+
+```{r}
+head(followers)
+tail(followers)
+```
+
+Onwards...
+
+---
+
+### Wrangling the data
+
+Now we form our binary matrix with another `map_df` function and `ifelse` statement, this time binding columns rather than rows.
+
+```{r}
+# get a de-duplicated list of all followers
+aRdent_followers <- unique(followers$user_id)
+
+# for each follower, get a binary indicator of whether they follow each tweeter or not and bind to one dataframe
+binaries <- rstaters %>% 
+  map_dfc(~ ifelse(aRdent_followers %in% filter(followers, account == .x)$user_id, 1, 0) %>% 
+            as.data.frame) # UpSetR doesn't like tibbles
+
+# set column names
+names(binaries) <- rstaters
+
+# have a look at the data
+head(binaries)
+```
+
+We can work with it...
+
+---
+
+### Plot with UpSetR
+
+Now the hard work is done we can plot our intersecting sets!
+
+```{r}
+# plot the sets with UpSetR
+upset(binaries, nsets = 7, main.bar.color = "SteelBlue", sets.bar.color = "DarkCyan", 
+      sets.x.label = "Follower Count", text.scale = c(rep(1.4, 5), 1), order.by = "freq")
+```
+
+This plot may require a bit of explanation (it took me a while figure what was going on). Basically, the bars on the bottom left show total follower count for each twitter handle (count of 1s in their binary list). The bars at the top show the count of the intersections denoted in the dot matrix below them. 
+
+So for columns in the matrix with only 1 dot, the bar above it shows the count of _unique_ (no intersection) followers that twitter has. This would be the outer area of a Venn diagram that has not intersected with anything else. Columns with 2 or more dots show the count of followers the dotted twitter handles share (intersecting sections of a Venn diagram). 
+
+I think it's an elegant way to visualise this informaiton. We can see that there is a high level of intersectionality between this group of tweeters with the number of followers who follow all 7 handles ranking highly on intersection size. Perhaps unsurprisingly, our biggest intersection is between StackOverflow's <a href="https://www.tidytextmining.com/" target="_blank">`TidyText`</a> dream team <a href="https://twitter.com/drob" target="_blank">David Robinson</a> (drob) & <a href="https://twitter.com/juliasilge" target="_blank">Julia Silge</a>. 
+
+What do you think? Love it? Hate it? Prefer a 7-way Venn? Let us know.
+
+---
+
+Thanks to the team behind UpSet, you can learn more about the project <a href="http://caleydo.org/tools/upset/" target="_blank">here.</a> 
+
+And as always, [get in touch](https://cultureofinsight.com/contact/) if you have any data projects you think we could help with!
+
+_¡Hasta luego!_

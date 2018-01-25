@@ -51,7 +51,7 @@
     <item>
       <title>Open Data</title>
       <link>/tags/open-data/</link>
-      <pubDate>Mon, 22 Jan 2018 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 25 Jan 2018 00:00:00 +0000</pubDate>
       
       <guid>/tags/open-data/</guid>
       <description></description>
@@ -60,7 +60,7 @@
     <item>
       <title>R</title>
       <link>/tags/r/</link>
-      <pubDate>Mon, 22 Jan 2018 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 25 Jan 2018 00:00:00 +0000</pubDate>
       
       <guid>/tags/r/</guid>
       <description></description>
@@ -85,11 +85,29 @@
     </item>
     
     <item>
+      <title>Social Media Analytics</title>
+      <link>/tags/social-media-analytics/</link>
+      <pubDate>Thu, 25 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/social-media-analytics/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Tidy Data</title>
       <link>/tags/tidy-data/</link>
       <pubDate>Thu, 12 Oct 2017 00:00:00 +0000</pubDate>
       
       <guid>/tags/tidy-data/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Web Scraping</title>
+      <link>/tags/web-scraping/</link>
+      <pubDate>Thu, 25 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/web-scraping/</guid>
       <description></description>
     </item>
     

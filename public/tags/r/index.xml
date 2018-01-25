@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2018 Culture of Insight. All Rights Reserved.</copyright>
-    <lastBuildDate>Mon, 22 Jan 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 25 Jan 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Visualising Intersecting Sets Of Twitter Followers</title>
+      <link>/blog/2018/01/25/2018-01-25-visualising-twitter-follower-overlap/</link>
+      <pubDate>Thu, 25 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/2018/01/25/2018-01-25-visualising-twitter-follower-overlap/</guid>
+      <description>Twitter AnalyticsThere has been a surge in a lot of great twitter analytics recently in the #rstats world, in part due to Michael Kearney’s excellent rtweet package. It makes wrangling with the twitter API like water off a duck’s back (twitter, bird, duck? sorry.). You almost feel like some sort of Zuckerberg-esque data tycoon when you realise the amount of data you can access with a few lines of code.</description>
+    </item>
     
     <item>
       <title>Building a Cryptocurrency Tracker with R</title>

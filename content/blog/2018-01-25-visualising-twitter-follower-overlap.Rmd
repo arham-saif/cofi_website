@@ -11,12 +11,12 @@ tags:
   - web-scraping
   - social-media-analytics
   - R
-draft: true
+draft: false
 ---
 
 ### Twitter Analytics
 
-There has been a surge in a lot of great twitter analytics recently in the #rstats world, in part due to <a href="https://github.com/mkearney" target="_blank">Michael Kearney's</a> excellent <a href="https://github.com/mkearney/rtweet" target="blank">`rtweet`</a> package. It makes wrangling with the twitter API like water off a duck's back (twitter, bird, duck? sorry.). You almost feel like some sort of Zuckerberg-esque data tycoon when you realise the amount of data you can access with a few lines of code.
+There has been a surge in a lot of great twitter analytics recently in the #rstats world, in part due to <a href="https://twitter.com/kearneymw" target="_blank">Michael Kearney's</a> excellent <a href="https://github.com/mkearney/rtweet" target="blank">`rtweet`</a> package. It makes wrangling with the twitter API like water off a duck's back (twitter, bird, duck? sorry). You almost feel like some sort of Zuckerberg-esque data tycoon when you realise the amount of data you can access with a few lines of code.
 
 If you're interested in doing some twitter scraping + visualising with R and want a top-notch resource, check out <a href="https://twitter.com/hrbrmstr" target="_blank">Bob Rudis'</a> work in progress <a href="https://rud.is/books/21-recipes/" target="blank">21 Recipes for Mining Twitter Data with rtweet</a>. Just like everything else Bob does, it's fantastic, and will get you from setting up your API token to making gorgeous network graphs in no time.
 

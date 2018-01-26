@@ -277,9 +277,16 @@ upset(binaries, nsets = 7, main.bar.color = &quot;SteelBlue&quot;, sets.bar.colo
 <p><img src="/blog/2018-01-25-visualising-twitter-follower-overlap_files/figure-html/unnamed-chunk-5-1.png" width="960" style="display: block; margin: auto;" /></p>
 <p>This plot may require a bit of explanation (it took me a while figure what was going on). Basically, the bars on the bottom left show total follower count for each twitter handle (count of 1s in their binary list). The bars at the top show the count of the intersections denoted in the dot matrix below them.</p>
 <p>So for columns in the matrix with only 1 dot, the bar above it shows the count of <em>unique</em> (no intersection) followers that twitter has. This would be the outer area of a Venn diagram that has not intersected with anything else. Columns with 2 or more dots show the count of followers the dotted twitter handles share (intersecting sections of a Venn diagram).</p>
-<p>I think it’s an elegant way to visualise this informaiton. We can see that there is a high level of intersectionality between this group of tweeters with the number of followers who follow all 7 handles ranking highly on intersection size. Perhaps unsurprisingly, our biggest intersection is between StackOverflow’s <a href="https://www.tidytextmining.com/" target="_blank"><code>TidyText</code></a> dream team <a href="https://twitter.com/drob" target="_blank">David Robinson</a> (drob) &amp; <a href="https://twitter.com/juliasilge" target="_blank">Julia Silge</a>.</p>
-<p>What do you think? Love it? Hate it? Prefer a 7-way Venn? Let us know.</p>
+<p>I think it’s an elegant way to visualise this informaiton. What can we learn from it?</p>
+</div>
+<div id="insight" class="section level3">
+<h3>Insight</h3>
+<p>It may be interesting to note that <a href="https://twitter.com/dataandme" target="_blank">Mara Averick</a> (dataandme), despite having the highest follower count, does not feature in the top 3 intersections, perhaps showing that her following is more diverse and reaches out behind the core #rstats niche.</p>
+<p>Similarly, <a href="https://twitter.com/hrbrmstr" target="_blank">Bob Rudis</a> (hrbrmstr) looks to be the least ‘intersected’ tweeter of this group, with highest <em>proportion</em> of unique followers.</p>
+<p>Conversely, <a href="https://twitter.com/thomasp85" target="_blank">Thomas Lin Pedersen’s</a> (thomasp85) following is more likely to intersect with the other tweeters; we can see that his number of unique followers is only a fraction higher than the number that also follow <em>all 6 of the others.</em></p>
+<p>Perhaps unsurprisingly, our biggest intersection is between StackOverflow’s <a href="https://www.tidytextmining.com/" target="_blank"><code>TidyText</code></a> dream team <a href="https://twitter.com/drob" target="_blank">David Robinson</a> (drob) &amp; <a href="https://twitter.com/juliasilge" target="_blank">Julia Silge</a>.</p>
 <hr />
+<p>What do you think? Love it? Hate it? Prefer a 7-set Venn? Let us know.</p>
 <p>Thanks to the team behind UpSet, you can learn more about the project <a href="http://caleydo.org/tools/upset/" target="_blank">here.</a></p>
 <p>And as always, <a href="https://cultureofinsight.com/contact/">get in touch</a> if you have any data projects you think we could help with!</p>
 <p><em>¡Hasta luego!</em></p>

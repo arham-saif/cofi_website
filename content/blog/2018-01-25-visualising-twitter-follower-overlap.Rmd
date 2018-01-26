@@ -125,13 +125,23 @@ This plot may require a bit of explanation (it took me a while figure what was g
 
 So for columns in the matrix with only 1 dot, the bar above it shows the count of _unique_ (no intersection) followers that twitter has. This would be the outer area of a Venn diagram that has not intersected with anything else. Columns with 2 or more dots show the count of followers the dotted twitter handles share (intersecting sections of a Venn diagram). 
 
-I think it's an elegant way to visualise this informaiton. We can see that there is a high level of intersectionality between this group of tweeters with the number of followers who follow all 7 handles ranking highly on intersection size. Perhaps unsurprisingly, our biggest intersection is between StackOverflow's <a href="https://www.tidytextmining.com/" target="_blank">`TidyText`</a> dream team <a href="https://twitter.com/drob" target="_blank">David Robinson</a> (drob) & <a href="https://twitter.com/juliasilge" target="_blank">Julia Silge</a>. 
+I think it's an elegant way to visualise this informaiton. What can we learn from it? 
 
-What do you think? Love it? Hate it? Prefer a 7-way Venn? Let us know.
+### Insight
+
+It may be interesting to note that <a href="https://twitter.com/dataandme" target="_blank">Mara Averick</a> (dataandme), despite having the highest follower count, does not feature in the top 3 intersections, perhaps showing that her following is more diverse and reaches out behind the core #rstats niche. 
+
+Similarly, <a href="https://twitter.com/hrbrmstr" target="_blank">Bob Rudis</a> (hrbrmstr) looks to be the least 'intersected' tweeter of this group, with highest _proportion_ of unique followers.
+
+Conversely, <a href="https://twitter.com/thomasp85" target="_blank">Thomas Lin Pedersen's</a> (thomasp85) following is more likely to intersect with the other tweeters; we can see that his number of unique followers is only a fraction higher than the number that also follow _all 6 of the others._
+
+Perhaps unsurprisingly, our biggest intersection is between StackOverflow's <a href="https://www.tidytextmining.com/" target="_blank">`TidyText`</a> dream team <a href="https://twitter.com/drob" target="_blank">David Robinson</a> (drob) & <a href="https://twitter.com/juliasilge" target="_blank">Julia Silge</a>. 
 
 ---
 
-Thanks to the team behind UpSet, you can learn more about the project <a href="http://caleydo.org/tools/upset/" target="_blank">here.</a> 
+What do you think? Love it? Hate it? Prefer a 7-set Venn? Let us know.
+
+Thanks to the team behind UpSet, you can learn more about the project <a href="http://caleydo.org/tools/upset/" target="_blank">here.</a>
 
 And as always, [get in touch](https://cultureofinsight.com/contact/) if you have any data projects you think we could help with!
 

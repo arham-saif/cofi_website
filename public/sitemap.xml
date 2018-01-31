@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/blog/2018/01/31/2018-01-31-map-your-google-location-data-with-r-shiny/</loc>
+    <lastmod>2018-01-31T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/blog/2018/01/25/2018-01-25-visualising-twitter-follower-overlap/</loc>
     <lastmod>2018-01-25T00:00:00+00:00</lastmod>
   </url>
@@ -34,7 +39,7 @@
   
   <url>
     <loc>/blog/</loc>
-    <lastmod>2018-01-25T00:00:00+00:00</lastmod>
+    <lastmod>2018-01-31T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -49,7 +54,7 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2018-01-25T00:00:00+00:00</lastmod>
+    <lastmod>2018-01-31T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -61,7 +66,7 @@
   
   <url>
     <loc>/tags/data-visualisation/</loc>
-    <lastmod>2017-10-12T00:00:00+00:00</lastmod>
+    <lastmod>2018-01-31T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -77,7 +82,7 @@
   
   <url>
     <loc>/tags/mapping/</loc>
-    <lastmod>2017-10-03T00:00:00+00:00</lastmod>
+    <lastmod>2018-01-31T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -89,7 +94,7 @@
   
   <url>
     <loc>/tags/r/</loc>
-    <lastmod>2018-01-25T00:00:00+00:00</lastmod>
+    <lastmod>2018-01-31T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -101,7 +106,7 @@
   
   <url>
     <loc>/tags/shiny/</loc>
-    <lastmod>2018-01-22T00:00:00+00:00</lastmod>
+    <lastmod>2018-01-31T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   

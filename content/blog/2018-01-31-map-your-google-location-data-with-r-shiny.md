@@ -56,7 +56,7 @@ myData <- locationdata$locations %>%
 
 ## Mutating the Google variables to be more viz-friendly
 
-For reasons I didn't tax my brain with, the latitude and logitude co-ordinates are multiplied to the power of 7, so that needed undoing to create standard co-ordinates for mapping. The clue was in the `E7` bit, and R helpfully just allowed me to divide by `1E7`. Then the timestamp needed converting from milliseconds (eat my dust, Jack Bauer), stored first as a string, into numbers and then a more readable date/time format.
+For reasons I didn't tax my brain with, the latitude and logitude co-ordinates are saved in the E7 format, so that needed undoing to create standard GPS co-ordinates for mapping. In R, this is easily adjusted by dividing by `1E7`. Then the timestamp needed converting from UNIX millisecond format (eat my dust, Jack Bauer), stored first as a string, into numbers and then a more readable date/time format.
 
 ```{r}
 myDataClean <- myData %>%

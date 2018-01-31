@@ -225,7 +225,7 @@ myData &lt;- locationdata$locations %&gt;%
 
 <h2 id="mutating-the-google-variables-to-be-more-viz-friendly">Mutating the Google variables to be more viz-friendly</h2>
 
-<p>For reasons I didn&rsquo;t tax my brain with, the latitude and logitude co-ordinates are multiplied to the power of 7, so that needed undoing to create standard co-ordinates for mapping. The clue was in the <code>E7</code> bit, and R helpfully just allowed me to divide by <code>1E7</code>. Then the timestamp needed converting from milliseconds (eat my dust, Jack Bauer), stored first as a string, into numbers and then a more readable date/time format.</p>
+<p>For reasons I didn&rsquo;t tax my brain with, the latitude and logitude co-ordinates are saved in the E7 format, so that needed undoing to create standard GPS co-ordinates for mapping. In R, this is easily adjusted by dividing by <code>1E7</code>. Then the timestamp needed converting from UNIX millisecond format (eat my dust, Jack Bauer), stored first as a string, into numbers and then a more readable date/time format.</p>
 
 <pre><code class="language-r">myDataClean &lt;- myData %&gt;%
   mutate(lat = latitudeE7 / 1E7, lon = longitudeE7 / 1E7) %&gt;% 

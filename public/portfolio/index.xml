@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Portfolios on Culture of Insight</title>
+    <link>/portfolio/</link>
+    <description>Recent content in Portfolios on Culture of Insight</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2018 Culture of Insight. All Rights Reserved.</copyright>
+    <lastBuildDate>Mon, 19 Feb 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/portfolio/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Interactive UK Election Dot Density Map</title>
+      <link>/portfolio/dotmap/</link>
+      <pubDate>Mon, 19 Feb 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/portfolio/dotmap/</guid>
+      <description>Shiny App that visualises the density of electoral votes for each party in 2017 and 2015 General Elections as well as the EU Referendum.</description>
+    </item>
+    
+    <item>
+      <title>Antivia Decision-Point Dashboard Catalog</title>
+      <link>/portfolio/antivia/</link>
+      <pubDate>Sun, 18 Feb 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/portfolio/antivia/</guid>
+      <description>Use username: culture password: insight to log into our public Decision-Point catalog and check out some of our example dashboards.</description>
+    </item>
+    
+  </channel>
+</rss>

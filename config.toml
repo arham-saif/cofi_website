@@ -24,14 +24,19 @@ paginate = 10
     weight = 1
     
 [[menu.main]]
-    name = "Contact"
-    url  = "/contact/"
+    name = "Portfolio"
+    url  = "/portfolio/"
     weight = 3
-
+    
 [[menu.main]]
     name = "Blog"
     url  = "/blog/"
     weight = 2
+    
+[[menu.main]]
+    name = "Contact"
+    url  = "/contact/"
+    weight = 4
 
 #[[menu.main]]
  #   name = "<i class='fa fa-2x fa-linkedin'></i>"
@@ -147,11 +152,13 @@ paginate = 10
     enable = true
     icon = "fa fa-share-alt"
     title = "Do you want to see more?"
-    subtitle = "To see some examples of our work and side-projects, visit our blog or have a flick through our company presentation..."
+    subtitle = "To see some examples of our work and side-projects, visit our blog, check out our public portfolio or have a flick through our company presentation..."
     link_url = "/blog/"
     link_text = "Check Out Our Blog!"
-    link_url_2 = "/presentation/"
-    link_text_2 = "Presentation Slides"
+    link_url_2 = "/portfolio/"
+    link_text_2 = "Public Portfolio"
+    link_url_3 = "/presentation/"
+    link_text_3 = "Presentation Slides"
 
 [params.clients]
     enable = true

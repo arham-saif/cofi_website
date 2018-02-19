@@ -3,6 +3,16 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/portfolio/dotmap/</loc>
+    <lastmod>2018-02-19T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/portfolio/antivia/</loc>
+    <lastmod>2018-02-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/blog/2018/01/31/2018-01-31-map-your-google-location-data-with-r-shiny/</loc>
     <lastmod>2018-01-31T00:00:00+00:00</lastmod>
   </url>
@@ -54,7 +64,7 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2018-01-31T00:00:00+00:00</lastmod>
+    <lastmod>2018-02-19T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -89,6 +99,12 @@
   <url>
     <loc>/tags/open-data/</loc>
     <lastmod>2018-01-25T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/portfolio/</loc>
+    <lastmod>2018-02-19T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   

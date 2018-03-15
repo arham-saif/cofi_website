@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2018 Culture of Insight. All Rights Reserved.</copyright>
-    <lastBuildDate>Mon, 19 Feb 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 15 Mar 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Responsive iframes for Shiny Apps</title>
+      <link>/blog/2018/03/15/2018-03-15-responsive-iframes-for-shiny-apps/</link>
+      <pubDate>Thu, 15 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/2018/03/15/2018-03-15-responsive-iframes-for-shiny-apps/</guid>
+      <description>Getting Shiny out into the wild Shiny has really changed game in terms of analytical web-application development. It allows analysts, researchers, scientists, or anyone who has a solid grasp of R programming to build their own highly bespoke web-apps to explore and communicate their data, without having to employ the help of front-end developers or data engineers. You can get production quality apps and dashboards up and running in days rather than months, and be in complete control of the process yourself.</description>
+    </item>
     
     <item>
       <title>Interactive UK Election Dot Density Map</title>

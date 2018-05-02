@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ggplot2 on Culture of Insight</title>
+    <link>/tags/ggplot2/</link>
+    <description>Recent content in Ggplot2 on Culture of Insight</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2018 Culture of Insight. All Rights Reserved.</copyright>
+    <lastBuildDate>Tue, 10 Apr 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/ggplot2/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Multivariate Dot-Density Maps in R with sf &amp; ggplot2</title>
+      <link>/blog/2018/04/10/2018-04-08-multivariate-dot-density-maps-in-r-with-sf-ggplot2/</link>
+      <pubDate>Tue, 10 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/2018/04/10/2018-04-08-multivariate-dot-density-maps-in-r-with-sf-ggplot2/</guid>
+      <description>BackgroundLast June I did a blog post about building dot-denisty maps in R using UK Census data. It has proven to be a fairly popular post, most likely due to the maps looking like something you’re more likely to see in the Tate Modern…
+There seems to have been a recent surge of interest in this type of mapping, largely due to this xkcd interpretation of the 2016 US Election…</description>
+    </item>
+    
+  </channel>
+</rss>

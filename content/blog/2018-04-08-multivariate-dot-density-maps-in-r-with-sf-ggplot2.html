@@ -1,0 +1,183 @@
+---
+title: Multivariate Dot-Density Maps in R with sf & ggplot2
+author: Paul Campbell
+date: '2018-04-10'
+slug: multivariate-dot-density-maps-in-r-with-sf-ggplot2
+twitterImg: img/party_points.png
+categories:
+  - Tutorials
+tags:
+  - R
+  - mapping
+  - data visualisation
+  - open data
+draft: true
+---
+
+
+
+<div id="background" class="section level2">
+<h2>Background</h2>
+<p>Last June I did a <a href="https://www.blog.cultureofinsight.com/2017/06/building-dot-density-maps-with-uk-census-data-in-r/" target="_blank">blog post</a> about building dot-denisty maps in R using UK Census data. It has proven to be a fairly popular post, most likely due to the maps looking like something you’re more likely to see in the Tate Modern…</p>
+<p><img src="https://www.blog.cultureofinsight.com/post/2017-05-22-building-dot-density-maps-with-uk-census-data-in-r_files/figure-html/unnamed-chunk-8-1.png" alt = "R dot density map" width="100%"></p>
+<p>There seems to have been a recent surge of interest in this type of mapping, largely due to this xkcd interpretation of the 2016 US Election…</p>
+<blockquote class="twitter-tweet tw-align-center" data-lang="en">
+<p lang="en" dir="ltr">
+This map is a brilliant data visualization. Here's a brief thread on why it's so much better than past efforts. <a href="https://t.co/HiEIxZu2wK">https://t.co/HiEIxZu2wK</a> <a href="https://t.co/52wusPMrPB">pic.twitter.com/52wusPMrPB</a>
+</p>&mdash; Alan Cole (@AlanMCole) <a href="https://twitter.com/AlanMCole/status/950415038506037254?ref_src=twsrc%5Etfw">
+January 8, 2018</a>
+</blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p><br></p>
+<p>Now I’m not going to take <em>all</em> the credit for this new wave of dot-density enthusiasm… but it’s great to see it gaining more traction as a method for visualising spatial data.</p>
+<p>The pièce de résistance of this method of mapping is that it does not suffer from the tendency of over-emphasising the influence of large, yet sparsely populated areas, as colour-coverage is dictated by count, not area size.</p>
+<p>When applied to election mapping, this gives a fairer assessment of the ‘popular vote’ when compared to a standard Choropleth map that fills entire regions with the colour of the winning party, regardless of how close the contest was or how many people voted.</p>
+<p>For a more enlightented discussion on the troubles and strifes of accurate mapping, check out the <a href="https://www.ft.com/content/65b5df0e-49ff-11e8-8ee8-cae73aab7ccb" target="_blank">latest FT chart doctor article</a>, where the <a href="https://twitter.com/theboysmithy" target="_blank">FT’s Alan Smith</a> talks with professor Mark Monmonier, author of the classic book <em>How to Lie With Maps</em>. (while you’re at it, have a look at <a href="https://twitter.com/sdbernard" target="_blank">Steven Bernard’s</a> piece on how the FT’s always-on-point maps are made <a href="https://www.ft.com/content/35188c6a-4870-11e8-8ee8-cae73aab7ccb" target="_blank">here</a>).</p>
+<hr />
+</div>
+<div id="rs-new-spatial-workflow" class="section level2">
+<h2>R’s New Spatial Workflow</h2>
+<p>With all of this in mind, I thought it would be a good time to update the previous blog post, this time utilising the relatively new <a href="https://r-spatial.github.io/sf/" target="_blank">simple features (sf) R package</a>. sf makes it a lot easier to do geospatial analysis within a <em>tidy framework</em>, ergo making it work seamlessly with the tidyverse, as all geospatial data is bundled into a list and treated as a single observation of a geographic variable in a data frame.</p>
+<p>This means we can go from raw data -&gt; dot density map with a lot less code and stress than ever before. So here’s a quick demo of how to get it done, this time as a map of 2016 UK General Election results in London Constituancies…</p>
+<hr />
+</div>
+<div id="load-packages-and-get-some-data" class="section level2">
+<h2>Load Packages and Get Some Data</h2>
+<p>First lets get some election data and a constituency level shapefile then select/rename the columns we need in each and join them together.</p>
+<p>I filter each dataset to the London region but if you’re doing this yourself and want to map another region, you can simply switch London out for the region of your choice and continue on.</p>
+<pre class="r"><code>library(tidyverse) # dev version of ggplot2 required devtools::install_github(&#39;hadley/ggplot2&#39;)
+library(sf)
+extrafont::loadfonts(&quot;win&quot;)
+
+# election results filtered to London region
+ge_data &lt;- read_csv(&quot;http://researchbriefings.files.parliament.uk/documents/CBP-7979/HoC-GE2017-constituency-results.csv&quot;) %&gt;% 
+  filter(region_name == &quot;London&quot;) %&gt;% 
+  select(ons_id, constituency_name, first_party, Con = con, Lab = lab, LD = ld, UKIP = ukip, Green = green)
+
+# shapefile filtered to London region
+# data available here: https://www.dropbox.com/s/4iajcx25grpx5qi/uk_650_wpc_2017_full_res_v1.8.zip?dl=0
+uk &lt;- st_read(&quot;../../data/blog_data/uk_650_wpc_2017_full_res_v1.8.shp&quot;, 
+              stringsAsFactors = FALSE, quiet = TRUE) %&gt;% 
+  st_transform(4326) %&gt;% 
+  filter(REGN == &quot;London&quot;) %&gt;% 
+  select(ons_id = PCONCODE)
+
+# merge the data
+sf_data &lt;- left_join(ge_data, uk) %&gt;% 
+  st_as_sf() # sf class is lost after join so make sf object again
+
+head(sf_data)</code></pre>
+<pre><code>## Simple feature collection with 6 features and 8 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: -0.2050868 ymin: 51.34552 xmax: 0.2176442 ymax: 51.56706
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+## # A tibble: 6 x 9
+##   ons_id   constituency_name     first_party   Con   Lab    LD  UKIP Green
+##   &lt;chr&gt;    &lt;chr&gt;                 &lt;chr&gt;       &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
+## 1 E140005~ Barking               Lab         10711 32319   599  3031   724
+## 2 E140005~ Battersea             Lab         22876 25292  4401   357   866
+## 3 E140005~ Beckenham             Con         30632 15545  4073     0  1380
+## 4 E140005~ Bermondsey and Old S~ Lab          7581 31161 18189   838   639
+## 5 E140005~ Bethnal Green and Bow Lab          7576 42969  2982   894  1516
+## 6 E140005~ Bexleyheath and Cray~ Con         25113 16040  1201  1944   601
+## # ... with 1 more variable: geometry &lt;MULTIPOLYGON [Â°]&gt;</code></pre>
+<hr />
+</div>
+<div id="generating-coordinates-for-each-dot" class="section level2">
+<h2>Generating Coordinates for each Dot</h2>
+<p>Here we create a data frame with the number of dots we want plotted in each constituency for each party. Dividing total vote count by 100 means that each dot will represent 100 votes. Then we plug this data into a <code>purrr::map_df</code> call and let it pipe it’s way to a nice tidy tibble with coordinates columns and a categorical column for the politcal party assignment of each dot.</p>
+<p>It took me a while to figure how to do this is in one pipe. The tricky part was realising that the ‘geometry set’ produced after the <code>st_sample</code> stage (generation of coordinates) has the top level ‘geometry type’ of <code>GEOMETRY</code> but in order for us to be able to scrape the the coordinates with the <code>st_coordinates</code> function, we must first simplify the geometry type to <code>POINT</code> with <code>st_cast</code> function…</p>
+<pre class="r"><code># data frame of number of dots to plot for each party (1 for every 100 votes)
+num_dots &lt;- ceiling(select(as.data.frame(sf_data), Con:Green) / 100)
+
+# generates data frame with coordinates for each point + what party it is assiciated with
+sf_dots &lt;- map_df(names(num_dots), 
+                  ~ st_sample(sf_data, size = num_dots[,.x], type = &quot;random&quot;) %&gt;% # generate the points in each polygon
+                    st_cast(&quot;POINT&quot;) %&gt;%                                          # cast the geom set as &#39;POINT&#39; data
+                    st_coordinates() %&gt;%                                          # pull out coordinates into a matrix
+                    as_tibble() %&gt;%                                               # convert to tibble
+                    setNames(c(&quot;lon&quot;,&quot;lat&quot;)) %&gt;%                                  # set column names
+                    mutate(Party = factor(.x, levels = names((num_dots))))        # add categorical party variable
+                  ) # map_df then binds each party&#39;s tibble into one
+
+head(sf_dots)</code></pre>
+<pre><code>## # A tibble: 6 x 3
+##      lon   lat Party
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;
+## 1 0.102   51.5 Con  
+## 2 0.0992  51.5 Con  
+## 3 0.149   51.6 Con  
+## 4 0.0724  51.5 Con  
+## 5 0.110   51.5 Con  
+## 6 0.0958  51.5 Con</code></pre>
+<pre class="r"><code>tail(sf_dots)</code></pre>
+<pre><code>## # A tibble: 6 x 3
+##      lon   lat Party
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;
+## 1 -0.249  51.4 Green
+## 2 -0.228  51.4 Green
+## 3 -0.243  51.4 Green
+## 4 -0.200  51.4 Green
+## 5 -0.215  51.4 Green
+## 6 -0.204  51.4 Green</code></pre>
+<p>We’re now ripe for plotting with <code>ggplot2</code>.</p>
+<hr />
+</div>
+<div id="visualise-the-votes" class="section level2">
+<h2>Visualise the Votes</h2>
+<p>Here’s my <code>ggplot2</code> code for the map output. Plotting this many points on a standard sized plot image won’t be particularly insightful as there will be severe over-plotting. So play around with your image size until it’s looking good, then adjust the text and legend sizes to compensate for the enlarged plot</p>
+<pre class="r"><code># colour palette for our party points
+pal &lt;- c(&quot;Con&quot; = &quot;#0087DC&quot;, &quot;Lab&quot; = &quot;#DC241F&quot;, &quot;LD&quot; = &quot;#FCBB30&quot;, &quot;UKIP&quot; = &quot;#70147A&quot;, &quot;Green&quot; = &quot;#78B943&quot;)
+
+# plot it and save as png big enough to avoid over-plotting of the points
+p &lt;- ggplot() +
+  geom_sf(data = sf_data, fill = &quot;transparent&quot;,colour = &quot;white&quot;) +
+  geom_point(data = sf_dots, aes(lon, lat, colour = Party)) +
+  scale_colour_manual(values = pal) +
+  scale_fill_manual(values = pal2, name = &quot;Winning Party&quot;) +
+  coord_sf(crs = 4326, datum = NA) +
+  theme_void(base_family = &quot;Iosevka&quot;, base_size = 48) +
+  labs(x = NULL, y = NULL,
+       title = &quot;UK General Election 2017\n&quot;,
+       subtitle = &quot;London Constituencies\n1 dot = 100 votes&quot;,
+       caption = &quot;Map by Culture of Insight @PaulCampbell91 | Data Sources: House of Commons Library, Alasdair Rae&quot;) +
+  guides(colour = guide_legend(override.aes = list(size = 18))) +
+  theme(legend.position = c(0.82, 1.03), legend.direction = &quot;horizontal&quot;,
+        plot.background = element_rect(fill = &quot;#212121&quot;, color = NA), 
+        panel.background = element_rect(fill = &quot;#212121&quot;, color = NA),
+        legend.background = element_rect(fill = &quot;#212121&quot;, color = NA),
+        legend.key = element_rect(fill = &quot;#212121&quot;, colour = NA),
+        plot.margin = margin(1, 1, 1, 1, &quot;cm&quot;),
+        text =  element_text(color = &quot;white&quot;),
+        title =  element_text(color = &quot;white&quot;),
+        plot.title = element_text(hjust = 0.5),
+        plot.caption = element_text(size = 32)
+  )
+
+ggsave(&quot;../../static/img/party_points.png&quot;, plot = p, dpi = 320, width = 80, height = 70, units = &quot;cm&quot;)</code></pre>
+<p>The results should look something like this…</p>
+<p><img src="/img/party_points.png" alt="R sf dot density election map london UK" width="100%" /></p>
+<p>We can compare it to a choropleth map of London seat winners…</p>
+<pre class="r"><code>ggplot() +
+  geom_sf(data = sf_data, aes(fill = first_party), colour = &quot;white&quot;) +
+  scale_fill_manual(values = pal, name = &quot;Seat Winner&quot;) +
+  coord_sf(crs = 4326, datum = NA) +
+  theme_void() +
+  theme(legend.position = c(0.8, 0.9), legend.direction = &quot;horizontal&quot;)</code></pre>
+<p><img src="/blog/2018-04-08-multivariate-dot-density-maps-in-r-with-sf-ggplot2_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>What do we think is the most insightful map? Luckily we don’t have to choose one or the other, can use both! No one map will be able to give the you all the answers so I find that it’s best to combine techniques for maximum insight. The choropleth gives us a clear indication as to who won where, and the dot-density looks under the hood and gives us an idea of the count and diversity of votes within each constituency.</p>
+<hr />
+</div>
+<div id="a-few-shout-outs" class="section level2">
+<h2>A few shout outs</h2>
+<ul>
+<li>Thanks to the FT data visualisation team for always inspiring with stellar maps and graphics</li>
+<li><a href="https://twitter.com/undertheraedar" target="_blank">Alasdair Rae</a> for his <a href="https://www.dropbox.com/s/4iajcx25grpx5qi/uk_650_wpc_2017_full_res_v1.8.zip?dl=0" target="_blank">UK Constinuencies shapefile</a></li>
+<li><a href="https://twitter.com/traffordDataLab" target="_blank">The Trafford Data Lab</a> for getting in touch regarding their use of our old dot-density tutorial and <a href="https://www.trafforddatalab.io/info/demographics/ethnicity/index.html" target="_blank">their code</a> that helped a lot in converting it to an this sf-friendly version</li>
+<li>Donald Trump, who’s love of a certain choropleth map has triggered the desire for better election maps everywhere</li>
+</ul>
+<hr />
+<p><em>Ci vediamo dopo!</em></p>
+</div>

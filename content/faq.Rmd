@@ -1,0 +1,99 @@
+---
+title: "FAQ"
+description: "Frequently asked questions"
+output:
+  blogdown::html_page:
+    toc: true
+---
+
+---
+
+## What’s an app?
+
+By Apps, we mean online, responsive visualisation tools created with data on one topic. For example, a tool which allows you to track product sales over time, analyse the results of a brand tracker or compare your web audiences to those of your rivals. These work on PCs/laptops, tablets or mobiles with any operating system and HTML5 browsers.
+We create apps for companies like News UK, Exterion Media and the FT.
+
+## What’s a portal?
+
+By Portals, we just mean a collection of apps and other web-based content in a single web interface. This might be one or two apps we’ve built for you, together with apps you’ve built elsewhere, CRM systems, document libraries etc. These can be accessed within a single website structure or a catalogue of apps. We create and manage portals for companies like Formula 1, Hearst Magazines, and A&E Networks.
+
+## Security, users and logins
+
+Whether it’s a portal or an app, these are hosted online with SSL (HTTPS) encryption, and accessed online by users with a secure login that gives them individual permissions that you decide, to access specific data.
+Apps can be made “open”, i.e. without the need for a login, if you want to share them publicly for marketing (see [insight.exterionmedia.com](http://insight.exterionmedia.com) for an example)
+
+User-level permissions mean that if we restrict part of your data or whole apps to specific users, others without the same permissions can’t gain access. Apps can be submitted to PEN testing by your IT Security team if this reassurance is needed.
+
+Unlike off-the-shelf dashboard tools like Tableau, we don’t charge on a per-user basis, so licensing will cost the same if it’s accessible to 10 people or 1,000, inside or outside your company.
+
+## GDPR
+
+We put security and privacy first in our handling of data, and you can read our GDPR policy here. However, our apps do not hold Personally Identifiable Information, so the risks of Data Privacy failures of that type are avoided. Market Research data in apps is aggregated to the point where anonymity is guaranteed, as per Market Research Society codes.
+
+Business-critical or sensitive data, which may be stored in your apps and portals, is handled to a similarly high standard. You can get data removed on request, and be sure that your data won’t be visible to the wrong users, or those without a login.
+
+## What kind of data can we put in?
+
+We have a decade of experience in building apps for data, having delivered in the region of 1,500 separate visualisation tools over this period. So you can basically include anything. We have extensive experience with the following types of data:-
+
+* Ad-hoc market research studies
+* Sales data
+* Syndicated data
+* Brand trackers
+* TV and other media audience data
+* Web analytics
+* Research libraries (searchable and downloadable archives of PDF, PPT, XLS, DOC files etc)
+* Video
+
+## How do we add data?
+
+For most of our clients, our service is as much about data management, cleaning and merging as it is about building tools to access it. So typically, we receive raw data from clients via secure interfaces (SFTP, Wetransfer, Dropbox), process it, add to your online apps, and check it is behaving as expected.
+
+To make the data delivery process as simple as possible for our clients, we work with whatever format you have it in, and design repeatable and secure code-based processes to format it for the apps. This means the update process is quick, low maintenance and extremely robust.
+
+Fully DIY-administered systems with support are also provided, where the client wishes to bypass us and load data directly. We provide training, and are always available if problems occur.
+
+## What technology do we use?
+
+Most of our apps are built using either R Shiny or Antivia DecisionPoint. Each has its benefits depending on the brief, and both allow scaleable, robust and highly secure tools to be developed without the astronomical licensing fees or IT requirements of Tableau and its rivals.
+
+## How do users access the data they need?
+
+We design common-sense user interfaces, with the principle that they should require no training to use.
+
+Typically, users navigate to a data topic via a simple menu, then set parameters with various buttons, text inputs and drop-downs. Data can be viewed in appropriate chart types or as tables. Each app’s user experience is developed and tested with ordinary users to replicate how they like to search.
+
+Each chart or table can then be downloaded to Excel/CSV, to your own branded PowerPoint template or to PDF for use outside the app or portal.
+
+## How are the apps and portals hosted and accessed?
+
+Hosting is always on SSL encrypted (HTTPS) servers. You can choose a custom URL, or embed apps within your own website in an iFrame. Due to the specific software required to make the applications work securely, the apps themselves are usually hosted on a secure cloud server rather than your own webserver, and use their own set of user permissions and logins.
+
+For enterprise-level requirements, we can arrange on-premise hosting for clients, where the clients are able to provide their own licenced servers.
+
+## How do you track usage?
+
+Google Analytics or other tracking codes can be incorporated into your apps or portals to measure user activity by app. We can even build an app to report back the usage data!
+
+## How are projects managed?
+
+Each project follows a clear plan as far as possible, from a thorough briefing document, review of data, app versions and refinement, user testing and final sign off. Experience tells us that requirements always evolve, as clients become aware of new things they could do, so our project management remains as agile as timings and resources permit. This ensures you get an app you can be really proud of, and which makes a real difference to its users’ work.
+
+Many projects include a build phase and ongoing maintenance, where we help you refresh the app and keep it current with newly released data. This ensures that our apps and portals become a long-term tool for making data more valuable and effective to our clients.
+
+## How much do projects cost?
+
+Projects contain the following cost elements:-
+
+* Licensing costs, to cover our infrastructure maintenance and software costs. Typically between £2k and £7k a year depending on the number of apps being run.
+* Project build costs, charged on a £950/day basis and clearly defined up front. This covers the design of the data management process and writing repeatable code for upkeep; building the data queries to feed the app; and building the user interface including user permissions.
+* Ongoing maintenance costs, including support for cleaning, loading and checking new data, maintaining user lists, and responding to queries.
+Most projects cost under £10,000 in total per year, including all the design and data work. With Tableau, £10k will only buy you the licence needed to get started.
+
+---
+
+## Other questions?
+
+In case you haven't found the answer you're looking for, please feel free to get in touch with us via our [contact page](/contact) with any questions you may have.
+
+Thanks!

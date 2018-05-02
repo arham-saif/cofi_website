@@ -3,6 +3,21 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/portfolio/workshopplay/</loc>
+    <lastmod>2018-05-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/2018/04/10/2018-04-08-multivariate-dot-density-maps-in-r-with-sf-ggplot2/</loc>
+    <lastmod>2018-04-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/portfolio/cryptotracker/</loc>
+    <lastmod>2018-04-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/blog/2018/03/15/2018-03-15-responsive-iframes-for-shiny-apps/</loc>
     <lastmod>2018-03-15T00:00:00+00:00</lastmod>
   </url>
@@ -54,7 +69,7 @@
   
   <url>
     <loc>/blog/</loc>
-    <lastmod>2018-03-15T00:00:00+00:00</lastmod>
+    <lastmod>2018-04-10T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -69,7 +84,7 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2018-03-15T00:00:00+00:00</lastmod>
+    <lastmod>2018-05-01T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -81,7 +96,7 @@
   
   <url>
     <loc>/tags/data-visualisation/</loc>
-    <lastmod>2018-01-31T00:00:00+00:00</lastmod>
+    <lastmod>2018-04-10T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -97,25 +112,25 @@
   
   <url>
     <loc>/tags/mapping/</loc>
-    <lastmod>2018-01-31T00:00:00+00:00</lastmod>
+    <lastmod>2018-04-10T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/tags/open-data/</loc>
-    <lastmod>2018-01-25T00:00:00+00:00</lastmod>
+    <lastmod>2018-04-10T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/portfolio/</loc>
-    <lastmod>2018-02-19T00:00:00+00:00</lastmod>
+    <lastmod>2018-05-01T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/tags/r/</loc>
-    <lastmod>2018-01-31T00:00:00+00:00</lastmod>
+    <lastmod>2018-04-10T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -151,7 +166,7 @@
   
   <url>
     <loc>/categories/tutorials/</loc>
-    <lastmod>2018-03-15T00:00:00+00:00</lastmod>
+    <lastmod>2018-04-10T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   

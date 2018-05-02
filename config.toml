@@ -34,9 +34,14 @@ paginate = 10
     weight = 2
     
 [[menu.main]]
+    name = "FAQ"
+    url  = "/faq/"
+    weight = 4
+    
+[[menu.main]]
     name = "Contact"
     url  = "/contact/"
-    weight = 4
+    weight = 5
 
 #[[menu.main]]
  #   name = "<i class='fa fa-2x fa-linkedin'></i>"

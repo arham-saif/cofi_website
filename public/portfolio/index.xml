@@ -7,10 +7,29 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2018 Culture of Insight. All Rights Reserved.</copyright>
-    <lastBuildDate>Mon, 19 Feb 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 01 May 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/portfolio/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Exterion Media Work Shop Play Dashboard</title>
+      <link>/portfolio/workshopplay/</link>
+      <pubDate>Tue, 01 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/portfolio/workshopplay/</guid>
+      <description>We&amp;rsquo;ve just re-built Exterion Media&amp;rsquo;s Work Shop Play survey dashboard! The dashboard is updated monthly with 3-4 new surveys across a variety of topics of relevance to the &amp;lsquo;Work.Shop.Play Urban Community&amp;rsquo; and has the following features built in:
+ A reactive front-end design with compatibility across all device platforms: Desktop, Tablet &amp;amp; Mobile Interactive user inputs to compare survey responses across a wide range of demographic target groups Branded chart image exports and data exports to CSV or Excel  Click on the image above to check it out!</description>
+    </item>
+    
+    <item>
+      <title>Crypto Currency Tracking Tool</title>
+      <link>/portfolio/cryptotracker/</link>
+      <pubDate>Sun, 01 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/portfolio/cryptotracker/</guid>
+      <description>A light-weight tracker tool built with R flexdashboard that scrapes crypto currency price data every hour and has interactive user inputs for personalised metrics.</description>
+    </item>
     
     <item>
       <title>Interactive UK Election Dot Density Map</title>

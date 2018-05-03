@@ -78,7 +78,7 @@ paginate = 10
 [params]
     viewMorePostLink = "/blog/"
     author = "Paul Campbell"
-    defaultKeywords = ["R", "Shiny", "dashboards"]
+    defaultKeywords = ["R", "shiny", "dashboards", "data visualization"]
     defaultDescription = "London Based Data Consultancy"
 
     # Google Maps API key (if not set will default to not passing a key.)

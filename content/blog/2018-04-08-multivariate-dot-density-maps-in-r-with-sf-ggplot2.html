@@ -13,7 +13,7 @@ tags:
   - data visualisation
   - open data
   - ggplot2
-draft: true
+draft: false
 ---
 
 
@@ -22,7 +22,10 @@ draft: true
 <h2>Background</h2>
 <p>Last June I did a <a href="https://www.blog.cultureofinsight.com/2017/06/building-dot-density-maps-with-uk-census-data-in-r/" target="_blank">blog post</a> about building dot-denisty maps in R using UK Census data. It has proven to be a fairly popular post, most likely due to the maps looking like something you’re more likely to see in the Tate Modern…</p>
 <p><img src="https://www.blog.cultureofinsight.com/post/2017-05-22-building-dot-density-maps-with-uk-census-data-in-r_files/figure-html/unnamed-chunk-8-1.png" alt = "R dot density map" width="700px" style="display: block; margin: 0 auto;"></p>
-<p>Not only do these maps looks beautiful, but there is a strong argument that they do a better job of representing data than There seems to have been a recent surge of interest in this type of mapping, largely due to this xkcd interpretation of the 2016 US Election…</p>
+<p>Not only do these maps looks beautiful, but there is a strong argument that they do a better job of representing data compared to the more common choropleth methods of filling geographical regions with one colour based on one variable.</p>
+<p>The pièce de résistance of dot-density mapping is that it does not suffer from the tendency of over-emphasising the influence of large, yet sparsely populated areas, as colour-coverage is dictated by count, not area size.</p>
+<p>When applied to election mapping, this gives a fairer assessment of the ‘popular vote’ when compared to a standard choropleth map that will fill entire constituencies with the colour of the winning party, regardless of how close the contest was or how many people voted.</p>
+<p>A good example of this is the webcomic <a href="https://xkcd.com/1939/" target="_blank">xkcd</a> and cartographer <a href="https://twitter.com/kennethfield" target="_blank">Kenneth Field’s</a> recent interpretations of the 2016 US Presidential Election (see images below, respectively), both of which set twitter alight with debate.</p>
 
 <div class="row">
   <div class="col-sm-6 col-md-6">
@@ -34,15 +37,13 @@ draft: true
 </div>
 
 <p><br></p>
-<p>Now I’m not going to say these maps were completely and utterly inspired by the take <em>alllll</em> the credit for this new wave of dot-density enthusiasm… but it’s great to see it gaining more traction as a method for visualising spatial data.</p>
-<p>The pièce de résistance of this method of mapping is that it does not suffer from the tendency of over-emphasising the influence of large, yet sparsely populated areas, as colour-coverage is dictated by count, not area size.</p>
-<p>When applied to election mapping, this gives a fairer assessment of the ‘popular vote’ when compared to a standard Choropleth map that fills entire regions with the colour of the winning party, regardless of how close the contest was or how many people voted.</p>
-<p>For a more enlightented discussion on the troubles and strifes of accurate mapping, check out the <a href="https://www.ft.com/content/65b5df0e-49ff-11e8-8ee8-cae73aab7ccb" target="_blank">latest FT chart doctor article</a>, where the <a href="https://twitter.com/theboysmithy" target="_blank">FT’s Alan Smith</a> talks with professor Mark Monmonier, author of the classic book <em>How to Lie With Maps</em>. (while you’re at it, have a look at <a href="https://twitter.com/sdbernard" target="_blank">Steven Bernard’s</a> piece on how the FT’s always-on-point maps are made <a href="https://www.ft.com/content/35188c6a-4870-11e8-8ee8-cae73aab7ccb" target="_blank">here</a>).</p>
+<p>You can also have a gander at the <a href="https://cultureofinsight.shinyapps.io/dotmap" target="_blank">Mapping tool</a> we built last year to look at UK election results from a dot-density context.</p>
+<p>And for a more enlightented discussion on the troubles and strifes of accurate mapping, check out the <a href="https://www.ft.com/content/65b5df0e-49ff-11e8-8ee8-cae73aab7ccb" target="_blank">latest FT chart doctor article</a>, where the <a href="https://twitter.com/theboysmithy" target="_blank">FT’s Alan Smith</a> talks with professor Mark Monmonier, author of the classic book <em>How to Lie With Maps</em>. (while you’re at it, have a look at <a href="https://twitter.com/sdbernard" target="_blank">Steven Bernard’s</a> piece on how the FT’s always-on-point maps are made <a href="https://www.ft.com/content/35188c6a-4870-11e8-8ee8-cae73aab7ccb" target="_blank">here</a>).</p>
 <hr />
 </div>
 <div id="rs-new-spatial-workflow" class="section level2">
 <h2>R’s New Spatial Workflow</h2>
-<p>With all of this in mind, I thought it would be a good time to update the previous blog post, this time utilising the relatively new <a href="https://r-spatial.github.io/sf/" target="_blank">simple features (sf) R package</a>. sf makes it a lot easier to do geospatial analysis within a <em>tidy framework</em>, ergo making it work seamlessly with the tidyverse, as all geospatial data is bundled into a list and treated as a single observation of a geographic variable in a data frame.</p>
+<p>With all of this in mind, I thought it would be a good time to update the previous blog post, this time utilising the relatively new <a href="https://r-spatial.github.io/sf/" target="_blank">simple features (sf) R package</a>. sf makes it a lot easier to do geospatial analysis within a <em>tidy framework</em>, ergo making it work seamlessly with the tidyverse, as each geospatial element is bundled into a list and treated as a single observation of a geographic variable in a data frame. No more fortifying malarky.</p>
 <p>This means we can go from raw data -&gt; dot density map with a lot less code and stress than ever before. So here’s a quick demo of how to get it done, this time as a map of 2016 UK General Election results in London Constituancies…</p>
 <hr />
 </div>
@@ -60,15 +61,14 @@ ge_data &lt;- read_csv(&quot;http://researchbriefings.files.parliament.uk/docume
 
 # shapefile filtered to London region
 # data available here: https://www.dropbox.com/s/4iajcx25grpx5qi/uk_650_wpc_2017_full_res_v1.8.zip?dl=0
-uk &lt;- st_read(&quot;../../data/blog_data/uk_650_wpc_2017_full_res_v1.8.shp&quot;, 
-              stringsAsFactors = FALSE, quiet = TRUE) %&gt;% 
+uk &lt;- st_read(&quot;../../data/blog_data/uk_650_wpc_2017_full_res_v1.8.shp&quot;, stringsAsFactors = FALSE, quiet = TRUE) %&gt;% 
   st_transform(4326) %&gt;% 
   filter(REGN == &quot;London&quot;) %&gt;% 
   select(ons_id = PCONCODE)
 
 # merge the data
 sf_data &lt;- left_join(ge_data, uk) %&gt;% 
-  st_as_sf() # sf class is lost after join so make sf object again
+  st_as_sf() # I&#39;m losing sf class after join so make sf object again
 
 head(sf_data)</code></pre>
 <hr />
@@ -146,7 +146,7 @@ p &lt;- ggplot() +
 ggsave(&quot;../../static/img/party_points.png&quot;, plot = p, dpi = 320, width = 80, height = 70, units = &quot;cm&quot;)</code></pre>
 <p>The results should look something like this…</p>
 <p><img src="/img/party_points.png" alt="R sf dot density election map london UK" width="100%" /></p>
-<p>Job’s a good’un. We can compare it to a choropleth map of London seat winners…</p>
+<p>Job’s a good’un. Let’s compare it to a choropleth map of London seat winners…</p>
 <pre class="r"><code>ggplot() +
   geom_sf(data = sf_data, aes(fill = first_party), colour = &quot;white&quot;) +
   scale_fill_manual(values = pal, name = &quot;Seat Winner&quot;) +
@@ -156,6 +156,8 @@ ggsave(&quot;../../static/img/party_points.png&quot;, plot = p, dpi = 320, width
 <p><img src="/blog/2018-04-08-multivariate-dot-density-maps-in-r-with-sf-ggplot2_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>What do we think is the most insightful map? Luckily we don’t have to choose one or the other, can use both! No one map will be able to give the you all the answers so I find that it’s best to combine techniques for maximum insight. The choropleth gives us a clear indication as to who won where, and the dot-density looks under the hood and gives us an idea of the count and diversity of votes within each constituency.</p>
 <hr />
+<p>That’s all for now. I know I didn’t go into great detail about the code so if you have any questions or want to kick off a heated mapping debate, please do leave a comment below or catch me on <a href="https://twitter.com/paulcampbell91" target="_blank">twitter</a>.</p>
+<hr />
 </div>
 <div id="a-few-shout-outs" class="section level2">
 <h2>A few shout outs</h2>
@@ -163,8 +165,8 @@ ggsave(&quot;../../static/img/party_points.png&quot;, plot = p, dpi = 320, width
 <li>Thanks to the FT data visualisation team for always inspiring with stellar maps and graphics</li>
 <li><a href="https://twitter.com/undertheraedar" target="_blank">Alasdair Rae</a> for his <a href="https://www.dropbox.com/s/4iajcx25grpx5qi/uk_650_wpc_2017_full_res_v1.8.zip?dl=0" target="_blank">UK Constinuencies shapefile</a></li>
 <li><a href="https://twitter.com/traffordDataLab" target="_blank">The Trafford Data Lab</a> for getting in touch regarding their use of our old dot-density tutorial and <a href="https://www.trafforddatalab.io/info/demographics/ethnicity/index.html" target="_blank">their code</a> that helped a lot in converting it to an this sf-friendly version</li>
-<li>Donald Trump, who’s love of a <a href="https://medium.com/tdebeus/trump-should-ignore-the-mercator-map-when-showing-election-results-52ad2d33b740" target="_blank">certain choropleth map</a> has triggered the desire for better election maps everywhere</li>
+<li>And Donald Trump, who’s love of a <a href="https://medium.com/tdebeus/trump-should-ignore-the-mercator-map-when-showing-election-results-52ad2d33b740" target="_blank">certain choropleth map</a> has triggered the desire for better election maps everywhere</li>
 </ul>
 <hr />
-<p><em>Ci vediamo dopo!</em></p>
+<p><em>A presto!</em></p>
 </div>

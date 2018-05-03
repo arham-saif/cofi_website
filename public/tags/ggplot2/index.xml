@@ -7,19 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2018 Culture of Insight. All Rights Reserved.</copyright>
-    <lastBuildDate>Tue, 10 Apr 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 02 May 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/ggplot2/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Multivariate Dot-Density Maps in R with sf &amp; ggplot2</title>
-      <link>/blog/2018/04/10/2018-04-08-multivariate-dot-density-maps-in-r-with-sf-ggplot2/</link>
-      <pubDate>Tue, 10 Apr 2018 00:00:00 +0000</pubDate>
+      <link>/blog/2018/05/02/2018-04-08-multivariate-dot-density-maps-in-r-with-sf-ggplot2/</link>
+      <pubDate>Wed, 02 May 2018 00:00:00 +0000</pubDate>
       
-      <guid>/blog/2018/04/10/2018-04-08-multivariate-dot-density-maps-in-r-with-sf-ggplot2/</guid>
-      <description>BackgroundLast June I did a blog post about building dot-denisty maps in R using UK Census data. It has proven to be a fairly popular post, most likely due to the maps looking like something you’re more likely to see in the Tate Modern…
-There seems to have been a recent surge of interest in this type of mapping, largely due to this xkcd interpretation of the 2016 US Election…</description>
+      <guid>/blog/2018/05/02/2018-04-08-multivariate-dot-density-maps-in-r-with-sf-ggplot2/</guid>
+      <description>Background Last June I did a blog post about building dot-denisty maps in R using UK Census data. It has proven to be a fairly popular post, most likely due to the maps looking like something you’re more likely to see in the Tate Modern…
+Not only do these maps looks beautiful, but there is a strong argument that they do a better job of representing data than There seems to have been a recent surge of interest in this type of mapping, largely due to this xkcd interpretation of the 2016 US Election…</description>
     </item>
     
   </channel>

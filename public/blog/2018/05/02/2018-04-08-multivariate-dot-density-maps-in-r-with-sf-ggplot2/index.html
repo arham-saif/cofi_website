@@ -6,7 +6,7 @@
   <meta name="robots" content="all,follow">
   <meta name="googlebot" content="index,follow,snippet,archive">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>How Market Research Can Tidy Up</title>
+  <title>Multivariate Dot-Density Maps in R with sf &amp; ggplot2</title>
   <meta name="author" content="" />
 
   
@@ -14,7 +14,7 @@
   
 
   
-  <meta name="description" content="How to make your research data go further with tidy data, reproducible programming and analytical web-applications...">
+  <meta name="description" content="Create dot-density election maps in a tidy data framework">
   
 
   <meta name="generator" content="Hugo 0.31" />
@@ -64,15 +64,15 @@
 
   
   
-    <title>How Market Research Can Tidy Up</title>
-    <meta property="og:title" content="How Market Research Can Tidy Up">
+    <title>Multivariate Dot-Density Maps in R with sf &amp; ggplot2</title>
+    <meta property="og:title" content="Multivariate Dot-Density Maps in R with sf &amp; ggplot2">
     <meta property="og:type" content="article">
-    <meta property="og:description" content="How to make your research data go further with tidy data, reproducible programming and analytical web-applications...">
+    <meta property="og:description" content="Create dot-density election maps in a tidy data framework">
 
       
       <meta name="twitter:card" content="summary_large_image">
-      <meta name="twitter:image" content="/img/data-science-pipeline.png" >
-      <meta property='og:image' content="/img/data-science-pipeline.png" >      
+      <meta name="twitter:image" content="/img/party_points.png" >
+      <meta property='og:image' content="/img/party_points.png" >      
       
       
     
@@ -93,9 +93,9 @@
         <div class="container">
             <div class="navbar-header">
                 <a class="navbar-brand home" href="/">
-                    <img src="/img/logo.png" alt="How Market Research Can Tidy Up logo" class="hidden-xs hidden-sm" style="height: 62px; padding-bottom: 15px;">
-                    <img src="/img/logo.png" alt="How Market Research Can Tidy Up logo" class="visible-xs visible-sm" style="height: 62px; padding-bottom: 15px;">
-                    <span class="sr-only">How Market Research Can Tidy Up - go to homepage</span>
+                    <img src="/img/logo.png" alt="Multivariate Dot-Density Maps in R with sf &amp; ggplot2 logo" class="hidden-xs hidden-sm" style="height: 62px; padding-bottom: 15px;">
+                    <img src="/img/logo.png" alt="Multivariate Dot-Density Maps in R with sf &amp; ggplot2 logo" class="visible-xs visible-sm" style="height: 62px; padding-bottom: 15px;">
+                    <span class="sr-only">Multivariate Dot-Density Maps in R with sf &amp; ggplot2 - go to homepage</span>
                 </a>
                 <div class="navbar-buttons">
                     <button type="button" class="navbar-toggle btn-template-main" data-toggle="collapse" data-target="#navigation">
@@ -174,7 +174,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h1>How Market Research Can Tidy Up</h1>
+                <h1>Multivariate Dot-Density Maps in R with sf &amp; ggplot2</h1>
             </div>
         </div>
     </div>
@@ -190,101 +190,158 @@
 
                     <div class="col-md-9" id="blog-post">
 
-                        <p class="text-muted text-uppercase mb-small text-right">By <a href="#">James Smythe</a> | October 12, 2017</p>
+                        <p class="text-muted text-uppercase mb-small text-right">By <a href="#">Paul Campbell</a> | May 2, 2018</p>
 
                         <div id="post-content">
-                          <script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
-<script src="/rmarkdown-libs/jquery/jquery.min.js"></script>
-<link href="/rmarkdown-libs/dygraphs/dygraph.css" rel="stylesheet" />
-<script src="/rmarkdown-libs/dygraphs/dygraph-combined.js"></script>
-<script src="/rmarkdown-libs/moment/moment.js"></script>
-<script src="/rmarkdown-libs/moment-timezone/moment-timezone-with-data.js"></script>
-<script src="/rmarkdown-libs/moment-fquarter/moment-fquarter.min.js"></script>
-<script src="/rmarkdown-libs/dygraphs-binding/dygraphs.js"></script>
+                          <div id="background" class="section level2">
+<h2>Background</h2>
+<p>Last June I did a <a href="https://www.blog.cultureofinsight.com/2017/06/building-dot-density-maps-with-uk-census-data-in-r/" target="_blank">blog post</a> about building dot-denisty maps in R using UK Census data. It has proven to be a fairly popular post, most likely due to the maps looking like something you’re more likely to see in the Tate Modern…</p>
+<p><img src="https://www.blog.cultureofinsight.com/post/2017-05-22-building-dot-density-maps-with-uk-census-data-in-r_files/figure-html/unnamed-chunk-8-1.png" alt = "R dot density map" width="700px" style="display: block; margin: 0 auto;"></p>
+<p>Not only do these maps looks beautiful, but there is a strong argument that they do a better job of representing data than There seems to have been a recent surge of interest in this type of mapping, largely due to this xkcd interpretation of the 2016 US Election…</p>
 
+<div class="row">
+  <div class="col-sm-6 col-md-6">
+    <img src="https://imgs.xkcd.com/comics/2016_election_map.png" width="100%" class="img-responsive inline-block"/>
+  </div>
+  <div class="col-sm-6 col-md-6">
+    <img src="https://3.bp.blogspot.com/-j22J0zrvgVg/WqAB6S5q6-I/AAAAAAAAB9U/mUC41CFzhWsCanbGInTHwez4qHXxU6kcgCEwYBhgL/s1600/pic1.jpg" width="100%"  style="display: inline-block" class="img-responsive inline-block"/>
+  </div>
+</div>
 
-<hr />
-<div id="synopsis" class="section level2">
-<h2>Synopsis</h2>
-<p>Market Research is great at compiling the right data, but not so good at making it easy to use. This isn’t about “storytelling”. It’s about the data itself, and clarity on what <em>delivering</em> it actually means. Getting the data out of siloes like tabs and SPSS where it cannot adequately be mined, and out into the big wide world as <em>Tidy Data</em>.</p>
-<blockquote class="twitter-tweet tw-align-center" data-lang="en">
-<p lang="en" dir="ltr">
-Colleague: “The data were not entered with analysis in mind.”
-</p>
-— Noam Ross (<span class="citation">@noamross</span>) <a href="https://twitter.com/noamross/status/900435026147409926?ref_src=twsrc%5Etfw">August 23, 2017</a>
-</blockquote>
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-<hr />
-</div>
-<div id="the-problem" class="section level2">
-<h2>The Problem</h2>
-<p>Esomar recently reported that Global Market Research growth is at its highest since 2010, driven by new “market research” sectors such as web analytics and social media monitoring. But this joyful headline hides mixed emotions. How many huge traditional quant projects have been axed in recent years, as business gets used to the slick, self-service nature of new sources of data? Were they really not good value for money? Or was it all in the presentation?</p>
-<p>Market Research agencies have invested to meet the challenge, with the result that research is now much better at tech, but it still lags behind in its communcation of data. Analytics data is available in engaging dashboard formats at the click of a mouse whereas brand trackers still languish in massive tabulations files or SPSS, one file per month, waiting for an over-worked researcher to scroll through for the one key number, to pop into the MD’s monthly PowerPoint deck. Which he or she never reads.</p>
-<p>Tabs remain our default delivery medium. Usually because that’s what the client asks for, preferring to save on the presentation costs and do the analysis in-house. Tabs were born decades ago, from a need to summarise data without coding, in an era where we lacked the desktop computing skills to do this ourselves. With our pathological need to be complete, tab decks tend to be huge. They may be right, they may be complete, but they are not useful to the modern data user.</p>
-<hr />
-</div>
-<div id="the-solution" class="section level2">
-<h2>The Solution</h2>
-<div id="tidy-data" class="section level3">
-<h3>Tidy Data</h3>
-<p>The minimum standard we should be aiming for is <strong>Tidy Data</strong>. This <a href="https://www.jstatsoft.org/article/view/v059i10" target="_blank">concept</a>, championed by data scientist Hadley Wickham, is about data being shaped for analysis, modelling and visualisation. A Tidy Research Data table will have:</p>
-<ol style="list-style-type: decimal">
-<li>one variable per column</li>
-<li>one case per row</li>
-<li>one table per project (one big rectangle of data)</li>
-</ol>
-<p>Compare this to the MR standard. Data often delivered in excel tabs formatted for print; split across sheets and tables, with titles, blank columns/rows and even images separating sections of data.</p>
-<p>The implication is that these data tables constitute “delivery”, the agency’s final means of communicating the data without regard for where it goes next.</p>
-<p>This is undesirable for a number of reasons. Firstly, for anyone wanting to conduct further analysis on the data, their job just became <em>a lot</em> harder. Say you’re an analyst with the task of summarising a batch of reports of media brands’ website traffic. The data is delivered in multiple reports split by target audience or timescale. With the data in disparate locations, even calculating an average is far from a trivial pursuit. How do you write formulas for data across different files, tabs, and columns? You could, but if you want to get it right you probably shouldn’t.</p>
-<p>In the optimal pipeline of analysis, from data source to communication, tidying shouldn’t be the bit taking up time and creating risk of error. Understanding is where we need to invest our efforts:</p>
 <p><br></p>
-<center>
-<img src="/img/data-science-pipeline.png" />
-</center>
-<p><em>Source: <a href="http://r4ds.had.co.nz/introduction.html">R For Data Science</a></em></p>
-<p>With data formatted inefficiently, even tidying will often be beyond the capabilities of the average research analyst, and the final communication becomes the spreadsheet itself or a powerpoint deck that takes weeks to build with lots of error prone copy + pasting. The <strong>understanding</strong> stage has been bypassed, and the optimal outcome missed.</p>
+<p>Now I’m not going to say these maps were completely and utterly inspired by the take <em>alllll</em> the credit for this new wave of dot-density enthusiasm… but it’s great to see it gaining more traction as a method for visualising spatial data.</p>
+<p>The pièce de résistance of this method of mapping is that it does not suffer from the tendency of over-emphasising the influence of large, yet sparsely populated areas, as colour-coverage is dictated by count, not area size.</p>
+<p>When applied to election mapping, this gives a fairer assessment of the ‘popular vote’ when compared to a standard Choropleth map that fills entire regions with the colour of the winning party, regardless of how close the contest was or how many people voted.</p>
+<p>For a more enlightented discussion on the troubles and strifes of accurate mapping, check out the <a href="https://www.ft.com/content/65b5df0e-49ff-11e8-8ee8-cae73aab7ccb" target="_blank">latest FT chart doctor article</a>, where the <a href="https://twitter.com/theboysmithy" target="_blank">FT’s Alan Smith</a> talks with professor Mark Monmonier, author of the classic book <em>How to Lie With Maps</em>. (while you’re at it, have a look at <a href="https://twitter.com/sdbernard" target="_blank">Steven Bernard’s</a> piece on how the FT’s always-on-point maps are made <a href="https://www.ft.com/content/35188c6a-4870-11e8-8ee8-cae73aab7ccb" target="_blank">here</a>).</p>
 <hr />
 </div>
-<div id="visualising-your-data" class="section level3">
-<h3>Visualising your data</h3>
-<p>It’s widely known that the human brain is much better at interpreting visuals as opposed to numbers and text. Here’s a quick example:</p>
-<blockquote class="twitter-tweet tw-align-center" data-cards="hidden" data-lang="en">
-<p lang="en" dir="ltr">
-Average oil price<br><br>2006: $61<br>2007: $69<br>2008: $94<br>2009: $61<br>2010: $77<br>2011: $107<br>2012: $109<br>2013: $106<br>2014: $96<br>2015: $49<br>2016: $41 <a href="https://t.co/dVyZKhaIEe">pic.twitter.com/dVyZKhaIEe</a>
-</p>
-— The Spectator Index (<span class="citation">@spectatorindex</span>) <a href="https://twitter.com/spectatorindex/status/916385096801898496?ref_src=twsrc%5Etfw">October 6, 2017</a>
-</blockquote>
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-<blockquote class="twitter-tweet tw-align-center" data-lang="en">
-<p lang="en" dir="ltr">
-You could make a chart out of that, you know. They were invented just for that <a href="https://t.co/fWhzQxNE1p">https://t.co/fWhzQxNE1p</a>
-</p>
-— Maarten Lambrechts (<span class="citation">@maartenzam</span>) <a href="https://twitter.com/maartenzam/status/916394129290018817?ref_src=twsrc%5Etfw">October 6, 2017</a>
-</blockquote>
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-<p>As Maarten rightly points out, this data seems ripe for plotting on an x + y axis. How quickly can you get a solid understanding of what the average oil price has been doing in the last 10 years from the tweet above? Now compare that with a quick glance at a chart of the same data, below:</p>
-<p><br></p>
-<div id="htmlwidget-1" style="width:100%;height:300px;" class="dygraphs html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1">{"x":{"attrs":{"axes":{"x":{"pixelsPerLabel":60,"axisLabelFormatter":"function(d){ return d.getFullYear() }","drawAxis":true},"y":{"drawAxis":true}},"series":{"Price":{"axis":"y"}},"colors":["black"],"title":"Average Oil Price $","labels":["year","Price"],"retainDateWindow":false,"stackedGraph":false,"fillGraph":true,"fillAlpha":0.3,"stepPlot":false,"drawPoints":false,"pointSize":1,"drawGapEdgePoints":false,"connectSeparatedPoints":false,"strokeWidth":1,"strokeBorderColor":"white","colorValue":0.5,"colorSaturation":1,"includeZero":false,"drawAxesAtZero":false,"logscale":false,"axisTickSize":3,"axisLineColor":"black","axisLineWidth":0.3,"axisLabelColor":"black","axisLabelFontSize":14,"axisLabelWidth":60,"drawGrid":false,"gridLineWidth":0.3,"rightGap":5,"digitsAfterDecimal":2,"labelsKMB":false,"labelsKMG2":false,"labelsUTC":false,"maxNumberWidth":6,"animatedZooms":false,"mobileDisableYTouch":true,"legend":"auto","labelsDivWidth":300,"labelsShowZeroValues":true,"labelsSeparateLines":false,"hideOverlayOnMouseOut":true},"scale":"yearly","annotations":[{"x":"2014-01-01T00:00:00.000Z","shortText":"Hold on tight","text":"doesn't go well from here","width":100,"height":25,"cssClass":"dygraph-axis-label","tickHeight":60,"attachAtBottom":false,"series":"Price"}],"shadings":[],"events":[],"format":"date","data":[["2006-01-01T00:00:00.000Z","2007-01-01T00:00:00.000Z","2008-01-01T00:00:00.000Z","2009-01-01T00:00:00.000Z","2010-01-01T00:00:00.000Z","2011-01-01T00:00:00.000Z","2012-01-01T00:00:00.000Z","2013-01-01T00:00:00.000Z","2014-01-01T00:00:00.000Z","2015-01-01T00:00:00.000Z","2016-01-01T00:00:00.000Z"],[61,69,94,61,77,107,109,106,96,49,41]],"fixedtz":false,"tzone":"UTC"},"evals":["attrs.axes.x.axisLabelFormatter"],"jsHooks":[]}</script>
-<p><br></p>
-<p>In the attention poor world, there’s only going to be one winner. It’s therefore vital that we start getting our data out of spreadsheets and into effective data visualisations if we want our research to realise its value. And there’s no better place to do this than the modern day web-browser…</p>
+<div id="rs-new-spatial-workflow" class="section level2">
+<h2>R’s New Spatial Workflow</h2>
+<p>With all of this in mind, I thought it would be a good time to update the previous blog post, this time utilising the relatively new <a href="https://r-spatial.github.io/sf/" target="_blank">simple features (sf) R package</a>. sf makes it a lot easier to do geospatial analysis within a <em>tidy framework</em>, ergo making it work seamlessly with the tidyverse, as all geospatial data is bundled into a list and treated as a single observation of a geographic variable in a data frame.</p>
+<p>This means we can go from raw data -&gt; dot density map with a lot less code and stress than ever before. So here’s a quick demo of how to get it done, this time as a map of 2016 UK General Election results in London Constituancies…</p>
 <hr />
 </div>
-<div id="getting-your-data-in-the-browser" class="section level3">
-<h3>Getting your data in the browser</h3>
-<p>Browsers are where people expect to find information. And it should be no different when it comes to making sense of your data. Web-browsers are what the most cutting edge front-end technologies are built for, and utilising them to build rich web applications is getting easier and easier. The only real prerequisite is <em>tidy data!</em></p>
-<p>At Culture of Insight, we increasingly use <a href="https://en.wikipedia.org/wiki/R_(programming_language)" target="_blank">R</a> to develop solutions for our clients’ data projects. From <a href="https://www.youtube.com/watch?v=s3JldKoA0zw" target="_blank">reproducible workflows</a> to world reknowned graphing libraries, it literally sets data free where the many popular BI software apps build walled gardens, and charge extortionate fees. And with the <a href="https://shiny.rstudio.com/" target="_blank">shiny</a> package, all of this can be built into bespoke web applications that meet specific project needs and utilise the latest web technologies.</p>
-<p>Here’s a simple demo app we built by tidying up some <strong>dummy</strong> web-traffic data files, previously stored in formatted Excel reports. By munging all the data in one big beautiful tidy rectangle, the user can use filters and selectors in the browser to manipulate the data to their specifications. The absorbing interactivity allows users to quickly strip back to the data they’re interested in and compare brand performance across a variety of metrics. It has has the depth of a thousand PowerPoint slides but the size of one.</p>
-<p><a href="https://cultureofinsight.shinyapps.io/tidydata_dash" rel="comscore app" target="_blank"><img src="/img/tidydata_dash.gif" alt="comscore app" style="width: 100%; margin: 0 auto;"/></a> <em>click the image to launch the app</em></p>
+<div id="load-packages-and-get-some-data" class="section level2">
+<h2>Load Packages and Get Some Data</h2>
+<p>First lets get some election data and a constituency level shapefile then select/rename the columns we need in each and join them together.</p>
+<p>I filter each dataset to the London region but if you’re doing this yourself and want to map another region, you can simply switch London out for the region of your choice and continue on.</p>
+<pre class="r"><code>library(tidyverse) # dev version of ggplot2 required devtools::install_github(&#39;hadley/ggplot2&#39;)
+library(sf)
+
+# election results filtered to London region
+ge_data &lt;- read_csv(&quot;http://researchbriefings.files.parliament.uk/documents/CBP-7979/HoC-GE2017-constituency-results.csv&quot;) %&gt;% 
+  filter(region_name == &quot;London&quot;) %&gt;% 
+  select(ons_id, constituency_name, first_party, Con = con, Lab = lab, LD = ld, UKIP = ukip, Green = green)
+
+# shapefile filtered to London region
+# data available here: https://www.dropbox.com/s/4iajcx25grpx5qi/uk_650_wpc_2017_full_res_v1.8.zip?dl=0
+uk &lt;- st_read(&quot;../../data/blog_data/uk_650_wpc_2017_full_res_v1.8.shp&quot;, 
+              stringsAsFactors = FALSE, quiet = TRUE) %&gt;% 
+  st_transform(4326) %&gt;% 
+  filter(REGN == &quot;London&quot;) %&gt;% 
+  select(ons_id = PCONCODE)
+
+# merge the data
+sf_data &lt;- left_join(ge_data, uk) %&gt;% 
+  st_as_sf() # sf class is lost after join so make sf object again
+
+head(sf_data)</code></pre>
 <hr />
 </div>
-<div id="summary" class="section level3">
-<h3>Summary</h3>
-<p>Armed with your research data in a tidy format, you have the opportunity to stretch the value of your market research to its full potential by furthering analysis opportunities and delivering the results in more engaging ways. Prioritise the communication of the data to the same degree as the collection of the data and visualise it in the browser for maximum accesibility and impact.</p>
-<p>This may require a shift from the status quo of market research reporting, but the level of investment or thought required to do this is minimal, the potential benefits transformational.</p>
+<div id="generating-coordinates-for-each-dot" class="section level2">
+<h2>Generating Coordinates for each Dot</h2>
+<p>Here we create a data frame with the number of dots we want plotted in each constituency for each party. Dividing total vote count by 100 means that each dot will represent 100 votes. Then we plug this data into a <code>purrr::map_df</code> call and let it pipe it’s way to a nice tidy tibble with coordinates columns and a categorical column for the politcal party assignment of each dot.</p>
+<p>It took me a while to figure how to do this is in one pipe. The tricky part was realising that the ‘geometry set’ produced after the <code>st_sample</code> stage (generation of coordinates) has the top level ‘geometry type’ of <code>GEOMETRY</code> but in order for us to be able to scrape the the coordinates with the <code>st_coordinates</code> function, we must first simplify the geometry type to <code>POINT</code> with <code>st_cast</code> function…</p>
+<pre class="r"><code># data frame of number of dots to plot for each party (1 for every 100 votes)
+num_dots &lt;- ceiling(select(as.data.frame(sf_data), Con:Green) / 100)
+
+# generates data frame with coordinates for each point + what party it is assiciated with
+sf_dots &lt;- map_df(names(num_dots), 
+                  ~ st_sample(sf_data, size = num_dots[,.x], type = &quot;random&quot;) %&gt;% # generate the points in each polygon
+                    st_cast(&quot;POINT&quot;) %&gt;%                                          # cast the geom set as &#39;POINT&#39; data
+                    st_coordinates() %&gt;%                                          # pull out coordinates into a matrix
+                    as_tibble() %&gt;%                                               # convert to tibble
+                    setNames(c(&quot;lon&quot;,&quot;lat&quot;)) %&gt;%                                  # set column names
+                    mutate(Party = factor(.x, levels = names((num_dots))))        # add categorical party variable
+                  ) # map_df then binds each party&#39;s tibble into one
+
+head(sf_dots)</code></pre>
+<pre><code>## # A tibble: 6 x 3
+##      lon   lat Party
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;
+## 1 0.102   51.5 Con  
+## 2 0.0992  51.5 Con  
+## 3 0.149   51.6 Con  
+## 4 0.0724  51.5 Con  
+## 5 0.110   51.5 Con  
+## 6 0.0958  51.5 Con</code></pre>
+<pre class="r"><code>tail(sf_dots)</code></pre>
+<pre><code>## # A tibble: 6 x 3
+##      lon   lat Party
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;
+## 1 -0.249  51.4 Green
+## 2 -0.228  51.4 Green
+## 3 -0.243  51.4 Green
+## 4 -0.200  51.4 Green
+## 5 -0.215  51.4 Green
+## 6 -0.204  51.4 Green</code></pre>
+<p>We’re now ripe for plotting with <code>ggplot2</code>.</p>
 <hr />
-<p><em>James Smythe is the MD of Culture of Insight, a media research and analytics app development company working for clients such as Sky, Exterion, Global Radio, Hachette Books, Shortlist Media, News UK and the Royal Shakespeare Company. <a href="https://twitter.com/datasetfree" target="_blank"><span class="citation">@datasetfree</span></a> <a href="www.cultureofinsight.com" target="_blank">cultureofinsight.com</a></em></p>
 </div>
+<div id="visualise-the-votes" class="section level2">
+<h2>Visualise the Votes</h2>
+<p>Here’s my <code>ggplot2</code> code for the map output. Plotting this many points on a standard sized plot image won’t be particularly insightful as there will be severe over-plotting. So play around with your image size until it’s looking good, then adjust the text and legend sizes to compensate for the enlarged plot</p>
+<pre class="r"><code># colour palette for our party points
+pal &lt;- c(&quot;Con&quot; = &quot;#0087DC&quot;, &quot;Lab&quot; = &quot;#DC241F&quot;, &quot;LD&quot; = &quot;#FCBB30&quot;, &quot;UKIP&quot; = &quot;#70147A&quot;, &quot;Green&quot; = &quot;#78B943&quot;)
+
+# plot it and save as png big enough to avoid over-plotting of the points
+p &lt;- ggplot() +
+  geom_sf(data = sf_data, fill = &quot;transparent&quot;,colour = &quot;white&quot;) +
+  geom_point(data = sf_dots, aes(lon, lat, colour = Party)) +
+  scale_colour_manual(values = pal) +
+  coord_sf(crs = 4326, datum = NA) +
+  theme_void(base_family = &quot;Iosevka&quot;, base_size = 48) +
+  labs(x = NULL, y = NULL,
+       title = &quot;UK General Election 2017\n&quot;,
+       subtitle = &quot;London Constituencies\n1 dot = 100 votes&quot;,
+       caption = &quot;Map by Culture of Insight @PaulCampbell91 | Data Sources: House of Commons Library, Alasdair Rae&quot;) +
+  guides(colour = guide_legend(override.aes = list(size = 18))) +
+  theme(legend.position = c(0.82, 1.03), legend.direction = &quot;horizontal&quot;,
+        plot.background = element_rect(fill = &quot;#212121&quot;, color = NA), 
+        panel.background = element_rect(fill = &quot;#212121&quot;, color = NA),
+        legend.background = element_rect(fill = &quot;#212121&quot;, color = NA),
+        legend.key = element_rect(fill = &quot;#212121&quot;, colour = NA),
+        plot.margin = margin(1, 1, 1, 1, &quot;cm&quot;),
+        text =  element_text(color = &quot;white&quot;),
+        title =  element_text(color = &quot;white&quot;),
+        plot.title = element_text(hjust = 0.5),
+        plot.caption = element_text(size = 32)
+  )
+
+ggsave(&quot;../../static/img/party_points.png&quot;, plot = p, dpi = 320, width = 80, height = 70, units = &quot;cm&quot;)</code></pre>
+<p>The results should look something like this…</p>
+<p><img src="/img/party_points.png" alt="R sf dot density election map london UK" width="100%" /></p>
+<p>Job’s a good’un. We can compare it to a choropleth map of London seat winners…</p>
+<pre class="r"><code>ggplot() +
+  geom_sf(data = sf_data, aes(fill = first_party), colour = &quot;white&quot;) +
+  scale_fill_manual(values = pal, name = &quot;Seat Winner&quot;) +
+  coord_sf(crs = 4326, datum = NA) +
+  theme_void() +
+  theme(legend.position = c(0.8, 0.9), legend.direction = &quot;horizontal&quot;)</code></pre>
+<p><img src="/blog/2018-04-08-multivariate-dot-density-maps-in-r-with-sf-ggplot2_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>What do we think is the most insightful map? Luckily we don’t have to choose one or the other, can use both! No one map will be able to give the you all the answers so I find that it’s best to combine techniques for maximum insight. The choropleth gives us a clear indication as to who won where, and the dot-density looks under the hood and gives us an idea of the count and diversity of votes within each constituency.</p>
+<hr />
+</div>
+<div id="a-few-shout-outs" class="section level2">
+<h2>A few shout outs</h2>
+<ul>
+<li>Thanks to the FT data visualisation team for always inspiring with stellar maps and graphics</li>
+<li><a href="https://twitter.com/undertheraedar" target="_blank">Alasdair Rae</a> for his <a href="https://www.dropbox.com/s/4iajcx25grpx5qi/uk_650_wpc_2017_full_res_v1.8.zip?dl=0" target="_blank">UK Constinuencies shapefile</a></li>
+<li><a href="https://twitter.com/traffordDataLab" target="_blank">The Trafford Data Lab</a> for getting in touch regarding their use of our old dot-density tutorial and <a href="https://www.trafforddatalab.io/info/demographics/ethnicity/index.html" target="_blank">their code</a> that helped a lot in converting it to an this sf-friendly version</li>
+<li>Donald Trump, who’s love of a <a href="https://medium.com/tdebeus/trump-should-ignore-the-mercator-map-when-showing-election-results-52ad2d33b740" traget="_blank">certain choropleth map</a> has triggered the desire for better election maps everywhere</li>
+</ul>
+<hr />
+<p><em>Ci vediamo dopo!</em></p>
 </div>
 
                         </div>

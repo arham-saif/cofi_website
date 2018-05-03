@@ -219,7 +219,7 @@ function counters () {
 
 /* picture zoom */
 function pictureZoom () {
-  $('.product .image, .post .image, .photostream div').each(function () {
+  $('.product .image, .photostream div').each(function () {
     var imgHeight = $(this).find('img').height()
     $(this).height(imgHeight)
   })

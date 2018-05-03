@@ -1,6 +1,6 @@
 ---
 title: Antivia Decision-Point Dashboard Catalog
-twitterImg: /img/antivia.png
+twitterImg: img/antivia.png
 author: James Smythe
 date: '2018-02-18'
 ---

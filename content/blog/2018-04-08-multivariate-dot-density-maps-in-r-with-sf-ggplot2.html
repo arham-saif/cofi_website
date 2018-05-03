@@ -53,6 +53,7 @@ draft: false
 <p>I filter each dataset to the London region but if you’re doing this yourself and want to map another region, you can simply switch London out for the region of your choice and continue on.</p>
 <pre class="r"><code>library(tidyverse) # dev version of ggplot2 required devtools::install_github(&#39;hadley/ggplot2&#39;)
 library(sf)
+extrafont::loadfonts(&quot;win&quot;)
 
 # election results filtered to London region
 ge_data &lt;- read_csv(&quot;http://researchbriefings.files.parliament.uk/documents/CBP-7979/HoC-GE2017-constituency-results.csv&quot;) %&gt;% 
@@ -71,14 +72,45 @@ sf_data &lt;- left_join(ge_data, uk) %&gt;%
   st_as_sf() # I&#39;m losing sf class after join so make sf object again
 
 head(sf_data)</code></pre>
+<pre><code>## Simple feature collection with 6 features and 8 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: -0.2050868 ymin: 51.34552 xmax: 0.2176442 ymax: 51.56706
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+## # A tibble: 6 x 9
+##   ons_id   constituency_name     first_party   Con   Lab    LD  UKIP Green
+##   &lt;chr&gt;    &lt;chr&gt;                 &lt;chr&gt;       &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
+## 1 E140005~ Barking               Lab         10711 32319   599  3031   724
+## 2 E140005~ Battersea             Lab         22876 25292  4401   357   866
+## 3 E140005~ Beckenham             Con         30632 15545  4073     0  1380
+## 4 E140005~ Bermondsey and Old S~ Lab          7581 31161 18189   838   639
+## 5 E140005~ Bethnal Green and Bow Lab          7576 42969  2982   894  1516
+## 6 E140005~ Bexleyheath and Cray~ Con         25113 16040  1201  1944   601
+## # ... with 1 more variable: geometry &lt;MULTIPOLYGON [Â°]&gt;</code></pre>
 <hr />
 </div>
 <div id="generating-coordinates-for-each-dot" class="section level2">
 <h2>Generating Coordinates for each Dot</h2>
-<p>Here we create a data frame with the number of dots we want plotted in each constituency for each party. Dividing total vote count by 100 means that each dot will represent 100 votes. Then we plug this data into a <code>purrr::map_df</code> call and let it pipe it’s way to a nice tidy tibble with coordinates columns and a categorical column for the politcal party assignment of each dot.</p>
-<p>It took me a while to figure how to do this is in one pipe. The tricky part was realising that the ‘geometry set’ produced after the <code>st_sample</code> stage (generation of coordinates) has the top level ‘geometry type’ of <code>GEOMETRY</code> but in order for us to be able to scrape the the coordinates with the <code>st_coordinates</code> function, we must first simplify the geometry type to <code>POINT</code> with <code>st_cast</code> function…</p>
-<pre class="r"><code># data frame of number of dots to plot for each party (1 for every 100 votes)
-num_dots &lt;- ceiling(select(as.data.frame(sf_data), Con:Green) / 100)
+<p>Here we create a data frame with the number of dots we want plotted in each constituency for each party. Dividing total vote count by 100 means that each dot will represent 100 votes. We then apply a random rounding algorithm on the floats to avoid any systematic bias in overall dot counts. Then we plug this data into a <code>purrr::map_df</code> call and let it pipe it’s way to a nice tidy tibble with coordinates columns and a categorical column for the politcal party assignment of each dot. Finally we randomise the order of rows with <code>slice</code>, again to avoid any bias in plotting order.</p>
+<p>It took me a while to figure how to do the final stage in one pipe. The tricky part was realising that the ‘geometry set’ produced after the <code>st_sample</code> stage (generation of coordinates) has the top level ‘geometry type’ of <code>GEOMETRY</code>, but in order for us to be able to scrape the the coordinates with the <code>st_coordinates</code> function, we must first simplify the geometry type to <code>POINT</code> with <code>st_cast</code> function…</p>
+<pre class="r"><code># credit to Jens von Bergmann for this algo https://github.com/mountainMath/dotdensity/blob/master/R/dot-density.R
+random_round &lt;- function(x) {
+    v=as.integer(x)
+    r=x-v
+    test=runif(length(r), 0.0, 1.0)
+    add=rep(as.integer(0),length(r))
+    add[r&gt;test] &lt;- as.integer(1)
+    value=v+add
+    ifelse(is.na(value) | value&lt;0,0,value)
+    return(value)
+  }
+
+# data frame of number of dots to plot for each party (1 for every 100 votes)
+num_dots &lt;- as.data.frame(sf_data) %&gt;% 
+  select(Con:Green) %&gt;% 
+  mutate_all(funs(. / 100)) %&gt;% 
+  mutate_all(random_round)
 
 # generates data frame with coordinates for each point + what party it is assiciated with
 sf_dots &lt;- map_df(names(num_dots), 
@@ -87,29 +119,20 @@ sf_dots &lt;- map_df(names(num_dots),
                     st_coordinates() %&gt;%                                          # pull out coordinates into a matrix
                     as_tibble() %&gt;%                                               # convert to tibble
                     setNames(c(&quot;lon&quot;,&quot;lat&quot;)) %&gt;%                                  # set column names
-                    mutate(Party = factor(.x, levels = names((num_dots))))        # add categorical party variable
-                  ) # map_df then binds each party&#39;s tibble into one
+                    mutate(Party = .x)                                            # add categorical party variable
+                  ) %&gt;% 
+  slice(sample(1:n())) # once map_df binds rows randomise order to avoid bias in plotting order
 
 head(sf_dots)</code></pre>
 <pre><code>## # A tibble: 6 x 3
-##      lon   lat Party
-##    &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;
-## 1 0.102   51.5 Con  
-## 2 0.0992  51.5 Con  
-## 3 0.149   51.6 Con  
-## 4 0.0724  51.5 Con  
-## 5 0.110   51.5 Con  
-## 6 0.0958  51.5 Con</code></pre>
-<pre class="r"><code>tail(sf_dots)</code></pre>
-<pre><code>## # A tibble: 6 x 3
-##      lon   lat Party
-##    &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;
-## 1 -0.249  51.4 Green
-## 2 -0.228  51.4 Green
-## 3 -0.243  51.4 Green
-## 4 -0.200  51.4 Green
-## 5 -0.215  51.4 Green
-## 6 -0.204  51.4 Green</code></pre>
+##       lon   lat Party
+##     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;
+## 1 -0.0721  51.5 Lab  
+## 2 -0.431   51.6 Lab  
+## 3 -0.0686  51.6 Green
+## 4 -0.0118  51.5 Lab  
+## 5 -0.293   51.6 Lab  
+## 6 -0.321   51.6 Con</code></pre>
 <p>We’re now ripe for plotting with <code>ggplot2</code>.</p>
 <hr />
 </div>

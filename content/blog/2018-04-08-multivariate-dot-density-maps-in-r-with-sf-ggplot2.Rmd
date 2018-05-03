@@ -74,9 +74,10 @@ First lets get some election data and a constituency level shapefile then select
 
 I filter each dataset to the London region but if you're doing this yourself and want to map another region, you can simply switch London out for the region of your choice and continue on. 
 
-```{r eval=FALSE}
+```{r}
 library(tidyverse) # dev version of ggplot2 required devtools::install_github('hadley/ggplot2')
 library(sf)
+extrafont::loadfonts("win")
 
 # election results filtered to London region
 ge_data <- read_csv("http://researchbriefings.files.parliament.uk/documents/CBP-7979/HoC-GE2017-constituency-results.csv") %>% 
@@ -101,13 +102,28 @@ head(sf_data)
 
 ## Generating Coordinates for each Dot
 
-Here we create a data frame with the number of dots we want plotted in each constituency for each party. Dividing total vote count by 100 means that each dot will represent 100 votes. Then we plug this data into a `purrr::map_df` call and let it pipe it's way to a nice tidy tibble with coordinates columns and a categorical column for the politcal party assignment of each dot.
+Here we create a data frame with the number of dots we want plotted in each constituency for each party. Dividing total vote count by 100 means that each dot will represent 100 votes. We then apply a random rounding algorithm on the floats to avoid any systematic bias in overall dot counts. Then we plug this data into a `purrr::map_df` call and let it pipe it's way to a nice tidy tibble with coordinates columns and a categorical column for the politcal party assignment of each dot. Finally we randomise the order of rows with `slice`, again to avoid any bias in plotting order.
 
-It took me a while to figure how to do this is in one pipe. The tricky part was realising that the 'geometry set' produced after the `st_sample` stage (generation of coordinates) has the top level 'geometry type' of `GEOMETRY` but in order for us to be able to scrape the the coordinates with the `st_coordinates` function, we must first simplify the geometry type to `POINT` with `st_cast` function...
+It took me a while to figure how to do the final stage in one pipe. The tricky part was realising that the 'geometry set' produced after the `st_sample` stage (generation of coordinates) has the top level 'geometry type' of `GEOMETRY`, but in order for us to be able to scrape the the coordinates with the `st_coordinates` function, we must first simplify the geometry type to `POINT` with `st_cast` function...
 
 ```{r}
+# credit to Jens von Bergmann for this algo https://github.com/mountainMath/dotdensity/blob/master/R/dot-density.R
+random_round <- function(x) {
+    v=as.integer(x)
+    r=x-v
+    test=runif(length(r), 0.0, 1.0)
+    add=rep(as.integer(0),length(r))
+    add[r>test] <- as.integer(1)
+    value=v+add
+    ifelse(is.na(value) | value<0,0,value)
+    return(value)
+  }
+
 # data frame of number of dots to plot for each party (1 for every 100 votes)
-num_dots <- ceiling(select(as.data.frame(sf_data), Con:Green) / 100)
+num_dots <- as.data.frame(sf_data) %>% 
+  select(Con:Green) %>% 
+  mutate_all(funs(. / 100)) %>% 
+  mutate_all(random_round)
 
 # generates data frame with coordinates for each point + what party it is assiciated with
 sf_dots <- map_df(names(num_dots), 
@@ -116,11 +132,11 @@ sf_dots <- map_df(names(num_dots),
                     st_coordinates() %>%                                          # pull out coordinates into a matrix
                     as_tibble() %>%                                               # convert to tibble
                     setNames(c("lon","lat")) %>%                                  # set column names
-                    mutate(Party = factor(.x, levels = names((num_dots))))        # add categorical party variable
-                  ) # map_df then binds each party's tibble into one
+                    mutate(Party = .x)                                            # add categorical party variable
+                  ) %>% 
+  slice(sample(1:n())) # once map_df binds rows randomise order to avoid bias in plotting order
 
 head(sf_dots)
-tail(sf_dots)
 ```
 
 We're now ripe for plotting with `ggplot2`.

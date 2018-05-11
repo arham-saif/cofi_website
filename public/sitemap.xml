@@ -129,6 +129,10 @@
   </url>
   
   <url>
+    <loc>/tech/</loc>
+  </url>
+  
+  <url>
     <loc>/portfolio/</loc>
     <lastmod>2018-05-01T00:00:00+00:00</lastmod>
     <priority>0</priority>

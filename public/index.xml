@@ -158,5 +158,14 @@ Leave a note in the contact form below and we&amp;rsquo;ll get back to you as so
       <description>What’s an app?What’s a portal?Security, users and loginsGDPRWhat kind of data can we put in?How do we add data?What technology do we use?How do users access the data they need?How are the apps and portals hosted and accessed?How do you track usage?How are projects managed?How much do projects cost?Other questions?What’s an app?By Apps, we mean online, responsive visualisation tools created with data on one topic.</description>
     </item>
     
+    <item>
+      <title>Our Tech Stack</title>
+      <link>/tech/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/tech/</guid>
+      <description>Why we use open-source We&amp;rsquo;re passionate about using open-source software (OSS) to develop specialised data solutions and tools for our clients. The benefits of using OSS as opposed to pre-packaged products are numerous; the most obvious two being flexibility and cost. We benefit from the rich ecosystem of open-source tech that we can bring together into a product that works for you. And you don&amp;rsquo;t pay extortionate per-user licencing costs!</description>
+    </item>
+    
   </channel>
 </rss>

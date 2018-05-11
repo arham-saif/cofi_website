@@ -26,12 +26,17 @@ paginate = 10
 [[menu.main]]
     name = "Portfolio"
     url  = "/portfolio/"
-    weight = 3
+    weight = 2
     
 [[menu.main]]
     name = "Blog"
     url  = "/blog/"
-    weight = 2
+    weight = 5
+    
+[[menu.main]]
+    name = "Our Tech"
+    url  = "/tech/"
+    weight = 3
     
 [[menu.main]]
     name = "FAQ"
@@ -41,7 +46,7 @@ paginate = 10
 [[menu.main]]
     name = "Contact"
     url  = "/contact/"
-    weight = 5
+    weight = 6
 
 #[[menu.main]]
  #   name = "<i class='fa fa-2x fa-linkedin'></i>"
@@ -55,13 +60,13 @@ paginate = 10
     weight = 1
     name = "Twitter"
     url = "http://twitter.com/datasetfree"
-    pre = "<i class='fa fa-2x fa-twitter'></i>"
+    pre = "<i class='fab fa-2x fa-twitter'></i>"
 
 [[menu.topbar]]
     weight = 2
     name = "LinkedIn"
     url = "https://www.linkedin.com/company/1762719/"
-    pre = "<i class='fa fa-2x fa-linkedin'></i>"
+    pre = "<i class='fab fa-2x fa-linkedin'></i>"
 
 #[[menu.topbar]]
  #   weight = 2

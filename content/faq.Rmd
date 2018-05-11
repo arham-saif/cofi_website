@@ -55,7 +55,7 @@ Fully DIY-administered systems with support are also provided, where the client 
 
 ## What technology do we use?
 
-Most of our apps are built using either R Shiny or Antivia DecisionPoint. Each has its benefits depending on the brief, and both allow scaleable, robust and highly secure tools to be developed without the astronomical licensing fees or IT requirements of Tableau and its rivals.
+Most of our apps are built using either R Shiny or Antivia DecisionPoint. Each has its benefits depending on the brief, and both allow scaleable, robust and highly secure tools to be developed without the astronomical licensing fees or IT requirements of Tableau and its rivals. Check out our [tech page](/tech) for more information about our development process and deployment methods.
 
 ## How do users access the data they need?
 

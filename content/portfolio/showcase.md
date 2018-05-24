@@ -5,7 +5,7 @@ author: Paul Campbell
 date: '2018-05-17'
 ---
 
-<a href="https://apps.cultureofinsight.com/showcase" target="_blank"><img src="/img/showcase.png" alt="Culture of Insight Building nterfaces for you aand your data" width="100%" title="Click to launch app" /></a>
+<a href="https://apps.cultureofinsight.com/showcase" target="_blank"><img src="/img/showcase.png" alt="Culture of Insight Building interfaces for you aand your data" width="100%" title="Click to launch app" /></a>
 
 We built an app to showcase how we combine powerful data programming in R with modern user interfaces using the latest HTML, CSS and Javascript frameworks.
 

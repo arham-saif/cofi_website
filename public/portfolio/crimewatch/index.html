@@ -6,7 +6,7 @@
   <meta name="robots" content="all,follow">
   <meta name="googlebot" content="index,follow,snippet,archive">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Showcase App</title>
+  <title>UK Crime Mapping Tool</title>
   <meta name="author" content="" />
 
   
@@ -65,17 +65,17 @@
 
   
   
-    <title>Showcase App</title>
-    <meta property="og:title" content="Showcase App">
+    <title>UK Crime Mapping Tool</title>
+    <meta property="og:title" content="UK Crime Mapping Tool">
     <meta property="og:type" content="article">
-    <meta property="og:description" content="We built an app to showcase how we combine powerful data programming in R with modern user interfaces using the latest HTML, CSS and Javascript frameworks.
-Features:
- TV Data Dashboard Sales Data Dashboard Automated Report Generator  get a report your twitter data by typing in your username!  Data Exporting Examples  Branded Chart Image Downloads Data downloads to CSV or Excel PowerPoint Chart Downloads - build a chart in the app and download it into a powerpoint template as a native chart object    Click on the image above to check it out!">
+    <meta property="og:description" content="This is an example of how we can &lsquo;democratise&rsquo; a data source by combining back-end data programming with a simple, effective user interface.
+The application uses geocoding and GPS to allow users to retrieve and map data from the UK Police data base at a location of their choice within England, Wales or Northern Ireland.
+Currently the app will return data for the most recent month available in the data base (March 2018 at the time of writing).">
 
       
       <meta name="twitter:card" content="summary_large_image">
-      <meta name="twitter:image" content="/img/showcase.png" >
-      <meta property='og:image' content="/img/showcase.png" >      
+      <meta name="twitter:image" content="/img/crime-watch.png" >
+      <meta property='og:image' content="/img/crime-watch.png" >      
       
       
     
@@ -96,9 +96,9 @@ Features:
         <div class="container">
             <div class="navbar-header">
                 <a class="navbar-brand home" href="/">
-                    <img src="/img/logo.png" alt="Showcase App logo" class="hidden-xs hidden-sm" style="height: 62px; padding-bottom: 15px;">
-                    <img src="/img/logo.png" alt="Showcase App logo" class="visible-xs visible-sm" style="height: 62px; padding-bottom: 15px;">
-                    <span class="sr-only">Showcase App - go to homepage</span>
+                    <img src="/img/logo.png" alt="UK Crime Mapping Tool logo" class="hidden-xs hidden-sm" style="height: 62px; padding-bottom: 15px;">
+                    <img src="/img/logo.png" alt="UK Crime Mapping Tool logo" class="visible-xs visible-sm" style="height: 62px; padding-bottom: 15px;">
+                    <span class="sr-only">UK Crime Mapping Tool - go to homepage</span>
                 </a>
                 <div class="navbar-buttons">
                     <button type="button" class="navbar-toggle btn-template-main" data-toggle="collapse" data-target="#navigation">
@@ -183,7 +183,7 @@ Features:
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h1>Showcase App</h1>
+                <h1>UK Crime Mapping Tool</h1>
             </div>
         </div>
     </div>
@@ -200,31 +200,29 @@ Features:
                     <div class="col-md-9" id="blog-post">
 
                         <div id="post-content">
-                          <p><a href="https://apps.cultureofinsight.com/showcase" target="_blank"><img src="/img/showcase.png" alt="Culture of Insight Building interfaces for you aand your data" width="100%" title="Click to launch app" /></a></p>
+                          
 
-<p>We built an app to showcase how we combine powerful data programming in R with modern user interfaces using the latest HTML, CSS and Javascript frameworks.</p>
+<p><a href="https://apps.cultureofinsight.com/crime-watch/" target="_blank"><img src="/img/crime-watch.png" alt="UK Police data interface" width="100%" title="Click to launch app" /></a></p>
 
-<p>Features:</p>
+<p>This is an example of how we can &lsquo;democratise&rsquo; a data source by combining back-end data programming with a simple, effective user interface.</p>
+
+<p>The application uses geocoding and GPS to allow users to retrieve and map data from the UK Police data base at a location of their choice within England, Wales or Northern Ireland.</p>
+
+<p>Currently the app will return data for the most recent month available in the data base (March 2018 at the time of writing). Functionality could be added to allow users to request data from previous months.</p>
+
+<p>Criminal incidents within a 1 mile radius of the users chosen location are retrieved and mapped at the lattitude + longitude recorded by the police. A summary count of all incidents, grouped by category, is also visualised in a bar chart.</p>
+
+<p>Visit the full-page app at <a href="https://apps.cultureofinsight.com/crime-watch/" target="_blank">apps.cultureofinsight.com/crime-watch/</a> or check out the code <a href="https://github.com/PaulC91/crime-watch" target="_blank">here</a>.</p>
+
+<hr />
+
+<h2 id="credits">Credits</h2>
 
 <ul>
-<li>TV Data Dashboard</li>
-<li>Sales Data Dashboard</li>
-<li>Automated Report Generator
-
-<ul>
-<li>get a report your twitter data by typing in your username!</li>
-</ul></li>
-<li>Data Exporting Examples
-
-<ul>
-<li>Branded Chart Image Downloads</li>
-<li>Data downloads to CSV or Excel</li>
-<li><strong>PowerPoint Chart Downloads</strong> - build a chart in the app and download it into a powerpoint template as a native chart object
-<br /></li>
-</ul></li>
+<li>Geocoding via the <a href="https://github.com/ropensci/opencage">rOpenSci opencage R package</a></li>
+<li>GPS locater via Dr Tom August&rsquo;s <a href="https://github.com/AugustT/shiny_geolocation">shiny geolocation Javascript script</a></li>
+<li>API calls to the <a href="https://data.police.uk/">data.police.uk</a> data base via Nicholas Tierney&rsquo;s <a href="https://github.com/njtierney/ukpolice">ukpolice R package</a></li>
 </ul>
-
-<p>Click on the image above to check it out!</p>
 
                         </div>
                         

@@ -24,6 +24,17 @@ Features:
     </item>
     
     <item>
+      <title>UK Crime Mapping Tool</title>
+      <link>/portfolio/crimewatch/</link>
+      <pubDate>Wed, 16 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/portfolio/crimewatch/</guid>
+      <description>This is an example of how we can &amp;lsquo;democratise&amp;rsquo; a data source by combining back-end data programming with a simple, effective user interface.
+The application uses geocoding and GPS to allow users to retrieve and map data from the UK Police data base at a location of their choice within England, Wales or Northern Ireland.
+Currently the app will return data for the most recent month available in the data base (March 2018 at the time of writing).</description>
+    </item>
+    
+    <item>
       <title>Multivariate Dot-Density Maps in R with sf &amp; ggplot2</title>
       <link>/blog/2018/05/02/2018-04-08-multivariate-dot-density-maps-in-r-with-sf-ggplot2/</link>
       <pubDate>Wed, 02 May 2018 00:00:00 +0000</pubDate>

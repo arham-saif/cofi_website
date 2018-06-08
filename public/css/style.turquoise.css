@@ -3556,6 +3556,10 @@ a.list-group-item.active > .badge,
   right: 15px;
 }
 
+.portfolio {
+  padding: 0;
+}
+
 .portfolio .item {
   list-style-type: none;
 }

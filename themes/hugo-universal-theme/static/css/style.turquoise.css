@@ -3555,3 +3555,7 @@ a.list-group-item.active > .badge,
   left: 15px;
   right: 15px;
 }
+
+.portfolio .item {
+  list-style-type: none;
+}

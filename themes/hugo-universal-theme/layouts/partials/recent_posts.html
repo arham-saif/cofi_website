@@ -15,46 +15,50 @@
             <!-- *** BLOG HOMEPAGE *** -->
 
             <div class="row">
-
-                {{ $posts := .Paginate (where .Data.Pages "Type" "blog") }}
-                {{ range first 4 $posts.Pages }}
-                <div class="col-md-3 col-sm-6">
-                    <div class="box-image-text blog">
-                        <div class="top">
-                            <div class="image" style="overflow:hidden">
-                                {{ if .Params.twitterImg }}
-                                <img src="{{ .Site.BaseURL}}{{ .Params.twitterImg }}" class="img-responsive" alt="" >
-                                {{ else }}
-                                <img src="{{ .Site.BaseURL}}img/placeholder.png" class="img-responsive" alt="">
-                                {{ end }}
-                            </div>
-                            <div class="bg"></div>
-                            <div class="text">
-                                <p class="buttons">
-                                    <a href="{{ .Permalink }}" class="btn btn-template-transparent-primary"><i class="fa fa-link"></i> {{ i18n "readMore" }}</a>
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="content">
-                            <h4><a href="{{ .Permalink }}">{{ .Title }}</a></h4>
-                            <p class="author-category">
-                            {{ with .Params.author }}
-                            {{ i18n "authorBy" }} <a href="#">{{ . }}</a>
-                            {{ end }}
-                            {{ i18n "publishedOn" }} {{ .Date.Format .Site.Params.date_format }}
-                            </p>
-                            <p class="intro">{{ .Params.description }}</p>
-                            <p class="read-more">
-                              <a href="{{ .Permalink }}" class="btn btn-template-main">{{ i18n "continueReading" }}</a>
-                            </p>
-                        </div>
-                    </div>
-                    <!-- /.box-image-text -->
-
-                </div>
+              <ul class="owl-carousel portfolio">
+                {{ $posts := .Paginate (where .Data.Pages "Type" "portfolio") }}
+                {{ range $posts.Pages }}
+                <li class="owl-item">
+                  <div>
+                      <div class="box-image-text blog">
+                          <div class="top">
+                              <div class="image" style="overflow:hidden;">
+                                  {{ if .Params.twitterImg }}
+                                  <img src="{{ .Site.BaseURL}}{{ .Params.twitterImg }}" class="img-responsive" width="90%" style= "display:block; margin: 0 auto;" alt="" >
+                                  {{ else }}
+                                  <img src="{{ .Site.BaseURL}}img/placeholder.png" class="img-responsive" alt="">
+                                  {{ end }}
+                              </div>
+                              <div class="bg"></div>
+                              <div class="text">
+                                  <p class="buttons">
+                                      <a href="{{ .Permalink }}" class="btn btn-template-transparent-primary"><i class="fa fa-link"></i> {{ i18n "readMore" }}</a>
+                                  </p>
+                              </div>
+                          </div>
+  
+                          <div class="content">
+                              <h4><a href="{{ .Permalink }}">{{ .Title }}</a></h4>
+                              <!--
+                              <p class="author-category">
+                              {{ with .Params.author }}
+                              {{ i18n "authorBy" }} <a href="#">{{ . }}</a>
+                              {{ end }}
+                              {{ i18n "publishedOn" }} {{ .Date.Format .Site.Params.date_format }}
+                              </p>
+                              -->
+                              <p class="intro">{{ .Params.description }}</p>
+                              <p class="read-more">
+                                <a href="{{ .Permalink }}" class="btn btn-template-main">{{ i18n "continueReading" }}</a>
+                              </p>
+                          </div>
+                      </div>
+                      <!-- /.box-image-text -->
+  
+                  </div>
+                </li>
                 {{ end }}
-
+              </ul>
             </div>
             <!-- /.row -->
 

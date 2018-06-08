@@ -29,7 +29,7 @@ paginate = 10
     weight = 2
     
 [[menu.main]]
-    name = "Blog"
+    name = "R Blog"
     url  = "/blog/"
     weight = 5
     
@@ -180,5 +180,5 @@ paginate = 10
 
 [params.recent_posts]
     enable = true
-    title = "From our blog"
+    title = "Public Portfolio"
     subtitle = ""

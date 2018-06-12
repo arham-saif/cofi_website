@@ -29,7 +29,7 @@ paginate = 10
     weight = 2
     
 [[menu.main]]
-    name = "R Blog"
+    name = "Blog"
     url  = "/blog/"
     weight = 5
     

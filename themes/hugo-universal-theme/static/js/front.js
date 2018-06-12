@@ -95,6 +95,10 @@ function sliders () {
   if ($('.owl-carousel').length) {
     $('.customers').owlCarousel({
       items: 6,
+      slideSpeed: 300,
+      paginationSpeed: 400,
+      autoPlay: true,
+      stopOnHover: true,
       itemsDesktopSmall: [990, 4],
       itemsTablet: [768, 2],
       itemsMobile: [480, 1]

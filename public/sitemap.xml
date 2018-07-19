@@ -185,6 +185,10 @@
   </url>
   
   <url>
+    <loc>/training/</loc>
+  </url>
+  
+  <url>
     <loc>/categories/tutorials/</loc>
     <lastmod>2018-05-02T00:00:00+00:00</lastmod>
     <priority>0</priority>

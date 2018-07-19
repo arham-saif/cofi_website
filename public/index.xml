@@ -189,5 +189,15 @@ Leave a note in the contact form below and we&amp;rsquo;ll get back to you as so
       <description>Why we use open-source We&amp;rsquo;re passionate about using open-source software (OSS) to develop specialised data solutions and tools for our clients. The benefits of using OSS as opposed to pre-packaged products are numerous; the most obvious two being flexibility and cost. We benefit from the rich ecosystem of open-source tech that we can bring together into a product that works for you. And you don&amp;rsquo;t pay extortionate per-user licencing costs!</description>
     </item>
     
+    <item>
+      <title>Transform Your Data Skills</title>
+      <link>/training/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/training/</guid>
+      <description>In many sectors and industries data has become the most valuable resource a business can acquire. As the the volume of data keeps getting bigger, having the tools to harness it for insight is vital. Manipulating large quantities of data in programs like Excel can be inefficient, frustrating and error-prone.
+For this reason, more and more people are switching to programming languages like R for data tasks. It&amp;rsquo;s simple to get started with, purpose-built for data analysis, and comprehensive - an &amp;lsquo;end-to-end&amp;rsquo; data project from data importing through to communication of insights in reports or interactive dashboards is all possible purely with R!</description>
+    </item>
+    
   </channel>
 </rss>

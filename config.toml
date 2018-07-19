@@ -27,26 +27,31 @@ paginate = 10
     name = "Portfolio"
     url  = "/portfolio/"
     weight = 2
+
+[[menu.main]]
+    name = "Training"
+    url  = "/training/"
+    weight = 3
     
 [[menu.main]]
     name = "Blog"
     url  = "/blog/"
-    weight = 5
+    weight = 4
     
 [[menu.main]]
     name = "Our Tech"
     url  = "/tech/"
-    weight = 3
+    weight = 5
     
 [[menu.main]]
     name = "FAQ"
     url  = "/faq/"
-    weight = 4
+    weight = 6
     
 [[menu.main]]
     name = "Contact"
     url  = "/contact/"
-    weight = 6
+    weight = 7
 
 #[[menu.main]]
  #   name = "<i class='fa fa-2x fa-linkedin'></i>"

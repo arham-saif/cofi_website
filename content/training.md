@@ -1,6 +1,7 @@
 +++
 title = "Transform Your Data Skills"
 description = "Invest in you or your teams data skills with one of our R training courses"
+keywords = ["R", "Training", "Workshops", "London", "Tidyverse", "Shiny", "Data Science"]
 +++
 
 <center>

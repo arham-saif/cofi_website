@@ -3,7 +3,11 @@
  * Author : Louis Barranqueiro - https://github.com/LouisBarranqueiro
  */
  
- @import url('https://fonts.googleapis.com/css?family=Roboto+Slab:300,400');
+ @import url('https://fonts.googleapis.com/css?family=Roboto+Slab:300,400|Oswald:400,500,700');
+
+content p {
+  line-height: 1.6;
+}
 
 #post-content {
   font-family: 'Roboto Slab';
@@ -14,7 +18,8 @@
   max-width: 100%;
 }
 
-#post-content h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: 'Oswald';
   font-weight: 500;
 }
 

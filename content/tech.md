@@ -33,4 +33,4 @@ Another deployment option we offer is via <a href="https://www.docker.com/what-d
 
 ---
 
-If you have any questions about our development and deployment process, get in touch via our [contant page](/contact).
+If you have any questions about our development and deployment process, get in touch via our [contact page](/contact).

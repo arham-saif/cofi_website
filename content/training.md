@@ -3,6 +3,12 @@ title = "Transform Your Data Skills"
 description = "Invest in you or your teams data skills with one of our R training courses"
 +++
 
+<center>
+
+<a href="http://r4ds.had.co.nz/" target="_blank" title="R for Data Science"><img src="/img/data-science-pipeline.png" alt="R data science training tidyverse"/></a>
+
+</center>
+
 In many sectors and industries data has become the most valuable resource a business can acquire. As the the volume of data keeps getting bigger, having the tools to harness it for insight is vital. Manipulating large quantities of data in programs like Excel can be inefficient, frustrating and error-prone.
 
 For this reason, more and more people are switching to programming languages like R for data tasks. It's simple to get started with, purpose-built for data analysis, and comprehensive - an 'end-to-end' data project from data importing through to communication of insights in reports or interactive dashboards is all possible purely with R! 
@@ -38,4 +44,4 @@ If you're interested in training for your whole team, we can travel to you and f
 
 ### Book Now
 
-For more information or to request a booking, head over to our [contant page](/contact) and get in touch!
+For more information or to request a booking, head over to our [contact page](/contact) and get in touch!

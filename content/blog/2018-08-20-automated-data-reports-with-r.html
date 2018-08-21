@@ -1,0 +1,213 @@
+---
+title: Automated Data Reports with R
+author: Paul Campbell
+description: "Create reproducible reports from data cleaning to visualisation with rmarkdown"
+date: '2018-08-20'
+slug: automated-data-reports-with-r
+twitterImg: img/party_points_small.png
+categories:
+  - Tutorials
+tags:
+  - R
+  - rmarkdown
+  - data reporting
+  - data visualisation
+  - ggplot2
+draft: true
+---
+
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/pymjs/pym.v1.js"></script>
+<script src="/rmarkdown-libs/widgetframe-binding/widgetframe.js"></script>
+
+
+<p>A lot of data analysts will find themselves doing repetitive manual tasks on a data set every day/week/month in Excel then copying and pasting their updated charts and tables into Word or PowerPoint reports - if this sounds like your job description, you may want to consider switching to a programming language like R with which you can automate the majority of these processes; from importing your data all the way through to emailing your boss the final report. They’ll never know you were actually in the pub the whole time.</p>
+<p>Making the switch to doing your data work with R can be daunting, but with the combination of <a href="https://www.rstudio.com/products/RStudio/" target="_blank">RStudio</a> as your ‘integrated development environment’, the <a href="https://www.tidyverse.org/" target="_blank">tidyverse packages</a> for data analysis, and <a href="https://rmarkdown.rstudio.com/" target="_blank">rmarkdown</a> for producing reports in just about any format you’d like (HTML, PDF, Word, PowerPoint, Dashboard, even entire websites like this one!), along with a really great and welcoming community of R users online, there has never been a better time to make the leap and start your journey on the path to data programming nirvana.</p>
+<hr />
+<div id="worked-example" class="section level2">
+<h2>Worked Example</h2>
+<p>In this post we’re going to run through what might be a typical workflow of building a reproducible data report in R - that is, one that you can simply hit ‘Run’ on whenever a new wave of data comes in, and all your charts and tables update accordingly giving you the latest insights in your data at the touch of a button.</p>
+<p>I’m going to use the classic gapminder dataset that contains population, life expectancy, and GDP per capita metrics for many countries over time. There is a gapminder R package that would conveniently give us the data in a format best suited for data analysis - <a href="https://en.wikipedia.org/wiki/Tidy_data" target="_blank">tidy data</a> - but we want to make this run-through as realistic as possible.</p>
+<p>As such, I’ve taken this tidy data set, removed one of the variables that we’ll have to add ourselves later, then split it up by year across multiple excel sheets in a single excel file. Sacrilige, I know, but from experience this is a very common way data with multiple time periods is stored and distributed, so it will be useful to know how to bring it all together with R code. If you’re interested in the code required to commit such a heinous crime of ‘untidying’ a data set into excel sheets you can check out the <a href="" target="_blank">make gapminder messy again</a> R script over on github.</p>
+<p>As you can see from the Excel file, each tab contains data for the year denoted in the tab name. The time between each wave in this data set is large but a more real-life scenario would be a new wave of data each month, which the following process would work equally well for.</p>
+<p>So let’s begin with the code! If you’re brand new to R don’t worry if you don’t know the ins and outs of the syntax and focus on the output.</p>
+<hr />
+<p>First thing first is to load the libraries we’ll be using for our report and set a default ggplot2 chart theme.</p>
+<pre class="r"><code>library(tidyverse)
+library(readxl)
+library(scales)
+library(countrycode)
+library(hrbrthemes)
+library(gghighlight)
+library(gganimate)
+library(glue)
+library(plotly)
+library(formattable)
+library(DT)
+library(widgetframe)
+library(crosstalk)
+
+theme_set(
+  theme_ipsum_tw(
+    base_family = &quot;Oswald&quot;, 
+    plot_title_family = &quot;Oswald&quot;, 
+    plot_title_face = 500,
+    subtitle_family = &quot;Oswald&quot;
+    )
+  )</code></pre>
+</div>
+<div id="data-importing-tidying" class="section level2">
+<h2>Data Importing &amp; Tidying</h2>
+<p>So the code below is doing the following things:</p>
+<ul>
+<li>saves the excel filepath to a <code>path</code> variable</li>
+<li>creates a new <code>combined_data</code> data frame by…
+<ul>
+<li>pulling the names of all the excel sheets in the file</li>
+<li>passing these to a <code>map_df</code> function that iterates over each sheet, reads in only the data table starting on row 5, adds a <code>year</code> column populated with the sheet name then binds all tables into one data frame</li>
+<li>a <code>continent</code> column is then added using the <code>countrycode</code> package that can translate from one geographical coding scheme to another - in our case getting a continent name from a country name</li>
+<li>finally the <code>select</code> function reorders our columns to the way we want them</li>
+</ul></li>
+</ul>
+<pre class="r"><code>path &lt;- &quot;../../data/blog_data/gapminder_messy.xlsx&quot;
+
+combined_data &lt;- 
+  excel_sheets(path) %&gt;% 
+  map_df(~ {
+    read_excel(path, sheet = .x, skip = 4, trim_ws = TRUE) %&gt;% 
+      mutate(year = as.numeric(.x))
+  }) %&gt;% 
+  mutate(continent = countrycode(sourcevar = country, 
+                                 origin = &quot;country.name&quot;, 
+                                 destination = &quot;continent&quot;)) %&gt;% 
+  select(continent, country, year, everything())
+
+continent_summary &lt;- 
+  combined_data %&gt;% 
+  group_by(continent, year) %&gt;% 
+  summarise(gdpPercap = weighted.mean(gdpPercap, pop),
+            lifeExp = weighted.mean(lifeExp, pop),
+            pop = sum(pop)) %&gt;% 
+  gather(metric, value, 3:5) %&gt;% 
+  mutate(year = as.Date(glue(&quot;{year}-01-01&quot;)))</code></pre>
+<p>Let’s quickly inspect our data to check that it got it the job done…</p>
+<pre class="r"><code># top 6 rows
+head(combined_data)</code></pre>
+<pre><code>## # A tibble: 6 x 6
+##   continent country      year gdpPercap lifeExp      pop
+##   &lt;chr&gt;     &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
+## 1 Asia      Afghanistan  2007       975    43.8 31889923
+## 2 Europe    Albania      2007      5937    76.4  3600523
+## 3 Africa    Algeria      2007      6223    72.3 33333216
+## 4 Africa    Angola       2007      4797    42.7 12420476
+## 5 Americas  Argentina    2007     12779    75.3 40301927
+## 6 Oceania   Australia    2007     34435    81.2 20434176</code></pre>
+<pre class="r"><code># bottom 6 rows
+tail(combined_data)</code></pre>
+<pre><code>## # A tibble: 6 x 6
+##   continent country             year gdpPercap lifeExp      pop
+##   &lt;chr&gt;     &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
+## 1 Americas  Venezuela           1952      7690    55.1  5439568
+## 2 Asia      Vietnam             1952       605    40.4 26246839
+## 3 Asia      West Bank and Gaza  1952      1516    43.2  1030585
+## 4 Asia      Yemen, Rep.         1952       782    32.5  4963829
+## 5 Africa    Zambia              1952      1147    42.0  2672000
+## 6 Africa    Zimbabwe            1952       407    48.5  3080907</code></pre>
+<p>We’re now in a positions to calculate the latest period on period percentage change of each metric and visuale them.</p>
+<hr />
+</div>
+<div id="linked-interactive-graphics" class="section level2">
+<h2>Linked Interactive Graphics</h2>
+<p>In an HTML report, we can use linked interactive graphics to encourage users to engage with the data and explore the insights. The charts below show the latest period percentage changes of all 3 metrics in the data set.</p>
+<p>Use the search bar to highlight a particular country across all 3 charts or click directly on one of the bars. Double clicking will deselect the highlighted country.</p>
+<p>Colours represent the continent each country is part of.</p>
+<p><br></p>
+<pre class="r"><code>p_change &lt;- combined_data %&gt;% 
+  mutate(year = as.Date(glue(&quot;{year}-01-01&quot;))) %&gt;% 
+  group_by(continent, country) %&gt;% 
+  arrange(year) %&gt;% 
+  mutate(gdpPercap_change = (gdpPercap - lag(gdpPercap)) / lag(gdpPercap),
+         lifeExp_change = (lifeExp - lag(lifeExp)) / lag(lifeExp),
+         pop_change = (pop - lag(pop)) / lag(pop))
+         
+latest_figs &lt;- p_change %&gt;% 
+  filter(year == max(year)) %&gt;%
+  select(-year) %&gt;% 
+  arrange(country) %&gt;% 
+  ungroup()</code></pre>
+<pre class="r"><code>sd &lt;- SharedData$new(latest_figs, ~country, group = &quot;Highlight a Country&quot;)
+
+sd_gdp &lt;- ggplot(sd, aes(reorder(country, -gdpPercap_change), gdpPercap_change,
+                               text = glue::glue(&quot;{country}, {continent}: {percent(gdpPercap_change)}&quot;))) +
+  geom_col(aes(fill = continent)) +
+  scale_y_percent() +
+  labs(title = &quot;GDP Per Capita % Change&quot;, y = &quot;GDP per capita&quot;) +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        panel.grid.major.x = element_blank())
+
+sd_le &lt;- ggplot(sd, aes(reorder(country, -lifeExp_change), lifeExp_change,
+                               text = glue::glue(&quot;{country}, {continent}: {percent(lifeExp_change)}&quot;))) +
+  geom_col(aes(fill = continent)) +
+  scale_y_percent() +
+  labs(title = &quot;Life Expectacy % Change&quot;, y = &quot;Life Expectancy&quot;) +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        panel.grid.major.x = element_blank())
+
+sd_pop &lt;- ggplot(sd, aes(reorder(country, -pop_change), pop_change,
+                               text = glue::glue(&quot;{country}, {continent}: {percent(pop_change)}&quot;))) +
+  geom_col(aes(fill = continent)) +
+  scale_y_percent() +
+  labs(title = &quot;Latest Period % Change&quot;, y = &quot;Population&quot;) +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        panel.grid.major.x = element_blank())
+
+sd_gdp_i &lt;- ggplotly(sd_gdp, tooltip = &quot;text&quot;)
+sd_le_i &lt;- ggplotly(sd_le, tooltip = &quot;text&quot;)
+sd_pop_i &lt;- ggplotly(sd_pop, tooltip = &quot;text&quot;)
+
+subplot(sd_gdp_i, sd_le_i, sd_pop_i, nrows = 3, titleY = TRUE) %&gt;% 
+  config(collaborate = FALSE, displaylogo = FALSE) %&gt;% 
+  hide_legend() %&gt;% 
+  highlight(selectize = TRUE, on = &quot;plotly_click&quot;) %&gt;% 
+  frameWidget(height = &quot;600px&quot;)</code></pre>
+<div id="htmlwidget-1" style="width:100%;height:600px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/blog/2018-08-20-automated-data-reports-with-r_files/figure-html//widgets/widget_unnamed-chunk-5.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<p><br></p>
+</div>
+<div id="searchable-data-tables" class="section level2">
+<h2>Searchable Data Tables</h2>
+<p>We can also use interactive data tables with search functionality and column sorting to allow users to quickly find the numbers they are looking for. Clicking on column headers will sort the data ascending or descending.</p>
+<p><br></p>
+<pre class="r"><code>fmrt &lt;- formatter(&quot;span&quot;, 
+  style = x ~ style(color = ifelse(x &gt; 0, &quot;green&quot;, ifelse(x &lt; 0, &quot;red&quot;, &quot;black&quot;))),
+  x ~ icontext(ifelse(x &gt; 0, &quot;arrow-up&quot;, &quot;arrow-down&quot;), percent(x, digits = 1)))
+
+mills &lt;- scales::unit_format(scale = 1e-6, accuracy = .01, unit = &quot;M&quot;)
+
+tdat &lt;- latest_figs %&gt;%
+  select(-continent) %&gt;% 
+  select(1:2, 5, 3, 6, 4, 7) %&gt;% 
+  mutate(pop = mills(pop))
+
+ftbl &lt;- formattable(tdat, list(
+  gdpPercap_change = fmrt,
+  lifeExp_change = fmrt,
+  pop_change = fmrt
+))
+
+as.datatable(ftbl, rownames = FALSE, 
+             colnames = c(&quot;Country&quot;, &quot;GDP Per Capita&quot;, &quot;&quot;, &quot;Life Expectancy&quot;, &quot;&quot;, &quot;Population&quot;, &quot;&quot;),
+             options = list(columnDefs = list(list(className = &#39;dt-center&#39;, targets = c(1,3,5))))
+             ) %&gt;% 
+  formatCurrency(columns = 2) %&gt;% 
+  formatRound(columns = 4, digits = 1) %&gt;% 
+  frameWidget(elementId = &quot;dt&quot;)</code></pre>
+<div id="dt" style="width:100%;height:672px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="dt">{"x":{"url":"/blog/2018-08-20-automated-data-reports-with-r_files/figure-html//widgets/widget_unnamed-chunk-6.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+</div>

@@ -2,8 +2,6 @@
  * GitHub Gist Theme
  * Author : Louis Barranqueiro - https://github.com/LouisBarranqueiro
  */
- 
- @import url('https://fonts.googleapis.com/css?family=Roboto+Slab:300,400|Oswald:400,500,700');
 
 content p {
   line-height: 1.6;
@@ -35,11 +33,11 @@ pre {
 
 code {
   font-size: 13px;
-  font-family: Iosevka, Inconsolata, monospace !important;
+  font-family: 'Fira Code', Iosevka, Inconsolata, monospace !important;
 }
 
 code.hljs {
-  font-family: Iosevka, Inconsolata, monospace !important;
+  font-family: 'Fira Code', Iosevka, Inconsolata, monospace !important;
 }
 
 .hljs {

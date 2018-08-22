@@ -16,9 +16,13 @@ tags:
 draft: true
 ---
 
-A lot of data analysts will find themselves doing repetitive manual tasks on a data set every day/week/month in Excel then copying and pasting their updated charts and tables into Word or PowerPoint reports - if this sounds like your job description, you may want to consider switching to a programming language like R with which you can automate the majority of these processes; from importing your data all the way through to emailing your boss the final report. They'll never know you were actually in the pub the whole time.
+A lot of data analysts will find themselves doing repetitive manual tasks on a data set every day/week/month in Excel then copying and pasting their updated pivot tables and charts into Word or PowerPoint reports for their stakeholders. If this sounds like your job description, you may want to consider switching to a programming language like R with which you can automate the majority of these processes; from importing your data all the way through to emailing your boss the final report. They'll never know you were actually in the pub the whole time.
 
-Making the switch to doing your data work with R can be daunting, but with the combination of <a href="https://www.rstudio.com/products/RStudio/" target="_blank">RStudio</a> as your 'integrated development environment', the <a href="https://www.tidyverse.org/" target="_blank">tidyverse packages</a> for data analysis, and <a href="https://rmarkdown.rstudio.com/" target="_blank">rmarkdown</a> for producing reports in just about any format you'd like (HTML, PDF, Word, PowerPoint, Dashboard, even entire websites like this one!), along with a really great and welcoming community of R users online, there has never been a better time to make the leap and start your journey on the path to data programming nirvana.
+Automation may sound like a scary word to any human being with a job that would like to keep it, but learning to automate some of your most common data tasks can be seriously beneficial to both your company or organisation and your own job security! Some of the benefits of an automated reporting workflow over a manual one include:
+
+1. **It saves you time.** Most people will feel like they don't have the time they need to fulfill all that is asked of them at work. So if you can cut out the time taken on manual data processing and focus more analysis and insight, that can only be a good thing.
+2. **It reduces errors.** When your reporting relies on manual data entry and formula with hard-coded cell references, one typo or out-of-place number can lead to results that are way off the mark. Automating the process with a script will remove the possibility of human error completely.
+3. **It expands your data visualisation options.** Using an open-source software like R will allow to draw on a vast array of tools and charting libraries not available in proprietary software like MS Office. For example, HTML reports with the <a href="https://rmarkdown.rstudio.com/" target="_blank">rmarkdown</a> package can include interactive charts, maps and tables that utilise the latest web-technologies - more on this below.
 
 ---
 
@@ -28,11 +32,11 @@ In this post we're going to run through what might be a typical workflow of buil
 
 I'm going to use the classic gapminder dataset that contains population, life expectancy, and GDP per capita metrics for many countries over time. There is a gapminder R package that would conveniently give us the data in a format best suited for data analysis - <a href="https://en.wikipedia.org/wiki/Tidy_data" target="_blank">tidy data</a> - but we want to make this run-through as realistic as possible. 
 
-As such, I've taken this tidy data set, removed one of the variables that we'll have to add ourselves later, then split it up by year across multiple excel sheets in a single excel file. Sacrilige, I know, but from experience this is a very common way data with multiple time periods is stored and distributed, so it will be useful to know how to bring it all together with R code. If you're interested in the code required to commit such a heinous crime of 'untidying' a data set into excel sheets you can check out the <a href="" target="_blank">make gapminder messy again</a> R script over on github.
+As such, I've taken this tidy data set, removed one of the variables that we'll have to add ourselves later, then split it up by year across multiple excel sheets in a single excel file. Sacrilige, I know, but from experience this is a very common way data with multiple time periods is stored and distributed, so it will be useful to know how to bring it back together again with R code. If you're interested in the code required to commit such a heinous crime of 'untidying' a data set into excel sheets you can check out the <a href="https://gist.github.com/PaulC91/a3c61cee7bcdef7bba31d675bfa726eb" target="_blank">make gapminder messy again</a> R script over on github.
 
 As you can see from the Excel file, each tab contains data for the year denoted in the tab name. The time between each wave in this data set is large but a more real-life scenario would be a new wave of data each month, which the following process would work equally well for.
 
-So let's begin with the code! If you're brand new to R don't worry if you don't know the ins and outs of the syntax and focus on the output.
+So let's begin with the code! If you're brand new to R don't worry if you don't know the ins and outs of the syntax. Hopefully you will see that we can get a lot done with not a lot of code!
 
 ---
 
@@ -41,12 +45,14 @@ knitr::opts_chunk$set(fig.retina = 2,
                       fig.width = 10, 
                       fig.height = 7,
                       fig.align = "center", 
-                      cache = FALSE,
+                      cache = TRUE,
                       message=FALSE, 
                       warning=FALSE, 
                       echo=TRUE
                       )
 ```
+
+## Load the Libraries
 
 First thing first is to load the libraries we'll be using for our report and set a default ggplot2 chart theme.
 
@@ -75,7 +81,20 @@ theme_set(
   )
 ```
 
+---
+
 ## Data Importing & Tidying
+
+This is the part that can be most satisfying to automate because the manual equivalent is often very tedious, time-consuming work. We're going to program a process that will:
+
+- iterate over each sheet in the excel file
+- pull out only the data table section (starting on row 5)
+- add a `year` column populated by the name of the sheet
+- combine all the seperate tables into one single data frame
+- add a `continent` column based on the `country` column using the `countrycode` package
+- re-order the columns to our desired specifications
+
+The reproducibility of this code comes from the fact that it is agnostic to the number of sheets in our excel file. That means whenever we get an updated file with a new tab of data, we just point the same code to this file and we'll get a new dataset that includes this new data. Any future computations we draw from the data such as latest period-on-period changes will automatically be derived from the latest available data that we have just received. 
 
 So the code below is doing the following things:
 
@@ -120,19 +139,15 @@ head(combined_data)
 tail(combined_data)
 ```
 
-We're now in a positions to calculate the latest period on period percentage change of each metric and visuale them.
+We're now in a positions to calculate our latest metrics and visualise them.
 
 ---
 
 ## Linked Interactive Graphics
 
-In an HTML report, we can use linked interactive graphics to encourage users to engage with the data and explore the insights. The charts below show the latest period percentage changes of all 3 metrics in the data set. 
+In an HTML report, we can use linked interactive graphics to encourage users to engage with the data and explore the insights. Let's build some charts to show the latest period percentage changes of all 3 metrics in the data set. 
 
-Use the search bar to highlight a particular country across all 3 charts or click directly on one of the bars. Double clicking will deselect the highlighted country.
-
-Colours represent the continent each country is part of.
-
-<br>
+First we do the data wrangling to compute the changes...
 
 ```{r}
 
@@ -151,6 +166,14 @@ latest_figs <- p_change %>%
   ungroup()
 
 ```
+
+Then we build the charts and add the linked functionality.
+
+Use the search bar to highlight a particular country across all 3 charts or click directly on one of the bars. Double clicking will deselect the highlighted country.
+
+Colours represent the continent each country is part of.
+
+<br>
 
 ```{r}
 
@@ -193,18 +216,17 @@ sd_pop_i <- ggplotly(sd_pop, tooltip = "text")
 subplot(sd_gdp_i, sd_le_i, sd_pop_i, nrows = 3, titleY = TRUE) %>% 
   config(collaborate = FALSE, displaylogo = FALSE) %>% 
   hide_legend() %>% 
-  highlight(selectize = TRUE, on = "plotly_click") %>% 
+  highlight(selectize = TRUE, on = "plotly_click", off = "plotly_doubleclick") %>% 
   frameWidget(height = "600px")
 
 ```
 
-<br>
+---
 
 ## Searchable Data Tables
 
 We can also use interactive data tables with search functionality and column sorting to allow users to quickly find the numbers they are looking for. Clicking on column headers will sort the data ascending or descending.
 
-<br>
 
 ```{r}
 
@@ -226,12 +248,12 @@ ftbl <- formattable(tdat, list(
 ))
 
 as.datatable(ftbl, rownames = FALSE, 
-             colnames = c("Country", "GDP Per Capita", "", "Life Expectancy", "", "Population", ""),
+             colnames = c("Country", "GDP Per Capita", "+/-", "Life Expectancy", "+/-", "Population", "+/-"),
              options = list(columnDefs = list(list(className = 'dt-center', targets = c(1,3,5))))
              ) %>% 
   formatCurrency(columns = 2) %>% 
-  formatRound(columns = 4, digits = 1) %>% 
-  frameWidget(elementId = "dt")
+  formatRound(columns = 4, digits = 1)
 
 ```
 
+Making the switch to doing your data work with R can be daunting, but with the combination of <a href="https://www.rstudio.com/products/RStudio/" target="_blank">RStudio</a> as your 'integrated development environment', the <a href="https://www.tidyverse.org/" target="_blank">tidyverse packages</a> for data analysis, and <a href="https://rmarkdown.rstudio.com/" target="_blank">rmarkdown</a> for producing reports in just about any format you'd like (HTML, PDF, Word, PowerPoint, Dashboard, even entire websites like this one!), along with a really great and welcoming community of R users online, there has never been a better time to make the leap and start your journey on the path to data programming nirvana.

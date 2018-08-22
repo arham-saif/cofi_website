@@ -18,7 +18,7 @@
       <pubDate>Mon, 20 Aug 2018 00:00:00 +0000</pubDate>
       
       <guid>/blog/2018/08/20/2018-08-20-automated-data-reports-with-r/</guid>
-      <description>A lot of data analysts will find themselves doing repetitive manual tasks on a data set every day/week/month in Excel then copying and pasting their updated charts and tables into Word or PowerPoint reports - if this sounds like your job description, you may want to consider switching to a programming language like R with which you can automate the majority of these processes; from importing your data all the way through to emailing your boss the final report.</description>
+      <description>A lot of data analysts will find themselves doing repetitive manual tasks on a data set every day/week/month in Excel then copying and pasting their updated pivot tables and charts into Word or PowerPoint reports for their stakeholders. If this sounds like your job description, you may want to consider switching to a programming language like R with which you can automate the majority of these processes; from importing your data all the way through to emailing your boss the final report.</description>
     </item>
     
     <item>
@@ -49,7 +49,7 @@ Currently the app will return data for the most recent month available in the da
       <pubDate>Wed, 02 May 2018 00:00:00 +0000</pubDate>
       
       <guid>/blog/2018/05/02/2018-04-08-multivariate-dot-density-maps-in-r-with-sf-ggplot2/</guid>
-      <description>BackgroundLast June I did a blog post about building dot-denisty maps in R using UK Census data. It has proven to be a fairly popular post, most likely due to the maps looking like something you’re more likely to see in the Tate Modern…
+      <description>Background Last June I did a blog post about building dot-denisty maps in R using UK Census data. It has proven to be a fairly popular post, most likely due to the maps looking like something you’re more likely to see in the Tate Modern…
 Not only do these maps looks beautiful, but there is a strong argument that they do a better job of representing data compared to the more common choropleth methods of filling geographical regions with one colour based on one variable.</description>
     </item>
     
@@ -186,7 +186,7 @@ If you already have an idea for a particular tool, dashboard or any other data a
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/faq/</guid>
-      <description>What’s an app?What’s a portal?Security, users and loginsGDPRWhat kind of data can we put in?How do we add data?What technology do we use?How do users access the data they need?How are the apps and portals hosted and accessed?How do you track usage?How are projects managed?How much do projects cost?Other questions?What’s an app?By Apps, we mean online, responsive visualisation tools created with data on one topic.</description>
+      <description>What’s an app? What’s a portal? Security, users and logins GDPR What kind of data can we put in? How do we add data? What technology do we use? How do users access the data they need? How are the apps and portals hosted and accessed? How do you track usage? How are projects managed? How much do projects cost? Other questions?   What’s an app? By Apps, we mean online, responsive visualisation tools created with data on one topic.</description>
     </item>
     
     <item>

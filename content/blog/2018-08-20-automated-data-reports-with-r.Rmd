@@ -16,13 +16,13 @@ tags:
 draft: true
 ---
 
-A lot of data analysts will find themselves doing repetitive manual tasks on a data set every day/week/month in Excel then copying and pasting their updated pivot tables and charts into Word or PowerPoint reports for their stakeholders. If this sounds like your job description, you may want to consider switching to a programming language like R with which you can automate the majority of these processes; from importing your data all the way through to emailing your boss the final report. They'll never know you were actually in the pub the whole time.
+A lot of data analysts will find themselves doing repetitive manual tasks on a data set every day/week/month in Excel, then copying and pasting their updated pivot tables and charts into Word or PowerPoint reports for their stakeholders. If this sounds like your job description, you may want to consider switching to a programming language like R. Writing scripts will allow you to automate the majority of these processes; from importing your data all the way through to emailing your boss the final report. They'll never know you were actually in the pub the whole time.
 
-Automation may sound like a scary word to any human being with a job that would like to keep it, but learning to automate some of your most common data tasks can be seriously beneficial to both your company or organisation and your own job security! Some of the benefits of an automated reporting workflow over a manual one include:
+Automation may sound like a scary word to any human being with a job that would like to keep it, but learning to automate some of your most common data tasks can be seriously beneficial to both your organisation and your own job security! Some of the benefits of an automated reporting workflow over a manual one include:
 
 1. **It saves you time.** Most people will feel like they don't have the time they need to fulfill all that is asked of them at work. So if you can cut out the time taken on manual data processing and focus more analysis and insight, that can only be a good thing.
 2. **It reduces errors.** When your reporting relies on manual data entry and formula with hard-coded cell references, one typo or out-of-place number can lead to results that are way off the mark. Automating the process with a script will remove the possibility of human error completely.
-3. **It expands your data visualisation options.** Using an open-source software like R will allow to draw on a vast array of tools and charting libraries not available in proprietary software like MS Office. For example, HTML reports with the <a href="https://rmarkdown.rstudio.com/" target="_blank">rmarkdown</a> package can include interactive charts, maps and tables that utilise the latest web-technologies - more on this below.
+3. **It expands your data visualisation options.** Using an open-source software like R will allow to draw on a vast array of tools and charting libraries not available in proprietary software. For example, HTML reports with the <a href="https://rmarkdown.rstudio.com/" target="_blank">rmarkdown</a> package can include interactive charts, maps and tables that utilise the latest web-technologies - more on this below.
 
 ---
 
@@ -45,7 +45,7 @@ knitr::opts_chunk$set(fig.retina = 2,
                       fig.width = 10, 
                       fig.height = 7,
                       fig.align = "center", 
-                      cache = TRUE,
+                      cache = FALSE,
                       message=FALSE, 
                       warning=FALSE, 
                       echo=TRUE
@@ -114,19 +114,7 @@ combined_data <-
     read_excel(path, sheet = .x, skip = 4, trim_ws = TRUE) %>% 
       mutate(year = as.numeric(.x))
   }) %>% 
-  mutate(continent = countrycode(sourcevar = country, 
-                                 origin = "country.name", 
-                                 destination = "continent")) %>% 
-  select(continent, country, year, everything())
-
-continent_summary <- 
-  combined_data %>% 
-  group_by(continent, year) %>% 
-  summarise(gdpPercap = weighted.mean(gdpPercap, pop),
-            lifeExp = weighted.mean(lifeExp, pop),
-            pop = sum(pop)) %>% 
-  gather(metric, value, 3:5) %>% 
-  mutate(year = as.Date(glue("{year}-01-01")))
+  select(country, year, everything())
 ```
 
 Let's quickly inspect our data to check that it got it the job done...
@@ -138,6 +126,19 @@ head(combined_data)
 # bottom 6 rows
 tail(combined_data)
 ```
+
+Looking good. However part of our analysis is going to involve computing continental summary statistics, but we currently don't have a continent column in our dataset. Adding one in Excel would require us making our own lookup table with a corresponding continent for each unique country in the dataset then using a `VLOOKUP` function. 
+
+In R we can easily make this part of the automated workflow using the `countrycode` package to translate from one geographical coding scheme to another - in our case getting a continent name based on a country name, like so:
+
+```{r}
+combined_data <- combined_data %>% 
+  mutate(continent = countrycode(sourcevar = country, origin = "country.name", destination = "continent")) %>% 
+  select(continent, everything())
+
+head(combined_data)
+```
+
 
 We're now in a positions to calculate our latest metrics and visualise them.
 
@@ -173,12 +174,11 @@ Use the search bar to highlight a particular country across all 3 charts or clic
 
 Colours represent the continent each country is part of.
 
-<br>
-
 ```{r}
-
+# create a shared data source with the crosstalk package
 sd <- SharedData$new(latest_figs, ~country, group = "Highlight a Country")
 
+# build 3 static ggplot charts with the shared data
 sd_gdp <- ggplot(sd, aes(reorder(country, -gdpPercap_change), gdpPercap_change,
                                text = glue::glue("{country}, {continent}: {percent(gdpPercap_change)}"))) +
   geom_col(aes(fill = continent)) +
@@ -209,10 +209,12 @@ sd_pop <- ggplot(sd, aes(reorder(country, -pop_change), pop_change,
         axis.ticks.x=element_blank(),
         panel.grid.major.x = element_blank())
 
+# make them interactive with plotly
 sd_gdp_i <- ggplotly(sd_gdp, tooltip = "text")
 sd_le_i <- ggplotly(sd_le, tooltip = "text")
 sd_pop_i <- ggplotly(sd_pop, tooltip = "text")
 
+# arrange them together
 subplot(sd_gdp_i, sd_le_i, sd_pop_i, nrows = 3, titleY = TRUE) %>% 
   config(collaborate = FALSE, displaylogo = FALSE) %>% 
   hide_legend() %>% 
@@ -229,7 +231,6 @@ We can also use interactive data tables with search functionality and column sor
 
 
 ```{r}
-
 fmrt <- formatter("span", 
   style = x ~ style(color = ifelse(x > 0, "green", ifelse(x < 0, "red", "black"))),
   x ~ icontext(ifelse(x > 0, "arrow-up", "arrow-down"), percent(x, digits = 1)))
@@ -252,8 +253,20 @@ as.datatable(ftbl, rownames = FALSE,
              options = list(columnDefs = list(list(className = 'dt-center', targets = c(1,3,5))))
              ) %>% 
   formatCurrency(columns = 2) %>% 
-  formatRound(columns = 4, digits = 1)
-
+  formatRound(columns = 4, digits = 1) %>% 
+  frameWidget(height = "500px")
 ```
+
+```{r}
+continent_summary <- 
+  combined_data %>% 
+  group_by(continent, year) %>% 
+  summarise(gdpPercap = weighted.mean(gdpPercap, pop),
+            lifeExp = weighted.mean(lifeExp, pop),
+            pop = sum(pop)) %>% 
+  gather(metric, value, 3:5) %>% 
+  mutate(year = as.Date(glue("{year}-01-01")))
+```
+
 
 Making the switch to doing your data work with R can be daunting, but with the combination of <a href="https://www.rstudio.com/products/RStudio/" target="_blank">RStudio</a> as your 'integrated development environment', the <a href="https://www.tidyverse.org/" target="_blank">tidyverse packages</a> for data analysis, and <a href="https://rmarkdown.rstudio.com/" target="_blank">rmarkdown</a> for producing reports in just about any format you'd like (HTML, PDF, Word, PowerPoint, Dashboard, even entire websites like this one!), along with a really great and welcoming community of R users online, there has never been a better time to make the leap and start your journey on the path to data programming nirvana.

@@ -229,7 +229,9 @@
 <p>In this post we’re going to run through what might be a typical workflow of building a reproducible data report in R - that is, one that you can simply hit ‘Run’ on whenever a new wave of data comes in, and all your charts and tables update accordingly giving you the latest insights in your data at the touch of a button.</p>
 <p>I’m going to use the classic gapminder dataset that contains population, life expectancy, and GDP per capita metrics for many countries over time. There is a gapminder R package that would conveniently give us the data in a format best suited for data analysis - <a href="https://en.wikipedia.org/wiki/Tidy_data" target="_blank">tidy data</a> - but we want to make this run-through as realistic as possible.</p>
 <p>As such, I’ve taken this tidy data set, removed one of the variables that we’ll have to add ourselves later, then split it up by year across multiple excel sheets in a single excel file. Sacrilige, I know, but from experience this is a very common way data with multiple time periods is stored and distributed, so it will be useful to know how to bring it back together again with R code. If you’re interested in the code required to commit such a heinous crime of ‘untidying’ a data set into excel sheets you can check out the <a href="https://gist.github.com/PaulC91/a3c61cee7bcdef7bba31d675bfa726eb" target="_blank">make gapminder messy again</a> R script over on github.</p>
-<p>As you can see from the Excel file, each tab contains data for the year denoted in the tab name. The time between each wave in this data set is large but a more real-life scenario would be a new wave of data each month, which the following process would work equally well for.</p>
+<iframe width="100%" height="500px" frameborder="no" src="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fwww.cultureofinsight.com%2Fdata%2Fgapminder_messy.xlsx">
+</iframe>
+<p>As you can see from the Excel file, each tab contains data for the year denoted in the tab name. Here we have 5 year intervals between data but in a more realistic scenario these would be daily, weekly or monthly updates for which this process would work equally well. Similarly, if the data was seperated by a different type of variable such as survey results for different demographic target groups, the process below would allow you to combine the data and visualise the differences between the demographics.</p>
 <p>So let’s begin with the code! If you’re brand new to R don’t worry if you don’t know the ins and outs of the syntax. Hopefully you will see that we can get a lot done with not a lot of code!</p>
 <hr />
 </div>
@@ -250,14 +252,7 @@ library(DT)
 library(widgetframe)
 library(crosstalk)
 
-theme_set(
-  theme_ipsum_tw(
-    base_family = &quot;Oswald&quot;, 
-    plot_title_family = &quot;Oswald&quot;, 
-    plot_title_face = 500,
-    subtitle_family = &quot;Oswald&quot;
-    )
-  )</code></pre>
+theme_set(theme_ft_rc())</code></pre>
 <hr />
 </div>
 <div id="data-importing-tidying" class="section level2">
@@ -268,19 +263,9 @@ theme_set(
 <li>pull out only the data table section (starting on row 5)</li>
 <li>add a <code>year</code> column populated by the name of the sheet</li>
 <li>combine all the seperate tables into one single data frame</li>
-<li>add a <code>continent</code> column based on the <code>country</code> column using the <code>countrycode</code> package</li>
 <li>re-order the columns to our desired specifications</li>
 </ul>
 <p>The reproducibility of this code comes from the fact that it is agnostic to the number of sheets in our excel file. That means whenever we get an updated file with a new tab of data, we just point the same code to this file and we’ll get a new dataset that includes this new data. Any future computations we draw from the data such as latest period-on-period changes will automatically be derived from the latest available data that we have just received.</p>
-<p>So the code below is doing the following things:</p>
-<ul>
-<li>saves the excel filepath to a <code>path</code> variable</li>
-<li>creates a new <code>combined_data</code> data frame by…</li>
-<li>pulling the names of all the excel sheets in the file</li>
-<li>passing these to a <code>map_df</code> function that iterates over each sheet, reads in only the data table starting on row 5, adds a <code>year</code> column populated with the sheet name then binds all tables into one data frame</li>
-<li>a <code>continent</code> column is then added using the <code>countrycode</code> package that can translate from one geographical coding scheme to another - in our case getting a continent name from a country name</li>
-<li>finally the <code>select</code> function reorders our columns to the way we want them</li>
-</ul>
 <pre class="r"><code>path &lt;- &quot;../../data/blog_data/gapminder_messy.xlsx&quot;
 
 combined_data &lt;- 
@@ -350,8 +335,6 @@ latest_figs &lt;- p_change %&gt;%
   arrange(country) %&gt;% 
   ungroup()</code></pre>
 <p>Then we build the charts and add the linked functionality.</p>
-<p>Use the search bar to highlight a particular country across all 3 charts or click directly on one of the bars. Double clicking will deselect the highlighted country.</p>
-<p>Colours represent the continent each country is part of.</p>
 <pre class="r"><code># create a shared data source with the crosstalk package
 sd &lt;- SharedData$new(latest_figs, ~country, group = &quot;Highlight a Country&quot;)
 
@@ -397,8 +380,11 @@ subplot(sd_gdp_i, sd_le_i, sd_pop_i, nrows = 3, titleY = TRUE) %&gt;%
   hide_legend() %&gt;% 
   highlight(selectize = TRUE, on = &quot;plotly_click&quot;, off = &quot;plotly_doubleclick&quot;) %&gt;% 
   frameWidget(height = &quot;600px&quot;)</code></pre>
+<p>Use the search bar to highlight a particular country across all 3 charts or click directly on one of the bars. Double clicking will deselect the highlighted country.</p>
+<p>Colours represent the continent each country is part of.</p>
 <div id="htmlwidget-1" style="width:100%;height:600px;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/blog/2018-08-20-automated-data-reports-with-r_files/figure-html//widgets/widget_unnamed-chunk-6.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/blog/2018-08-20-automated-data-reports-with-r_files/figure-html//widgets/widget_unnamed-chunk-7.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<p><br></p>
 <hr />
 </div>
 <div id="searchable-data-tables" class="section level2">
@@ -421,15 +407,26 @@ ftbl &lt;- formattable(tdat, list(
   pop_change = fmrt
 ))
 
-as.datatable(ftbl, rownames = FALSE, 
+as.datatable(ftbl, rownames = FALSE, caption = &quot;Latest Period Changes 2002-2007&quot;,
              colnames = c(&quot;Country&quot;, &quot;GDP Per Capita&quot;, &quot;+/-&quot;, &quot;Life Expectancy&quot;, &quot;+/-&quot;, &quot;Population&quot;, &quot;+/-&quot;),
              options = list(columnDefs = list(list(className = &#39;dt-center&#39;, targets = c(1,3,5))))
+                            #dom = &#39;ftip&#39;)
              ) %&gt;% 
   formatCurrency(columns = 2) %&gt;% 
   formatRound(columns = 4, digits = 1) %&gt;% 
   frameWidget(height = &quot;500px&quot;)</code></pre>
 <div id="htmlwidget-2" style="width:100%;height:500px;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-2">{"x":{"url":"/blog/2018-08-20-automated-data-reports-with-r_files/figure-html//widgets/widget_unnamed-chunk-7.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"url":"/blog/2018-08-20-automated-data-reports-with-r_files/figure-html//widgets/widget_unnamed-chunk-8.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<hr />
+<pre class="r"><code>indx &lt;- combined_data %&gt;% 
+  mutate(year = as.Date(paste0(year, &quot;-01-01&quot;))) %&gt;% 
+  group_by(country) %&gt;% 
+  arrange(year) %&gt;% 
+  mutate(gdpPercap_change = (gdpPercap / first(gdpPercap)) * 100,
+         lifeExp_change = (lifeExp / first(lifeExp)) * 100,
+         pop_change = (pop / first(pop)) * 100
+         ) %&gt;% 
+  ungroup()</code></pre>
 <pre class="r"><code>continent_summary &lt;- 
   combined_data %&gt;% 
   group_by(continent, year) %&gt;% 

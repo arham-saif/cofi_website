@@ -14,6 +14,8 @@ tags:
   - data visualisation
   - ggplot2
 draft: true
+params:
+  continent: Europe
 ---
 
 A lot of data analysts will find themselves doing repetitive manual tasks on a data set every day/week/month in Excel, then copying and pasting their updated pivot tables and charts into Word or PowerPoint reports for their stakeholders. If this sounds like your job description, you may want to consider switching to a programming language like R. Writing scripts will allow you to automate the majority of these processes; from importing your data all the way through to emailing your boss the final report. They'll never know you were actually in the pub the whole time.
@@ -34,7 +36,9 @@ I'm going to use the classic gapminder dataset that contains population, life ex
 
 As such, I've taken this tidy data set, removed one of the variables that we'll have to add ourselves later, then split it up by year across multiple excel sheets in a single excel file. Sacrilige, I know, but from experience this is a very common way data with multiple time periods is stored and distributed, so it will be useful to know how to bring it back together again with R code. If you're interested in the code required to commit such a heinous crime of 'untidying' a data set into excel sheets you can check out the <a href="https://gist.github.com/PaulC91/a3c61cee7bcdef7bba31d675bfa726eb" target="_blank">make gapminder messy again</a> R script over on github.
 
-As you can see from the Excel file, each tab contains data for the year denoted in the tab name. The time between each wave in this data set is large but a more real-life scenario would be a new wave of data each month, which the following process would work equally well for.
+<iframe width="100%" height="500px" frameborder="no" src="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fwww.cultureofinsight.com%2Fdata%2Fgapminder_messy.xlsx"></iframe>
+
+As you can see from the Excel file, each tab contains data for the year denoted in the tab name. Here we have 5 year intervals between data but in a more realistic scenario these would be daily, weekly or monthly updates for which this process would work equally well. Similarly, if the data was seperated by a different type of variable such as survey results for different demographic target groups, the process below would allow you to combine the data and visualise the differences between the demographics. 
 
 So let's begin with the code! If you're brand new to R don't worry if you don't know the ins and outs of the syntax. Hopefully you will see that we can get a lot done with not a lot of code!
 
@@ -71,14 +75,7 @@ library(DT)
 library(widgetframe)
 library(crosstalk)
 
-theme_set(
-  theme_ipsum_tw(
-    base_family = "Oswald", 
-    plot_title_family = "Oswald", 
-    plot_title_face = 500,
-    subtitle_family = "Oswald"
-    )
-  )
+theme_set(theme_ft_rc())
 ```
 
 ---
@@ -91,19 +88,9 @@ This is the part that can be most satisfying to automate because the manual equi
 - pull out only the data table section (starting on row 5)
 - add a `year` column populated by the name of the sheet
 - combine all the seperate tables into one single data frame
-- add a `continent` column based on the `country` column using the `countrycode` package
 - re-order the columns to our desired specifications
 
 The reproducibility of this code comes from the fact that it is agnostic to the number of sheets in our excel file. That means whenever we get an updated file with a new tab of data, we just point the same code to this file and we'll get a new dataset that includes this new data. Any future computations we draw from the data such as latest period-on-period changes will automatically be derived from the latest available data that we have just received. 
-
-So the code below is doing the following things:
-
-- saves the excel filepath to a `path` variable
-- creates a new `combined_data` data frame by...
-  * pulling the names of all the excel sheets in the file
-  * passing these to a `map_df` function that iterates over each sheet, reads in only the data table starting on row 5, adds a `year` column populated with the sheet name then binds all tables into one data frame
-  * a `continent` column is then added using the `countrycode` package that can translate from one geographical coding scheme to another - in our case getting a continent name from a country name
-  * finally the `select` function reorders our columns to the way we want them
 
 ```{r cache=TRUE}
 path <- "../../data/blog_data/gapminder_messy.xlsx"
@@ -139,8 +126,46 @@ combined_data <- combined_data %>%
 head(combined_data)
 ```
 
+---
 
-We're now in a positions to calculate our latest metrics and visualise them.
+## Paramaterising Your Report
+
+We now have a consolidated dataset with an added continent variable coded to each country. A common case with data reporting would be to produce distinct reports from multiple subsets of a single data set. This is made easy using `rmarkdown` with the ability to supply a parameter at the top of your report script which can then be used as a variable in the code within the report to alter the outputs.
+
+Let's say in our example we want to batch produce a report for each continent. If we supply the name of the continent we want to build the report for in the `params` section of what is known as the `YAML` at the top of the report script like so:
+
+```
+---
+title: My Report
+output: html_document
+params:
+   continent: Europe
+---
+```
+
+We can then use that parameter to filter our consolidated data set to only countries matching the continent parameter and then use that data for all subsequent analysis.
+
+```{r}
+filtered_data <- combined_data %>% 
+  filter(continent == params$continent)
+```
+
+Once we have our full report script ready to be executed, all we have to do to get a report from one continent to the next is change the value of the continent param at the top of the script. 
+
+Or if we're being really clever about it, we can turn our report rendering call into an R function and pass it to a `purrr::walk` call that will iterate over each continent, render the report for each, then save the appropriately named time-stamped files to a directory of your choosing ready to be shared with all relevant stake holders:
+
+```{r eval=FALSE}
+continents <- c("Asia", "Europe", "Africa", "Americas", "Oceania")
+
+renderMyReport <- function(continent) {
+  rmarkdown::render("MyReport.Rmd", output_file = glue("{continent}_report_{Sys.Date()}.html"), 
+                    params = list(continent = continent))
+}
+
+purrr::walk(continents, ~ renderMyReport)
+```
+
+But before we do that we need to code out the basis of the analysis we want contained our reports! So here are a few examples of the type of data visualisations that would help a stakeholder understand the latest metrics and insights from the data.
 
 ---
 
@@ -152,7 +177,7 @@ First we do the data wrangling to compute the changes...
 
 ```{r}
 
-p_change <- combined_data %>% 
+p_change <- filtered_data %>% 
   mutate(year = as.Date(glue("{year}-01-01"))) %>% 
   group_by(continent, country) %>% 
   arrange(year) %>% 
@@ -170,11 +195,7 @@ latest_figs <- p_change %>%
 
 Then we build the charts and add the linked functionality.
 
-Use the search bar to highlight a particular country across all 3 charts or click directly on one of the bars. Double clicking will deselect the highlighted country.
-
-Colours represent the continent each country is part of.
-
-```{r}
+```{r eval=FALSE}
 # create a shared data source with the crosstalk package
 sd <- SharedData$new(latest_figs, ~country, group = "Highlight a Country")
 
@@ -223,6 +244,61 @@ subplot(sd_gdp_i, sd_le_i, sd_pop_i, nrows = 3, titleY = TRUE) %>%
 
 ```
 
+Use the search bar to highlight a particular country across all 3 charts or click directly on one of the bars. Double clicking will deselect the highlighted country.
+
+Colours represent the continent each country is part of.
+
+```{r echo=FALSE}
+# create a shared data source with the crosstalk package
+sd <- SharedData$new(latest_figs, ~country, group = "Highlight a Country")
+
+# build 3 static ggplot charts with the shared data
+sd_gdp <- ggplot(sd, aes(reorder(country, -gdpPercap_change), gdpPercap_change,
+                               text = glue("{country}, {continent}: {percent(gdpPercap_change)}"))) +
+  geom_col(aes(fill = continent)) +
+  scale_y_percent() +
+  labs(title = "GDP Per Capita % Change", y = "GDP per capita") +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        panel.grid.major.x = element_blank())
+
+sd_le <- ggplot(sd, aes(reorder(country, -lifeExp_change), lifeExp_change,
+                               text = glue("{country}, {continent}: {percent(lifeExp_change)}"))) +
+  geom_col(aes(fill = continent)) +
+  scale_y_percent() +
+  labs(title = "Life Expectacy % Change", y = "Life Expectancy") +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        panel.grid.major.x = element_blank())
+
+sd_pop <- ggplot(sd, aes(reorder(country, -pop_change), pop_change,
+                               text = glue("{country}, {continent}: {percent(pop_change)}"))) +
+  geom_col(aes(fill = continent)) +
+  scale_y_percent() +
+  labs(title = "Latest Period % Change", y = "Population") +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        panel.grid.major.x = element_blank())
+
+# make them interactive with plotly
+sd_gdp_i <- ggplotly(sd_gdp, tooltip = "text")
+sd_le_i <- ggplotly(sd_le, tooltip = "text")
+sd_pop_i <- ggplotly(sd_pop, tooltip = "text")
+
+# arrange them together
+subplot(sd_gdp_i, sd_le_i, sd_pop_i, nrows = 3, titleY = TRUE) %>% 
+  config(collaborate = FALSE, displaylogo = FALSE) %>% 
+  hide_legend() %>% 
+  highlight(selectize = TRUE, on = "plotly_click", off = "plotly_doubleclick") %>% 
+  frameWidget(height = "600px")
+
+```
+
+<br>
+
 ---
 
 ## Searchable Data Tables
@@ -248,14 +324,90 @@ ftbl <- formattable(tdat, list(
   pop_change = fmrt
 ))
 
-as.datatable(ftbl, rownames = FALSE, 
+as.datatable(ftbl, rownames = FALSE, caption = "Latest Period Changes 2002-2007",
              colnames = c("Country", "GDP Per Capita", "+/-", "Life Expectancy", "+/-", "Population", "+/-"),
              options = list(columnDefs = list(list(className = 'dt-center', targets = c(1,3,5))))
+                            #dom = 'ftip')
              ) %>% 
   formatCurrency(columns = 2) %>% 
   formatRound(columns = 4, digits = 1) %>% 
   frameWidget(height = "500px")
 ```
+
+---
+
+```{r}
+p <- filtered_data %>% 
+  filter(year == max(year)) %>% 
+  ggplot(aes(gdpPercap, lifeExp, label = country)) +
+  geom_point(aes(size = pop), fill = "SteelBlue", colour = "white", alpha = .7, pch = 21) +
+  ggrepel::geom_text_repel(colour = "white", force = 3, segment.colour = "grey") +
+  scale_size(range = c(2, 12)) +
+  labs(x = "GDP per capita", y = "Life Expectancy",
+       title = "Latest European Metrics", subtitle = "Year: {frame_time}",
+       caption = "Source: Gapminder", size = "Population")
+```
+
+```{r}
+p <- ggplot(filtered_data, aes(gdpPercap, lifeExp, label = country)) +
+  geom_point(aes(size = pop), fill = "SteelBlue", colour = "white", alpha = .7, pch = 21) +
+  ggrepel::geom_text_repel(colour = "white", force = 3, segment.colour = "grey",
+                           max.iter = 12) +
+  scale_size(range = c(2, 12)) +
+  labs(x = "GDP per capita", y = "Life Expectancy",
+       title = "Latest European Metrics", subtitle = "Year: {frame_time}",
+       caption = "Source: Gapminder", size = "Population") +
+  transition_time(as.integer(year))
+p
+```
+
+
+
+We may want our report to keep an eye on a sepcific subset of the data. 
+
+```{r}
+indx <- filtered_data %>% 
+  mutate(year = as.Date(paste0(year, "-01-01"))) %>% 
+  group_by(country) %>% 
+  arrange(year) %>% 
+  mutate(gdpPercap_change = (gdpPercap / first(gdpPercap)) * 100,
+         lifeExp_change = (lifeExp / first(lifeExp)) * 100,
+         pop_change = (pop / first(pop)) * 100
+         ) %>% 
+  ungroup()
+
+base_breaks <- function(n = 10){
+    function(x) {
+        axisTicks(log10(range(x, na.rm = TRUE)), log = TRUE, n = n)
+    }
+}
+
+#highlight_countries <- c("United Kingdom", "Singapore", "Argentina", "Brazil", "India", "Ethiopia")
+
+top_countries <- 
+  indx %>% 
+  filter(year == max(year)) %>% 
+  top_n(5, gdpPercap_change) %>% 
+  pull(country)
+
+bottom_countries <- 
+  indx %>% 
+  filter(year == max(year)) %>% 
+  top_n(-5, gdpPercap_change) %>% 
+  pull(country)
+
+p <- ggplot(indx, aes(year, gdpPercap_change, colour = country)) +
+  geom_line(size = 1) +
+  gghighlight(country %in% c(top_countries, bottom_countries)) +
+  geom_point(aes(x = min(year), y = 100), colour = "black", size = 2) +
+  #scale_y_continuous(trans = "log10", breaks = base_breaks(), labels = prettyNum) +
+  labs(y = "Index (log10 scale)", 
+       title = "Keeping Track - GDP Per Capita from Base Index", 
+       subtitle = "Index 100 = Year 1952",
+       caption = "Source: Gapminder")
+p
+```
+
 
 ```{r}
 continent_summary <- 

@@ -3,8 +3,8 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/blog/2018/08/20/2018-08-20-automated-data-reports-with-r/</loc>
-    <lastmod>2018-08-20T00:00:00+00:00</lastmod>
+    <loc>/blog/2018/10/22/2018-08-20-automated-data-reports-with-r/</loc>
+    <lastmod>2018-10-22T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -84,7 +84,7 @@
   
   <url>
     <loc>/blog/</loc>
-    <lastmod>2018-08-20T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -99,7 +99,7 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2018-08-20T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -111,13 +111,13 @@
   
   <url>
     <loc>/tags/data-reporting/</loc>
-    <lastmod>2018-08-20T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/tags/data-visualisation/</loc>
-    <lastmod>2018-08-20T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -133,7 +133,7 @@
   
   <url>
     <loc>/tags/ggplot2/</loc>
-    <lastmod>2018-08-20T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -161,7 +161,7 @@
   
   <url>
     <loc>/tags/r/</loc>
-    <lastmod>2018-08-20T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -173,7 +173,7 @@
   
   <url>
     <loc>/tags/rmarkdown/</loc>
-    <lastmod>2018-08-20T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -207,7 +207,7 @@
   
   <url>
     <loc>/categories/tutorials/</loc>
-    <lastmod>2018-08-20T00:00:00+00:00</lastmod>
+    <lastmod>2018-10-22T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   

@@ -21,6 +21,7 @@
   
   <link href='//fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,500,700,800' rel='stylesheet' type='text/css'>
   <link href='//fonts.googleapis.com/css?family=Roboto+Slab:300,400|Oswald:400,500,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Spectral:300,400,500,700">
   <link rel="stylesheet" href="/firacode/fira_code.css" />
 
   
@@ -216,7 +217,10 @@
 <script src="/rmarkdown-libs/widgetframe-binding/widgetframe.js"></script>
 
 
-<p>A lot of data analysts will find themselves doing repetitive manual tasks on a data set every day/week/month in Excel, then copying and pasting their updated pivot tables and charts into Word or PowerPoint reports for their stakeholders. If this sounds like your job description, you may want to consider switching to a programming language like R. Writing scripts will allow you to automate the majority of these processes; from importing your data all the way through to emailing your boss the final report. They’ll never know you were actually in the pub the whole time.</p>
+<p>A lot of data analysts will find themselves doing repetitive manual tasks on a data set every day/week/month in Excel, then copying and pasting their updated pivot tables and charts into Word or PowerPoint reports for their stakeholders. If this sounds like your job description, you may want to consider switching to a programming language like R.</p>
+<p>Writing scripts will allow you to automate the majority of these processes; from importing your data all the way through to emailing your boss the final report. They’ll never know you were actually in the pub the whole time.</p>
+<div id="automation" class="section level2">
+<h2>Automation</h2>
 <p>Automation may sound like a scary word to any human being with a job that would like to keep it, but learning to automate some of your most common data tasks can be seriously beneficial to both your organisation and your own job security! Some of the benefits of an automated reporting workflow over a manual one include:</p>
 <ol style="list-style-type: decimal">
 <li><strong>It saves you time.</strong> Most people will feel like they don’t have the time they need to fulfill all that is asked of them at work. So if you can cut out the time taken on manual data processing and focus more analysis and insight, that can only be a good thing.</li>
@@ -224,6 +228,7 @@
 <li><strong>It expands your data visualisation options.</strong> Using an open-source software like R will allow to draw on a vast array of tools and charting libraries not available in proprietary software. For example, HTML reports with the <a href="https://rmarkdown.rstudio.com/" target="_blank">rmarkdown</a> package can include interactive charts, maps and tables that utilise the latest web-technologies - more on this below.</li>
 </ol>
 <hr />
+</div>
 <div id="worked-example" class="section level2">
 <h2>Worked Example</h2>
 <p>In this post we’re going to run through what might be a typical workflow of building a reproducible data report in R - that is, one that you can simply hit ‘Run’ on whenever a new wave of data comes in, and all your charts and tables update accordingly giving you the latest insights in your data at the touch of a button.</p>
@@ -240,17 +245,15 @@
 <p>First thing first is to load the libraries we’ll be using for our report and set a default ggplot2 chart theme.</p>
 <pre class="r"><code>library(tidyverse)
 library(readxl)
+library(hrbrthemes)
 library(scales)
 library(countrycode)
-library(hrbrthemes)
-library(gghighlight)
-library(gganimate)
 library(glue)
 library(plotly)
-library(formattable)
-library(DT)
-library(widgetframe)
 library(crosstalk)
+library(DT)
+library(gganimate)
+library(widgetframe)
 
 theme_set(theme_ft_rc())</code></pre>
 <hr />
@@ -272,7 +275,7 @@ combined_data &lt;-
   excel_sheets(path) %&gt;% 
   map_df(~ {
     read_excel(path, sheet = .x, skip = 4, trim_ws = TRUE) %&gt;% 
-      mutate(year = as.numeric(.x))
+      mutate(year = as.integer(.x))
   }) %&gt;% 
   select(country, year, everything())</code></pre>
 <p>Let’s quickly inspect our data to check that it got it the job done…</p>
@@ -280,7 +283,7 @@ combined_data &lt;-
 head(combined_data)</code></pre>
 <pre><code>## # A tibble: 6 x 5
 ##   country      year gdpPercap lifeExp      pop
-##   &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
+##   &lt;chr&gt;       &lt;int&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
 ## 1 Afghanistan  2007       975    43.8 31889923
 ## 2 Albania      2007      5937    76.4  3600523
 ## 3 Algeria      2007      6223    72.3 33333216
@@ -291,7 +294,7 @@ head(combined_data)</code></pre>
 tail(combined_data)</code></pre>
 <pre><code>## # A tibble: 6 x 5
 ##   country             year gdpPercap lifeExp      pop
-##   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
+##   &lt;chr&gt;              &lt;int&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
 ## 1 Venezuela           1952      7690    55.1  5439568
 ## 2 Vietnam             1952       605    40.4 26246839
 ## 3 West Bank and Gaza  1952      1516    43.2  1030585
@@ -307,22 +310,48 @@ tail(combined_data)</code></pre>
 head(combined_data)</code></pre>
 <pre><code>## # A tibble: 6 x 6
 ##   continent country      year gdpPercap lifeExp      pop
-##   &lt;chr&gt;     &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
+##   &lt;chr&gt;     &lt;chr&gt;       &lt;int&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
 ## 1 Asia      Afghanistan  2007       975    43.8 31889923
 ## 2 Europe    Albania      2007      5937    76.4  3600523
 ## 3 Africa    Algeria      2007      6223    72.3 33333216
 ## 4 Africa    Angola       2007      4797    42.7 12420476
 ## 5 Americas  Argentina    2007     12779    75.3 40301927
 ## 6 Oceania   Australia    2007     34435    81.2 20434176</code></pre>
-<p>We’re now in a positions to calculate our latest metrics and visualise them.</p>
+<hr />
+</div>
+<div id="paramaterising-your-report" class="section level2">
+<h2>Paramaterising Your Report</h2>
+<p>We now have a consolidated dataset with an added continent variable coded to each country. A common case with data reporting would be to produce distinct reports from multiple subsets of a single data set. This is made easy using <code>rmarkdown</code> with the ability to supply a parameter at the top of your report script which can then be used as a variable in the code within the report to alter the outputs.</p>
+<p>Let’s say in our example we want to batch produce a report for each continent. If we supply the name of the continent we want to build the report for in the <code>params</code> section of what is known as the <code>YAML</code> at the top of the report script like so:</p>
+<pre><code>---
+title: My Report
+output: html_document
+params:
+   continent: Europe
+---</code></pre>
+<p>We can then use that parameter to filter our consolidated data set to only countries matching the continent parameter and then use that data for all subsequent analysis.</p>
+<pre class="r"><code>filtered_data &lt;- combined_data %&gt;% 
+  filter(continent == params$continent)</code></pre>
+<p>Once we have our full report script ready to be executed, all we have to do to get a report from one continent to the next is change the value of the continent param at the top of the script.</p>
+<p>Or if we’re being really clever about it, we can turn our report rendering call into an R function and pass it to a <code>purrr::walk</code> call that will iterate over each continent, render the report for each, then save the appropriately named time-stamped files to a directory of your choosing ready to be shared with all relevant stake holders:</p>
+<pre class="r"><code>continents &lt;- c(&quot;Asia&quot;, &quot;Europe&quot;, &quot;Africa&quot;, &quot;Americas&quot;, &quot;Oceania&quot;)
+
+renderMyReport &lt;- function(continent) {
+  rmarkdown::render(&quot;MyReport.Rmd&quot;, output_file = glue(&quot;{continent}_report_{Sys.Date()}.html&quot;), 
+                    params = list(continent = continent))
+}
+
+purrr::walk(continents, ~ renderMyReport)</code></pre>
+<p>But before we do that we need to code out the basis of the analysis we want contained our reports! So here are a few examples of the type of data visualisations that would help a stakeholder understand the latest metrics and insights from the data.</p>
+<p>For the sake of brevity I’m not including all the code for the charts and tables but bear in mind that, like the data importing and tidying code, once it is setup and working, no amendments are required for each new wave of data we get to report on. They’ll automatically include the latest metrics for the data we have just processed.</p>
+<p>If you’re interested in seeing the full code for this report you can check it out over on <a href="https://github.com/paulc91/cofi_website/content/blog/2018-08-20-automated-data-reports-with-r.Rmd">github</a>.</p>
 <hr />
 </div>
 <div id="linked-interactive-graphics" class="section level2">
 <h2>Linked Interactive Graphics</h2>
 <p>In an HTML report, we can use linked interactive graphics to encourage users to engage with the data and explore the insights. Let’s build some charts to show the latest period percentage changes of all 3 metrics in the data set.</p>
 <p>First we do the data wrangling to compute the changes…</p>
-<pre class="r"><code>p_change &lt;- combined_data %&gt;% 
-  mutate(year = as.Date(glue(&quot;{year}-01-01&quot;))) %&gt;% 
+<pre class="r"><code>p_change &lt;- filtered_data %&gt;% 
   group_by(continent, country) %&gt;% 
   arrange(year) %&gt;% 
   mutate(gdpPercap_change = (gdpPercap - lag(gdpPercap)) / lag(gdpPercap),
@@ -334,108 +363,57 @@ latest_figs &lt;- p_change %&gt;%
   select(-year) %&gt;% 
   arrange(country) %&gt;% 
   ungroup()</code></pre>
-<p>Then we build the charts and add the linked functionality.</p>
-<pre class="r"><code># create a shared data source with the crosstalk package
-sd &lt;- SharedData$new(latest_figs, ~country, group = &quot;Highlight a Country&quot;)
-
-# build 3 static ggplot charts with the shared data
-sd_gdp &lt;- ggplot(sd, aes(reorder(country, -gdpPercap_change), gdpPercap_change,
-                               text = glue::glue(&quot;{country}, {continent}: {percent(gdpPercap_change)}&quot;))) +
-  geom_col(aes(fill = continent)) +
-  scale_y_percent() +
-  labs(title = &quot;GDP Per Capita % Change&quot;, y = &quot;GDP per capita&quot;) +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),
-        panel.grid.major.x = element_blank())
-
-sd_le &lt;- ggplot(sd, aes(reorder(country, -lifeExp_change), lifeExp_change,
-                               text = glue::glue(&quot;{country}, {continent}: {percent(lifeExp_change)}&quot;))) +
-  geom_col(aes(fill = continent)) +
-  scale_y_percent() +
-  labs(title = &quot;Life Expectacy % Change&quot;, y = &quot;Life Expectancy&quot;) +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),
-        panel.grid.major.x = element_blank())
-
-sd_pop &lt;- ggplot(sd, aes(reorder(country, -pop_change), pop_change,
-                               text = glue::glue(&quot;{country}, {continent}: {percent(pop_change)}&quot;))) +
-  geom_col(aes(fill = continent)) +
-  scale_y_percent() +
-  labs(title = &quot;Latest Period % Change&quot;, y = &quot;Population&quot;) +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),
-        panel.grid.major.x = element_blank())
-
-# make them interactive with plotly
-sd_gdp_i &lt;- ggplotly(sd_gdp, tooltip = &quot;text&quot;)
-sd_le_i &lt;- ggplotly(sd_le, tooltip = &quot;text&quot;)
-sd_pop_i &lt;- ggplotly(sd_pop, tooltip = &quot;text&quot;)
-
-# arrange them together
-subplot(sd_gdp_i, sd_le_i, sd_pop_i, nrows = 3, titleY = TRUE) %&gt;% 
-  config(collaborate = FALSE, displaylogo = FALSE) %&gt;% 
-  hide_legend() %&gt;% 
-  highlight(selectize = TRUE, on = &quot;plotly_click&quot;, off = &quot;plotly_doubleclick&quot;) %&gt;% 
-  frameWidget(height = &quot;600px&quot;)</code></pre>
+<p>Then we can visualise the results interactively with the linked functionality.</p>
 <p>Use the search bar to highlight a particular country across all 3 charts or click directly on one of the bars. Double clicking will deselect the highlighted country.</p>
-<p>Colours represent the continent each country is part of.</p>
 <div id="htmlwidget-1" style="width:100%;height:600px;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/blog/2018-08-20-automated-data-reports-with-r_files/figure-html//widgets/widget_unnamed-chunk-7.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/blog/2018-08-20-automated-data-reports-with-r_files/figure-html//widgets/widget_linked-charts.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 <p><br></p>
 <hr />
 </div>
 <div id="searchable-data-tables" class="section level2">
 <h2>Searchable Data Tables</h2>
-<p>We can also use interactive data tables with search functionality and column sorting to allow users to quickly find the numbers they are looking for. Clicking on column headers will sort the data ascending or descending.</p>
-<pre class="r"><code>fmrt &lt;- formatter(&quot;span&quot;, 
-  style = x ~ style(color = ifelse(x &gt; 0, &quot;green&quot;, ifelse(x &lt; 0, &quot;red&quot;, &quot;black&quot;))),
-  x ~ icontext(ifelse(x &gt; 0, &quot;arrow-up&quot;, &quot;arrow-down&quot;), percent(x, digits = 1)))
-
-mills &lt;- scales::unit_format(scale = 1e-6, accuracy = .01, unit = &quot;M&quot;)
-
-tdat &lt;- latest_figs %&gt;%
-  select(-continent) %&gt;% 
-  select(1:2, 5, 3, 6, 4, 7) %&gt;% 
-  mutate(pop = mills(pop))
-
-ftbl &lt;- formattable(tdat, list(
-  gdpPercap_change = fmrt,
-  lifeExp_change = fmrt,
-  pop_change = fmrt
-))
-
-as.datatable(ftbl, rownames = FALSE, caption = &quot;Latest Period Changes 2002-2007&quot;,
-             colnames = c(&quot;Country&quot;, &quot;GDP Per Capita&quot;, &quot;+/-&quot;, &quot;Life Expectancy&quot;, &quot;+/-&quot;, &quot;Population&quot;, &quot;+/-&quot;),
-             options = list(columnDefs = list(list(className = &#39;dt-center&#39;, targets = c(1,3,5))))
-                            #dom = &#39;ftip&#39;)
-             ) %&gt;% 
-  formatCurrency(columns = 2) %&gt;% 
-  formatRound(columns = 4, digits = 1) %&gt;% 
-  frameWidget(height = &quot;500px&quot;)</code></pre>
+<p>We can also view the same set of data in an interactive data tables with search functionality and column sorting to allow users to quickly find the numbers they are looking for. Clicking on column headers will sort the data ascending or descending.</p>
 <div id="htmlwidget-2" style="width:100%;height:500px;" class="widgetframe html-widget"></div>
 <script type="application/json" data-for="htmlwidget-2">{"x":{"url":"/blog/2018-08-20-automated-data-reports-with-r_files/figure-html//widgets/widget_unnamed-chunk-8.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 <hr />
-<pre class="r"><code>indx &lt;- combined_data %&gt;% 
-  mutate(year = as.Date(paste0(year, &quot;-01-01&quot;))) %&gt;% 
-  group_by(country) %&gt;% 
-  arrange(year) %&gt;% 
-  mutate(gdpPercap_change = (gdpPercap / first(gdpPercap)) * 100,
-         lifeExp_change = (lifeExp / first(lifeExp)) * 100,
-         pop_change = (pop / first(pop)) * 100
-         ) %&gt;% 
-  ungroup()</code></pre>
+</div>
+<div id="static-charts-with-ggplot2" class="section level2">
+<h2>Static Charts with ggplot2</h2>
+<p>The sad truth is that most managers just really love Microsoft Office or PDF reports. Fear not though, because with <code>ggplot2</code> we have the world’s best static charting library at our disposal and getting these charts in an automated Word, PowerPoint, or PDF report with <code>rmarkdown</code> is a walk in the park.</p>
+<p>The chart below combines all three metrics in our data into one chart - a la Hans Roslin (RIP) - for our latest wave of data.</p>
+<p>The position of the country annotations are automated with the <a href="https://github.com/slowkow/ggrepel"><code>ggrepel</code></a> package and computed to repel overlapping text labels away from each other.</p>
+<p><img src="/blog/2018-08-20-automated-data-reports-with-r_files/figure-html/unnamed-chunk-9-1.png" width="864" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="animated-charts" class="section level2">
+<h2>Animated Charts</h2>
+<p>Although we have been using a data set filtered to our chosen contininet parameter of Europe, we still have the full data set available to use. We can look at the continental summary statistics over time with the following data…</p>
 <pre class="r"><code>continent_summary &lt;- 
   combined_data %&gt;% 
   group_by(continent, year) %&gt;% 
   summarise(gdpPercap = weighted.mean(gdpPercap, pop),
             lifeExp = weighted.mean(lifeExp, pop),
             pop = sum(pop)) %&gt;% 
-  gather(metric, value, 3:5) %&gt;% 
-  mutate(year = as.Date(glue(&quot;{year}-01-01&quot;)))</code></pre>
-<p>Making the switch to doing your data work with R can be daunting, but with the combination of <a href="https://www.rstudio.com/products/RStudio/" target="_blank">RStudio</a> as your ‘integrated development environment’, the <a href="https://www.tidyverse.org/" target="_blank">tidyverse packages</a> for data analysis, and <a href="https://rmarkdown.rstudio.com/" target="_blank">rmarkdown</a> for producing reports in just about any format you’d like (HTML, PDF, Word, PowerPoint, Dashboard, even entire websites like this one!), along with a really great and welcoming community of R users online, there has never been a better time to make the leap and start your journey on the path to data programming nirvana.</p>
+  ungroup() %&gt;% 
+  gather(metric, value, 3:5)</code></pre>
+<p>Then visually animate the progress over time…</p>
+<p><img src="/blog/2018-08-20-automated-data-reports-with-r_files/figure-html/unnamed-chunk-11-1.gif" style="display: block; margin: auto;" /></p>
+<p>All credit to <a href="https://twitter.com/thomasp85">Thomas Lin Pederson</a>’s outstanding new <a href="https://github.com/thomasp85/gganimate/"><code>gganimate</code></a> package for making charts like the above so intuitively simple to make.</p>
+<hr />
+</div>
+<div id="fin" class="section level2">
+<h2>Fin</h2>
+<p>To sum up, we now have an <code>rmarkdown</code> script that is capable of combining data from excel tabs into a single data frame, computing new variables + summaries of the data, and visualing the results in interactive, static and animated charts! If gapminder ever get round to adding some post-2007 data we can run the function we built above passing in each continent parameter and batch produce a report for each at the touch of a button.</p>
+<p>In a real-world scenario you’d most likely want to add some bespoke narrative in each report but letting R take care of all the data processing and visualisation for you is going to give you much more time to dig out the real insights and find a solution to all global population, wealth and health probelms! 😅</p>
+<hr />
+</div>
+<div id="learning" class="section level2">
+<h2>Learning</h2>
+<p>Making the switch to doing your data work with R can be daunting, but with the combination of <a href="https://www.rstudio.com/products/RStudio/" target="_blank">RStudio</a> as your ‘integrated development environment’, the <a href="https://www.tidyverse.org/" target="_blank">tidyverse packages</a> for data analysis, and <a href="https://rmarkdown.rstudio.com/" target="_blank">rmarkdown</a> for producing reports in just about any format you’d like (HTML, PDF, Word, PowerPoint, Dashboard, even entire websites like this one!), along with a really great and welcoming community of R users online, there has never been a better time to make the leap and start your journey to better data reporting workflows.</p>
+<p>If you’d like some help getting started, we’re currently running a 1-day ‘Master Data with Code’ workshop where you’ll learn how to import, manipulate, join and transform data using the <code>tidyverse</code> packages in the RStudio IDE.</p>
+<p>We also offer bespoke in-house training for teams where we focus on your own specific data tasks and how you can use R for greater accuracy and efficiency in data processing, and engagement in your communicated insights.</p>
+<p>For more information get in touch via our <a href="https://cultureofinsight.com/contact/%22">Contact Page</a>.</p>
+<p>Thanks for reading!</p>
 </div>
 
                         </div>

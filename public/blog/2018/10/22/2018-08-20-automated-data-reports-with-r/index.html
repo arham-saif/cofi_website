@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="robots" content="all,follow">
+  <meta name="googlebot" content="index,follow,snippet,archive">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automated Data Reports with R</title>
+  <meta name="author" content="" />
+
+  
+  <meta name="keywords" content="R, shiny, dashboards, data visualization">	
+  
+
+  
+  <meta name="description" content="Create reproducible reports from data cleaning to visualisation with rmarkdown">
+  
+
+  <meta name="generator" content="Hugo 0.31" />
+  
+  <link href='//fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,500,700,800' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Oswald:400,500,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Spectral:300,400,500,700">
+  <link rel="stylesheet" href="/firacode/fira_code.css" />
+
+  
+  
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  
+  <link href="/css/animate.css" rel="stylesheet">
+
+  
+  
+    <link href="/css/style.turquoise.css" rel="stylesheet" id="theme-stylesheet">
+  
+
+
+  
+  <link href="/css/custom.css" rel="stylesheet">
+  
+  
+  <link rel="stylesheet" href="/css/github-gist.css" rel="stylesheet" id="theme-stylesheet">
+  <script src="/js/highlight.pack.js"></script>
+  <script>hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();</script>
+  
+   
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-973110494"></script> 
+  <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'AW-973110494'); </script>
+
+  
+  
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  
+
+  
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
+  <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
+  
+
+  <link href="/css/owl.carousel.css" rel="stylesheet">
+  <link href="/css/owl.theme.css" rel="stylesheet">
+
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Culture of Insight">
+
+  
+  
+    <title>Automated Data Reports with R</title>
+    <meta property="og:title" content="Automated Data Reports with R">
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="Create reproducible reports from data cleaning to visualisation with rmarkdown">
+
+      
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:image" content="/img/rmarkdown_ouputs.png" >
+      <meta property='og:image' content="/img/rmarkdown_ouputs.png" >      
+      
+      
+    
+
+</head>
+
+
+  <body>
+
+    <div id="all">
+
+        <header>
+
+          <div class="navbar-affixed-top" data-spy="affix" data-offset-top="200">
+
+    <div class="navbar navbar-default yamm" role="navigation" id="navbar">
+
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand home" href="/">
+                    <img src="/img/logo.png" alt="Automated Data Reports with R logo" class="hidden-xs hidden-sm" style="height: 62px; padding-bottom: 15px;">
+                    <img src="/img/logo.png" alt="Automated Data Reports with R logo" class="visible-xs visible-sm" style="height: 62px; padding-bottom: 15px;">
+                    <span class="sr-only">Automated Data Reports with R - go to homepage</span>
+                </a>
+                <div class="navbar-buttons">
+                    <button type="button" class="navbar-toggle btn-template-main" data-toggle="collapse" data-target="#navigation">
+                      <span class="sr-only">Toggle Navigation</span>
+                        <i class="fa fa-align-justify"></i>
+                    </button>
+                </div>
+            </div>
+            
+
+            <div class="navbar-collapse collapse" id="navigation">
+                <ul class="nav navbar-nav navbar-right">
+                  
+                  <li class="dropdown">
+                    
+                    <a href="/">Home</a>
+                    
+                  </li>
+                  
+                  <li class="dropdown">
+                    
+                    <a href="/portfolio/">Portfolio</a>
+                    
+                  </li>
+                  
+                  <li class="dropdown">
+                    
+                    <a href="/training/">Training</a>
+                    
+                  </li>
+                  
+                  <li class="dropdown">
+                    
+                    <a href="/blog/">Blog</a>
+                    
+                  </li>
+                  
+                  <li class="dropdown">
+                    
+                    <a href="/tech/">Our Tech</a>
+                    
+                  </li>
+                  
+                  <li class="dropdown">
+                    
+                    <a href="/faq/">FAQ</a>
+                    
+                  </li>
+                  
+                  <li class="dropdown">
+                    
+                    <a href="/contact/">Contact</a>
+                    
+                  </li>
+                  
+                </ul>
+            </div>
+            
+
+            <div class="collapse clearfix" id="search">
+
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search">
+                        <span class="input-group-btn">
+
+                    <button type="submit" class="btn btn-template-main"><i class="fa fa-search"></i></button>
+
+                </span>
+                    </div>
+                </form>
+
+            </div>
+            
+
+        </div>
+    </div>
+    
+
+</div>
+
+
+
+
+        </header>
+
+        <div id="heading-breadcrumbs">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Automated Data Reports with R</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+        <div id="content">
+            <div class="container">
+
+                <div class="row">
+
+                    
+
+                    <div class="col-md-9" id="blog-post">
+
+                        <p class="text-muted text-uppercase mb-small text-right">By <a href="#">Paul Campbell</a> | October 22, 2018</p>
+
+                        <div id="post-content">
+                          <script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/pymjs/pym.v1.js"></script>
+<script src="/rmarkdown-libs/widgetframe-binding/widgetframe.js"></script>
+
+
+<p>A lot of data analysts will find themselves doing repetitive manual tasks on a data set every day/week/month in Excel, then copying and pasting their updated pivot tables and charts into Word or PowerPoint reports for their stakeholders. If this sounds like your job description, you may want to consider switching to a programming language like R.</p>
+<p>Writing scripts will allow you to automate the majority of these processes; from importing your data all the way through to emailing your boss the final report. They’ll never know you were actually in the pub the whole time.</p>
+<hr />
+<div id="automation" class="section level2">
+<h2>Automation</h2>
+<p>Automation may sound like a scary word to any human being with a job that would like to keep it, but learning to automate some of your most common data tasks can be seriously beneficial to both your organisation and your own job security! Some of the benefits of an automated reporting workflow over a manual one include:</p>
+<ol style="list-style-type: decimal">
+<li><strong>It saves you time.</strong> Most people will feel like they don’t have the time they need to fulfill all that is asked of them at work. So if you can cut out the time taken on manual data processing and focus more analysis and insight, that can only be a good thing.</li>
+<li><strong>It reduces errors.</strong> When your reporting relies on manual data entry and formula with hard-coded cell references, one typo or out-of-place number can lead to results that are way off the mark. Automating the process with a script will remove the possibility of human error completely.</li>
+<li><strong>It expands your data visualisation options.</strong> Using an open-source software like R will allow to draw on a vast array of tools and charting libraries not available in proprietary software. For example, HTML reports with the <a href="https://rmarkdown.rstudio.com/" target="_blank">rmarkdown</a> package can include interactive charts, maps and tables that utilise the latest web-technologies - more on this below.</li>
+</ol>
+<hr />
+</div>
+<div id="worked-example" class="section level2">
+<h2>Worked Example</h2>
+<p>In this post we’re going to run through what might be a typical workflow of building a reproducible data report in R - that is, one that you can simply hit ‘Run’ on whenever a new wave of data comes in, and all your charts and tables update accordingly giving you the latest insights in your data at the touch of a button.</p>
+<p>I’m going to use the classic gapminder dataset that contains population, life expectancy, and GDP per capita metrics for many countries over time. There is a gapminder R package that would conveniently give us the data in a format best suited for data analysis - <a href="https://en.wikipedia.org/wiki/Tidy_data" target="_blank">tidy data</a> - but we want to make this run-through as realistic as possible.</p>
+<p>As such, I’ve taken this tidy data set, removed one of the variables that we’ll have to add ourselves later, then split it up by year across multiple excel sheets in a single excel file. Sacrilige, I know, but from experience this is a very common way data with multiple time periods is stored and distributed, so it will be useful to know how to bring it back together again with R code. If you’re interested in the code required to commit such a heinous crime of ‘untidying’ a data set into excel sheets you can check out the <a href="https://gist.github.com/PaulC91/a3c61cee7bcdef7bba31d675bfa726eb" target="_blank">make gapminder messy again</a> R script over on github.</p>
+<p><img src="https://raw.githubusercontent.com/PaulC91/intro_to_r/master/static/imgs/gapminder_messy.png" alt="messy excel data" width="100%" /></p>
+<p>To see the full file in all its glory <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fwww.cultureofinsight.com%2Fdata%2Fgapminder_messy.xlsx" target="_blank">click here</a>.</p>
+<p>As you can see from the Excel file, each tab contains data for the year denoted in the tab name. Here we have 5 year intervals between data but in a more realistic scenario these would be daily, weekly or monthly updates for which this process would work equally well. Similarly, if the data was seperated by a different type of variable such as survey results for different demographic target groups, the process below would allow you to combine the data and visualise the differences between the demographics.</p>
+<p>So let’s begin with the code! If you’re brand new to R don’t worry if you don’t know the ins and outs of the syntax. Hopefully you will see that we can get a lot done with not a lot of code!</p>
+<hr />
+</div>
+<div id="load-the-libraries" class="section level2">
+<h2>Load the Libraries</h2>
+<p>First thing first is to load the libraries we’ll be using for our report and set a default ggplot2 chart theme.</p>
+<pre class="r"><code>library(tidyverse)
+library(readxl)
+library(hrbrthemes)
+library(scales)
+library(countrycode)
+library(glue)
+library(plotly)
+library(crosstalk)
+library(DT)
+library(gganimate)
+library(widgetframe)
+
+theme_set(theme_ft_rc())</code></pre>
+<hr />
+</div>
+<div id="data-importing-tidying" class="section level2">
+<h2>Data Importing &amp; Tidying</h2>
+<p>This is the part that can be most satisfying to automate because the manual equivalent is often very tedious, time-consuming work. We’re going to program a process that will:</p>
+<ul>
+<li>iterate over each sheet in the excel file</li>
+<li>pull out only the data table section (starting on row 5)</li>
+<li>add a <code>year</code> column populated by the name of the sheet</li>
+<li>combine all the seperate tables into one single data frame</li>
+<li>re-order the columns to our desired specifications</li>
+</ul>
+<p>The reproducibility of this code comes from the fact that it is agnostic to the number of sheets in our excel file. That means whenever we get an updated file with a new tab of data, we just point the same code to this file and we’ll get a new dataset that includes this new data. Any future computations we draw from the data such as latest period-on-period changes will automatically be derived from the latest available data that we have just received.</p>
+<pre class="r"><code>path &lt;- &quot;../../data/blog_data/gapminder_messy.xlsx&quot;
+
+combined_data &lt;- 
+  excel_sheets(path) %&gt;% 
+  map_df(~ {
+    read_excel(path, sheet = .x, skip = 4, trim_ws = TRUE) %&gt;% 
+      mutate(year = as.integer(.x))
+  }) %&gt;% 
+  select(country, year, everything())</code></pre>
+<p>Let’s quickly inspect our data to check that it got it the job done…</p>
+<pre class="r"><code># top 6 rows
+head(combined_data)</code></pre>
+<pre><code>## # A tibble: 6 x 5
+##   country      year gdpPercap lifeExp      pop
+##   &lt;chr&gt;       &lt;int&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
+## 1 Afghanistan  2007       975    43.8 31889923
+## 2 Albania      2007      5937    76.4  3600523
+## 3 Algeria      2007      6223    72.3 33333216
+## 4 Angola       2007      4797    42.7 12420476
+## 5 Argentina    2007     12779    75.3 40301927
+## 6 Australia    2007     34435    81.2 20434176</code></pre>
+<pre class="r"><code># bottom 6 rows
+tail(combined_data)</code></pre>
+<pre><code>## # A tibble: 6 x 5
+##   country             year gdpPercap lifeExp      pop
+##   &lt;chr&gt;              &lt;int&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
+## 1 Venezuela           1952      7690    55.1  5439568
+## 2 Vietnam             1952       605    40.4 26246839
+## 3 West Bank and Gaza  1952      1516    43.2  1030585
+## 4 Yemen, Rep.         1952       782    32.5  4963829
+## 5 Zambia              1952      1147    42.0  2672000
+## 6 Zimbabwe            1952       407    48.5  3080907</code></pre>
+<p>Looking good. However part of our analysis is going to involve computing continental summary statistics, but we currently don’t have a continent column in our dataset. Adding one in Excel would require us making our own lookup table with a corresponding continent for each unique country in the dataset then using a <code>VLOOKUP</code> function.</p>
+<p>In R we can easily make this part of the automated workflow using the <code>countrycode</code> package to translate from one geographical coding scheme to another - in our case getting a continent name based on a country name, like so:</p>
+<pre class="r"><code>combined_data &lt;- combined_data %&gt;% 
+  mutate(continent = countrycode(sourcevar = country, origin = &quot;country.name&quot;, destination = &quot;continent&quot;)) %&gt;% 
+  select(continent, everything())
+
+head(combined_data)</code></pre>
+<pre><code>## # A tibble: 6 x 6
+##   continent country      year gdpPercap lifeExp      pop
+##   &lt;chr&gt;     &lt;chr&gt;       &lt;int&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
+## 1 Asia      Afghanistan  2007       975    43.8 31889923
+## 2 Europe    Albania      2007      5937    76.4  3600523
+## 3 Africa    Algeria      2007      6223    72.3 33333216
+## 4 Africa    Angola       2007      4797    42.7 12420476
+## 5 Americas  Argentina    2007     12779    75.3 40301927
+## 6 Oceania   Australia    2007     34435    81.2 20434176</code></pre>
+<hr />
+</div>
+<div id="paramaterising-your-report" class="section level2">
+<h2>Paramaterising Your Report</h2>
+<p>We now have a consolidated dataset with an added continent variable coded to each country. A common case with data reporting would be to produce distinct reports from multiple subsets of a single data set. This is made easy using <code>rmarkdown</code> with the ability to supply a parameter at the top of your report script which can then be used as a variable in the code within the report to alter the outputs.</p>
+<p>Let’s say in our example we want to batch produce a report for each continent. If we supply the name of the continent we want to build the report for in the <code>params</code> section of what is known as the <code>YAML</code> at the top of the report script like so:</p>
+<pre><code>---
+title: My Report
+output: html_document
+params:
+   continent: Europe
+---</code></pre>
+<p>We can then use that parameter to filter our consolidated data set to only countries matching the continent parameter and then use that data for all subsequent analysis.</p>
+<pre class="r"><code>filtered_data &lt;- combined_data %&gt;% 
+  filter(continent == params$continent)</code></pre>
+<p>Once we have our full report script ready to be executed, all we have to do to get a report from one continent to the next is change the value of the continent param at the top of the script.</p>
+<p>Or if we’re being really clever about it, we can turn our report rendering call into an R function and pass it to a <code>purrr::walk</code> call that will iterate over each continent, render the report for each, then save the appropriately named time-stamped files to a directory of your choosing ready to be shared with all relevant stake holders:</p>
+<pre class="r"><code>continents &lt;- c(&quot;Asia&quot;, &quot;Europe&quot;, &quot;Africa&quot;, &quot;Americas&quot;, &quot;Oceania&quot;)
+
+renderMyReport &lt;- function(continent) {
+  rmarkdown::render(&quot;MyReport.Rmd&quot;, output_file = glue(&quot;{continent}_report_{Sys.Date()}.html&quot;), 
+                    params = list(continent = continent))
+}
+
+purrr::walk(continents, ~ renderMyReport)</code></pre>
+<p>But before we do that we need to code out the basis of the analysis we want contained in our reports. So here are a few examples of the type of data visualisations that would help a stakeholder understand the latest metrics and insights from the data.</p>
+<p>For the sake of brevity I’m not including all the code for the charts and tables. But like the data importing and tidying code, once it is setup and working no amendments are required for each new wave of data we get to report on. They’ll automatically include the latest metrics for the data we have just processed.</p>
+<p>If you’re interested in seeing the full code for this report you can check it out over on <a href="https://github.com/PaulC91/cofi_website/blob/master/content/blog/2018-08-20-automated-data-reports-with-r.Rmd">github</a>.</p>
+<hr />
+</div>
+<div id="linked-interactive-graphics" class="section level2">
+<h2>Linked Interactive Graphics</h2>
+<p>In an HTML report, we can use linked interactive graphics to encourage users to engage with the data and explore the insights. Let’s build some charts to show the latest period percentage changes of all 3 metrics in the data set.</p>
+<p>First we do the data wrangling to compute the changes…</p>
+<pre class="r"><code>p_change &lt;- filtered_data %&gt;% 
+  group_by(continent, country) %&gt;% 
+  arrange(year) %&gt;% 
+  mutate(gdpPercap_change = (gdpPercap - lag(gdpPercap)) / lag(gdpPercap),
+         lifeExp_change = (lifeExp - lag(lifeExp)) / lag(lifeExp),
+         pop_change = (pop - lag(pop)) / lag(pop))
+         
+latest_figs &lt;- p_change %&gt;% 
+  filter(year == max(year)) %&gt;%
+  select(-year) %&gt;% 
+  arrange(country) %&gt;% 
+  ungroup()</code></pre>
+<p>Then we can visualise the results interactively with the linked functionality.</p>
+<p>Use the search bar to highlight a particular country across all 3 charts or click directly on one of the bars. Double clicking will deselect the highlighted country.</p>
+<div id="htmlwidget-1" style="width:100%;height:600px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/blog/2018-08-20-automated-data-reports-with-r_files/figure-html//widgets/widget_linked-charts.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<p><br></p>
+<hr />
+</div>
+<div id="searchable-data-tables" class="section level2">
+<h2>Searchable Data Tables</h2>
+<p>We can also view the same set of data in an interactive data tables with search functionality and column sorting to allow users to quickly find the numbers they are looking for. Clicking on column headers will sort the data ascending or descending.</p>
+<div id="htmlwidget-2" style="width:100%;height:500px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"url":"/blog/2018-08-20-automated-data-reports-with-r_files/figure-html//widgets/widget_unnamed-chunk-8.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<hr />
+</div>
+<div id="static-charts-with-ggplot2" class="section level2">
+<h2>Static Charts with ggplot2</h2>
+<p>The sad truth is that most managers just really love Microsoft Office or PDF reports. Fear not though, because with <code>ggplot2</code> we have the world’s best static charting library at our disposal and getting these charts in an automated Word, PowerPoint, or PDF report with <code>rmarkdown</code> is a walk in the park.</p>
+<p>The chart below combines all three metrics in our data into one chart - a la Hans Rosling (RIP) - for our latest wave of data. The position of the country annotations are automated with the <a href="https://github.com/slowkow/ggrepel"><code>ggrepel</code></a> package and computed to repel overlapping text labels away from each other.</p>
+<p><img src="/blog/2018-08-20-automated-data-reports-with-r_files/figure-html/unnamed-chunk-9-1.png" width="864" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="animated-charts" class="section level2">
+<h2>Animated Charts</h2>
+<p>Although we have been using a data set filtered to our chosen contininet parameter of Europe, we still have the full data set available to use. We can look at the continental summary statistics over time with the following data…</p>
+<pre class="r"><code>continent_summary &lt;- 
+  combined_data %&gt;% 
+  group_by(continent, year) %&gt;% 
+  summarise(gdpPercap = weighted.mean(gdpPercap, pop),
+            lifeExp = weighted.mean(lifeExp, pop),
+            pop = sum(pop)) %&gt;% 
+  ungroup() %&gt;% 
+  gather(metric, value, 3:5)</code></pre>
+<p>Then visually animate the progress over time…</p>
+<p><img src="/blog/2018-08-20-automated-data-reports-with-r_files/figure-html/unnamed-chunk-11-1.gif" style="display: block; margin: auto;" /></p>
+<p>All credit to <a href="https://twitter.com/thomasp85">Thomas Lin Pedersen</a>’s outstanding new <a href="https://github.com/thomasp85/gganimate/"><code>gganimate</code></a> package for making charts like the above so intuitively simple to make.</p>
+<hr />
+</div>
+<div id="fin" class="section level2">
+<h2>Fin</h2>
+<p>To sum up, we now have an <code>rmarkdown</code> script that is capable of combining data from excel tabs into a single data frame, computing new variables + summaries of the data, and visualing the results in interactive, static and animated charts! If gapminder ever get round to adding some post-2007 data we can run the function we built above passing in each continent parameter and batch produce a report for each at the touch of a button.</p>
+<p>In a real-world scenario you’d most likely want to add some distinct narrative in each report, but letting R take care of all the data processing and visualisation for you is going to give you much more time to dig out the real insights and find a solution to all global population, wealth and health probelms! 😅</p>
+<hr />
+</div>
+<div id="learning" class="section level2">
+<h2>Learning</h2>
+<p>Making the switch to doing your data work with R can be daunting, but with the combination of <a href="https://www.rstudio.com/products/RStudio/" target="_blank">RStudio</a> as your ‘integrated development environment’, the <a href="https://www.tidyverse.org/" target="_blank">tidyverse packages</a> for data analysis, and <a href="https://rmarkdown.rstudio.com/" target="_blank">rmarkdown</a> for producing reports in just about any format you’d like (HTML, PDF, Word, PowerPoint, Dashboard, even entire websites like this one!), there has never been a better time to make the leap and start your journey to better data reporting workflows. There’s also a really great and welcoming community of R users online who are always happy to help new users feel at home.</p>
+<p>If you’d like some help getting started, we’re currently running a 1-day ‘Master Data with Code’ workshop where you’ll learn how to import, manipulate, join and transform data using the <code>tidyverse</code> in the RStudio IDE.</p>
+<p>We also offer bespoke in-house training for teams where we focus on your own specific data tasks and how you can use R for greater accuracy and efficiency in data processing, and engagement in your communicated insights.</p>
+<p>For more information get in touch via our <a href="https://cultureofinsight.com/contact/">Contact Page</a>.</p>
+<p>Thanks for reading!</p>
+</div>
+
+                        </div>
+                        
+                        
+                        <div id="comments">
+                            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "culture-of-insight" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+                        </div>
+                        
+
+                    </div>
+                    
+
+                    
+
+                    
+
+                    <div class="col-md-3">
+
+                        
+
+                        
+
+
+
+
+
+
+
+<div class="panel panel-default sidebar-menu">
+
+    <div class="panel-heading">
+      <h3 class="panel-title">Categories</h3>
+    </div>
+
+    <div class="panel-body">
+        <ul class="nav nav-pills nav-stacked">
+            
+            <li><a href="/categories/tutorials">tutorials (4)</a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<div class="panel sidebar-menu">
+    <div class="panel-heading">
+      <h3 class="panel-title">Tags</h3>
+    </div>
+
+    <div class="panel-body">
+        <ul class="tag-cloud">
+            
+            <li><a href="/tags/dashboards"><i class="fa fa-tags"></i> dashboards</a>
+            </li>
+            
+            <li><a href="/tags/data-reporting"><i class="fa fa-tags"></i> data-reporting</a>
+            </li>
+            
+            <li><a href="/tags/data-visualisation"><i class="fa fa-tags"></i> data-visualisation</a>
+            </li>
+            
+            <li><a href="/tags/decision-point"><i class="fa fa-tags"></i> decision-point</a>
+            </li>
+            
+            <li><a href="/tags/ggplot2"><i class="fa fa-tags"></i> ggplot2</a>
+            </li>
+            
+            <li><a href="/tags/mapping"><i class="fa fa-tags"></i> mapping</a>
+            </li>
+            
+            <li><a href="/tags/open-data"><i class="fa fa-tags"></i> open-data</a>
+            </li>
+            
+            <li><a href="/tags/r"><i class="fa fa-tags"></i> r</a>
+            </li>
+            
+            <li><a href="/tags/reproducible-research"><i class="fa fa-tags"></i> reproducible-research</a>
+            </li>
+            
+            <li><a href="/tags/rmarkdown"><i class="fa fa-tags"></i> rmarkdown</a>
+            </li>
+            
+            <li><a href="/tags/shiny"><i class="fa fa-tags"></i> shiny</a>
+            </li>
+            
+            <li><a href="/tags/social-media-analytics"><i class="fa fa-tags"></i> social-media-analytics</a>
+            </li>
+            
+            <li><a href="/tags/tidy-data"><i class="fa fa-tags"></i> tidy-data</a>
+            </li>
+            
+            <li><a href="/tags/web-scraping"><i class="fa fa-tags"></i> web-scraping</a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+
+
+
+
+
+                        
+
+                    </div>
+                    
+
+                    
+
+                </div>
+                
+
+            </div>
+            
+        </div>
+        
+
+        <footer id="footer">
+    <div class="container">
+
+        
+        <div class="col-md-4 col-sm-6">
+            <h4>Culture of Insight</h4>
+
+            Getting you to Insight faster in 2018
+
+            <hr class="hidden-md hidden-lg hidden-sm">
+
+        </div>
+        
+        
+
+        <div class="col-md-4 col-sm-6">
+
+             
+            <h4>Recent posts</h4>
+
+            <div class="blog-entries">
+                
+                <div class="item same-height-row clearfix">
+                    <div class="image same-height-always">
+                        <a href="/blog/2018/10/22/2018-08-20-automated-data-reports-with-r/">
+                          
+                            <img src="/img/rmarkdown_ouputs.png" class="img-responsive" alt="Automated Data Reports with R">
+                          
+                        </a>
+                    </div>
+                    <div class="name same-height-always">
+                        <h5><a href="/blog/2018/10/22/2018-08-20-automated-data-reports-with-r/">Automated Data Reports with R</a></h5>
+                    </div>
+                </div>
+                
+                <div class="item same-height-row clearfix">
+                    <div class="image same-height-always">
+                        <a href="/blog/2018/05/02/2018-04-08-multivariate-dot-density-maps-in-r-with-sf-ggplot2/">
+                          
+                            <img src="/img/party_points_small.png" class="img-responsive" alt="Multivariate Dot-Density Maps in R with sf &amp; ggplot2">
+                          
+                        </a>
+                    </div>
+                    <div class="name same-height-always">
+                        <h5><a href="/blog/2018/05/02/2018-04-08-multivariate-dot-density-maps-in-r-with-sf-ggplot2/">Multivariate Dot-Density Maps in R with sf &amp; ggplot2</a></h5>
+                    </div>
+                </div>
+                
+                <div class="item same-height-row clearfix">
+                    <div class="image same-height-always">
+                        <a href="/blog/2018/03/15/2018-03-15-responsive-iframes-for-shiny-apps/">
+                          
+                            <img src="/img/shiny_iframe.png" class="img-responsive" alt="Responsive iframes for Shiny Apps">
+                          
+                        </a>
+                    </div>
+                    <div class="name same-height-always">
+                        <h5><a href="/blog/2018/03/15/2018-03-15-responsive-iframes-for-shiny-apps/">Responsive iframes for Shiny Apps</a></h5>
+                    </div>
+                </div>
+                
+            </div>
+
+            <hr class="hidden-md hidden-lg">
+             
+
+        </div>
+        
+
+        
+        <div class="col-md-4 col-sm-6">
+
+          <h4>Contact</h4>
+
+            <strong>Culture of Insight Ltd.</strong>
+        <br>Holborn Studios
+        <br>49-50 Eagle Wharf Road
+        <br>London
+        <br>N1 7ED
+      </p>
+      
+
+
+            <a href="/contact" class="btn btn-small btn-template-main">Go to contact page</a>
+
+            <hr class="hidden-md hidden-lg hidden-sm">
+
+        </div>
+        
+        
+
+    </div>
+    
+</footer>
+
+
+
+
+
+
+
+<div id="copyright">
+    <div class="container">
+        <div class="col-md-12">
+            
+            <p class="pull-left">&copy; 2018 Culture of Insight. All Rights Reserved.</p>
+            
+            <p class="pull-right">
+              Template by <a href="http://bootstrapious.com/free-templates">Bootstrapious</a>.
+              
+
+              Ported to Hugo by <a href="https://github.com/devcows/hugo-universal-theme">DevCows</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+    </div>
+    
+
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-40168473-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+<script src="//code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/Counter-Up/1.0/jquery.counterup.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-parallax/1.1.3/jquery-parallax.js"></script>
+
+<script src="//maps.googleapis.com/maps/api/js?v=3.exp"></script>
+
+<script src="/js/hpneo.gmaps.js"></script>
+<script src="/js/gmaps.init.js"></script>
+<script src="/js/front.js"></script>
+
+
+<script src="/js/owl.carousel.min.js"></script>
+
+
+  </body>
+</html>

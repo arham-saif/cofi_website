@@ -2,9 +2,9 @@
 title: Automated Data Reports with R
 author: Paul Campbell
 description: "Create reproducible reports from data cleaning to visualisation with rmarkdown"
-date: '2018-08-20'
+date: '2018-10-22'
 slug: automated-data-reports-with-r
-twitterImg: img/party_points_small.png
+twitterImg: img/rmarkdown_ouputs.png
 categories:
   - Tutorials
 tags:
@@ -13,12 +13,17 @@ tags:
   - data reporting
   - data visualisation
   - ggplot2
-draft: true
 params:
   continent: Europe
 ---
 
-A lot of data analysts will find themselves doing repetitive manual tasks on a data set every day/week/month in Excel, then copying and pasting their updated pivot tables and charts into Word or PowerPoint reports for their stakeholders. If this sounds like your job description, you may want to consider switching to a programming language like R. Writing scripts will allow you to automate the majority of these processes; from importing your data all the way through to emailing your boss the final report. They'll never know you were actually in the pub the whole time.
+A lot of data analysts will find themselves doing repetitive manual tasks on a data set every day/week/month in Excel, then copying and pasting their updated pivot tables and charts into Word or PowerPoint reports for their stakeholders. If this sounds like your job description, you may want to consider switching to a programming language like R. 
+
+Writing scripts will allow you to automate the majority of these processes; from importing your data all the way through to emailing your boss the final report. They'll never know you were actually in the pub the whole time.
+
+---
+
+## Automation
 
 Automation may sound like a scary word to any human being with a job that would like to keep it, but learning to automate some of your most common data tasks can be seriously beneficial to both your organisation and your own job security! Some of the benefits of an automated reporting workflow over a manual one include:
 
@@ -36,7 +41,9 @@ I'm going to use the classic gapminder dataset that contains population, life ex
 
 As such, I've taken this tidy data set, removed one of the variables that we'll have to add ourselves later, then split it up by year across multiple excel sheets in a single excel file. Sacrilige, I know, but from experience this is a very common way data with multiple time periods is stored and distributed, so it will be useful to know how to bring it back together again with R code. If you're interested in the code required to commit such a heinous crime of 'untidying' a data set into excel sheets you can check out the <a href="https://gist.github.com/PaulC91/a3c61cee7bcdef7bba31d675bfa726eb" target="_blank">make gapminder messy again</a> R script over on github.
 
-<iframe width="100%" height="500px" frameborder="no" src="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fwww.cultureofinsight.com%2Fdata%2Fgapminder_messy.xlsx"></iframe>
+<img src="https://raw.githubusercontent.com/PaulC91/intro_to_r/master/static/imgs/gapminder_messy.png" alt="messy excel data" width="100%" />
+
+To see the full file in all its glory <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fwww.cultureofinsight.com%2Fdata%2Fgapminder_messy.xlsx" target="_blank">click here</a>.
 
 As you can see from the Excel file, each tab contains data for the year denoted in the tab name. Here we have 5 year intervals between data but in a more realistic scenario these would be daily, weekly or monthly updates for which this process would work equally well. Similarly, if the data was seperated by a different type of variable such as survey results for different demographic target groups, the process below would allow you to combine the data and visualise the differences between the demographics. 
 
@@ -46,8 +53,8 @@ So let's begin with the code! If you're brand new to R don't worry if you don't 
 
 ```{r include=FALSE}
 knitr::opts_chunk$set(fig.retina = 2,
-                      fig.width = 10, 
-                      fig.height = 7,
+                      fig.width = 9, 
+                      fig.height = 5,
                       fig.align = "center", 
                       cache = FALSE,
                       message=FALSE, 
@@ -63,17 +70,15 @@ First thing first is to load the libraries we'll be using for our report and set
 ```{r setup, cache=FALSE}
 library(tidyverse)
 library(readxl)
+library(hrbrthemes)
 library(scales)
 library(countrycode)
-library(hrbrthemes)
-library(gghighlight)
-library(gganimate)
 library(glue)
 library(plotly)
-library(formattable)
-library(DT)
-library(widgetframe)
 library(crosstalk)
+library(DT)
+library(gganimate)
+library(widgetframe)
 
 theme_set(theme_ft_rc())
 ```
@@ -99,7 +104,7 @@ combined_data <-
   excel_sheets(path) %>% 
   map_df(~ {
     read_excel(path, sheet = .x, skip = 4, trim_ws = TRUE) %>% 
-      mutate(year = as.numeric(.x))
+      mutate(year = as.integer(.x))
   }) %>% 
   select(country, year, everything())
 ```
@@ -165,7 +170,11 @@ renderMyReport <- function(continent) {
 purrr::walk(continents, ~ renderMyReport)
 ```
 
-But before we do that we need to code out the basis of the analysis we want contained our reports! So here are a few examples of the type of data visualisations that would help a stakeholder understand the latest metrics and insights from the data.
+But before we do that we need to code out the basis of the analysis we want contained in our reports. So here are a few examples of the type of data visualisations that would help a stakeholder understand the latest metrics and insights from the data.
+
+For the sake of brevity I'm not including all the code for the charts and tables. But like the data importing and tidying code, once it is setup and working no amendments are required for each new wave of data we get to report on. They'll automatically include the latest metrics for the data we have just processed.
+
+If you're interested in seeing the full code for this report you can check it out over on [github](https://github.com/PaulC91/cofi_website/blob/master/content/blog/2018-08-20-automated-data-reports-with-r.Rmd).
 
 ---
 
@@ -176,9 +185,7 @@ In an HTML report, we can use linked interactive graphics to encourage users to 
 First we do the data wrangling to compute the changes...
 
 ```{r}
-
 p_change <- filtered_data %>% 
-  mutate(year = as.Date(glue("{year}-01-01"))) %>% 
   group_by(continent, country) %>% 
   arrange(year) %>% 
   mutate(gdpPercap_change = (gdpPercap - lag(gdpPercap)) / lag(gdpPercap),
@@ -193,17 +200,20 @@ latest_figs <- p_change %>%
 
 ```
 
-Then we build the charts and add the linked functionality.
+Then we can visualise the results interactively with the linked functionality.
 
-```{r eval=FALSE}
+Use the search bar to highlight a particular country across all 3 charts or click directly on one of the bars. Double clicking will deselect the highlighted country.
+
+```{r linked-charts, eval=TRUE, echo=FALSE}
 # create a shared data source with the crosstalk package
 sd <- SharedData$new(latest_figs, ~country, group = "Highlight a Country")
 
 # build 3 static ggplot charts with the shared data
 sd_gdp <- ggplot(sd, aes(reorder(country, -gdpPercap_change), gdpPercap_change,
                                text = glue::glue("{country}, {continent}: {percent(gdpPercap_change)}"))) +
-  geom_col(aes(fill = continent)) +
+  geom_col(aes(fill = gdpPercap_change)) +
   scale_y_percent() +
+  scale_fill_viridis_c(guide = FALSE) +
   labs(title = "GDP Per Capita % Change", y = "GDP per capita") +
   theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
@@ -212,8 +222,9 @@ sd_gdp <- ggplot(sd, aes(reorder(country, -gdpPercap_change), gdpPercap_change,
 
 sd_le <- ggplot(sd, aes(reorder(country, -lifeExp_change), lifeExp_change,
                                text = glue::glue("{country}, {continent}: {percent(lifeExp_change)}"))) +
-  geom_col(aes(fill = continent)) +
+  geom_col(aes(fill = lifeExp_change)) +
   scale_y_percent() +
+  scale_fill_viridis_c(guide = FALSE) +
   labs(title = "Life Expectacy % Change", y = "Life Expectancy") +
   theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
@@ -222,61 +233,9 @@ sd_le <- ggplot(sd, aes(reorder(country, -lifeExp_change), lifeExp_change,
 
 sd_pop <- ggplot(sd, aes(reorder(country, -pop_change), pop_change,
                                text = glue::glue("{country}, {continent}: {percent(pop_change)}"))) +
-  geom_col(aes(fill = continent)) +
+  geom_col(aes(fill = pop_change)) +
   scale_y_percent() +
-  labs(title = "Latest Period % Change", y = "Population") +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),
-        panel.grid.major.x = element_blank())
-
-# make them interactive with plotly
-sd_gdp_i <- ggplotly(sd_gdp, tooltip = "text")
-sd_le_i <- ggplotly(sd_le, tooltip = "text")
-sd_pop_i <- ggplotly(sd_pop, tooltip = "text")
-
-# arrange them together
-subplot(sd_gdp_i, sd_le_i, sd_pop_i, nrows = 3, titleY = TRUE) %>% 
-  config(collaborate = FALSE, displaylogo = FALSE) %>% 
-  hide_legend() %>% 
-  highlight(selectize = TRUE, on = "plotly_click", off = "plotly_doubleclick") %>% 
-  frameWidget(height = "600px")
-
-```
-
-Use the search bar to highlight a particular country across all 3 charts or click directly on one of the bars. Double clicking will deselect the highlighted country.
-
-Colours represent the continent each country is part of.
-
-```{r echo=FALSE}
-# create a shared data source with the crosstalk package
-sd <- SharedData$new(latest_figs, ~country, group = "Highlight a Country")
-
-# build 3 static ggplot charts with the shared data
-sd_gdp <- ggplot(sd, aes(reorder(country, -gdpPercap_change), gdpPercap_change,
-                               text = glue("{country}, {continent}: {percent(gdpPercap_change)}"))) +
-  geom_col(aes(fill = continent)) +
-  scale_y_percent() +
-  labs(title = "GDP Per Capita % Change", y = "GDP per capita") +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),
-        panel.grid.major.x = element_blank())
-
-sd_le <- ggplot(sd, aes(reorder(country, -lifeExp_change), lifeExp_change,
-                               text = glue("{country}, {continent}: {percent(lifeExp_change)}"))) +
-  geom_col(aes(fill = continent)) +
-  scale_y_percent() +
-  labs(title = "Life Expectacy % Change", y = "Life Expectancy") +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),
-        panel.grid.major.x = element_blank())
-
-sd_pop <- ggplot(sd, aes(reorder(country, -pop_change), pop_change,
-                               text = glue("{country}, {continent}: {percent(pop_change)}"))) +
-  geom_col(aes(fill = continent)) +
-  scale_y_percent() +
+  scale_fill_viridis_c(guide = FALSE) +
   labs(title = "Latest Period % Change", y = "Population") +
   theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
@@ -303,13 +262,12 @@ subplot(sd_gdp_i, sd_le_i, sd_pop_i, nrows = 3, titleY = TRUE) %>%
 
 ## Searchable Data Tables
 
-We can also use interactive data tables with search functionality and column sorting to allow users to quickly find the numbers they are looking for. Clicking on column headers will sort the data ascending or descending.
+We can also view the same set of data in an interactive data tables with search functionality and column sorting to allow users to quickly find the numbers they are looking for. Clicking on column headers will sort the data ascending or descending.
 
-
-```{r}
-fmrt <- formatter("span", 
-  style = x ~ style(color = ifelse(x > 0, "green", ifelse(x < 0, "red", "black"))),
-  x ~ icontext(ifelse(x > 0, "arrow-up", "arrow-down"), percent(x, digits = 1)))
+```{r echo=FALSE}
+# fmrt <- formatter("span", 
+#   style = x ~ style(color = ifelse(x > 0, "green", ifelse(x < 0, "red", "black"))),
+#   x ~ icontext(ifelse(x > 0, "arrow-up", "arrow-down"), percent(x, digits = 1)))
 
 mills <- scales::unit_format(scale = 1e-6, accuracy = .01, unit = "M")
 
@@ -318,96 +276,49 @@ tdat <- latest_figs %>%
   select(1:2, 5, 3, 6, 4, 7) %>% 
   mutate(pop = mills(pop))
 
-ftbl <- formattable(tdat, list(
-  gdpPercap_change = fmrt,
-  lifeExp_change = fmrt,
-  pop_change = fmrt
-))
+# ftbl <- formattable(tdat, list(
+#   gdpPercap_change = fmrt,
+#   lifeExp_change = fmrt,
+#   pop_change = fmrt
+# ))
 
-as.datatable(ftbl, rownames = FALSE, caption = "Latest Period Changes 2002-2007",
+DT::datatable(tdat, rownames = FALSE, caption = "Latest Period Figures (2007) & % Changes (2002-2007)",
              colnames = c("Country", "GDP Per Capita", "+/-", "Life Expectancy", "+/-", "Population", "+/-"),
-             options = list(columnDefs = list(list(className = 'dt-center', targets = c(1,3,5))))
-                            #dom = 'ftip')
+             options = list(dom = 'ftip',
+                            columnDefs = list(list(className = 'dt-center', targets = c(1,3,5))))
              ) %>% 
   formatCurrency(columns = 2) %>% 
   formatRound(columns = 4, digits = 1) %>% 
+  formatPercentage(columns = c(3,5,7)) %>% 
   frameWidget(height = "500px")
 ```
 
 ---
 
-```{r}
+## Static Charts with ggplot2
+
+The sad truth is that most managers just really love Microsoft Office or PDF reports. Fear not though, because with  `ggplot2` we have the world's best static charting library at our disposal and getting these charts in an automated Word, PowerPoint, or PDF report with `rmarkdown` is a walk in the park.
+
+The chart below combines all three metrics in our data into one chart - a la Hans Rosling (RIP) - for our latest wave of data. The position of the country annotations are automated with the [`ggrepel`](https://github.com/slowkow/ggrepel) package and computed to repel overlapping text labels away from each other.
+
+```{r echo=FALSE}
 p <- filtered_data %>% 
   filter(year == max(year)) %>% 
   ggplot(aes(gdpPercap, lifeExp, label = country)) +
   geom_point(aes(size = pop), fill = "SteelBlue", colour = "white", alpha = .7, pch = 21) +
-  ggrepel::geom_text_repel(colour = "white", force = 3, segment.colour = "grey") +
+  ggrepel::geom_text_repel(colour = "white", force = 50, segment.colour = "grey", size = 3) +
   scale_size(range = c(2, 12)) +
   labs(x = "GDP per capita", y = "Life Expectancy",
-       title = "Latest European Metrics", subtitle = "Year: {frame_time}",
-       caption = "Source: Gapminder", size = "Population")
-```
-
-```{r}
-p <- ggplot(filtered_data, aes(gdpPercap, lifeExp, label = country)) +
-  geom_point(aes(size = pop), fill = "SteelBlue", colour = "white", alpha = .7, pch = 21) +
-  ggrepel::geom_text_repel(colour = "white", force = 3, segment.colour = "grey",
-                           max.iter = 12) +
-  scale_size(range = c(2, 12)) +
-  labs(x = "GDP per capita", y = "Life Expectancy",
-       title = "Latest European Metrics", subtitle = "Year: {frame_time}",
-       caption = "Source: Gapminder", size = "Population") +
-  transition_time(as.integer(year))
+       title = "Latest European Metrics", subtitle = glue("Year: {max(filtered_data$year)}"),
+       caption = "@paulcampbell91 | Culture of Insight | Source: Gapminder", size = "Population")
 p
 ```
 
+---
 
+## Animated Charts
 
-We may want our report to keep an eye on a sepcific subset of the data. 
-
-```{r}
-indx <- filtered_data %>% 
-  mutate(year = as.Date(paste0(year, "-01-01"))) %>% 
-  group_by(country) %>% 
-  arrange(year) %>% 
-  mutate(gdpPercap_change = (gdpPercap / first(gdpPercap)) * 100,
-         lifeExp_change = (lifeExp / first(lifeExp)) * 100,
-         pop_change = (pop / first(pop)) * 100
-         ) %>% 
-  ungroup()
-
-base_breaks <- function(n = 10){
-    function(x) {
-        axisTicks(log10(range(x, na.rm = TRUE)), log = TRUE, n = n)
-    }
-}
-
-#highlight_countries <- c("United Kingdom", "Singapore", "Argentina", "Brazil", "India", "Ethiopia")
-
-top_countries <- 
-  indx %>% 
-  filter(year == max(year)) %>% 
-  top_n(5, gdpPercap_change) %>% 
-  pull(country)
-
-bottom_countries <- 
-  indx %>% 
-  filter(year == max(year)) %>% 
-  top_n(-5, gdpPercap_change) %>% 
-  pull(country)
-
-p <- ggplot(indx, aes(year, gdpPercap_change, colour = country)) +
-  geom_line(size = 1) +
-  gghighlight(country %in% c(top_countries, bottom_countries)) +
-  geom_point(aes(x = min(year), y = 100), colour = "black", size = 2) +
-  #scale_y_continuous(trans = "log10", breaks = base_breaks(), labels = prettyNum) +
-  labs(y = "Index (log10 scale)", 
-       title = "Keeping Track - GDP Per Capita from Base Index", 
-       subtitle = "Index 100 = Year 1952",
-       caption = "Source: Gapminder")
-p
-```
-
+Although we have been using a data set filtered to our chosen contininet parameter of Europe, we still have the full data set available to use. We can look at the continental summary statistics over time with the following data...
 
 ```{r}
 continent_summary <- 
@@ -416,9 +327,46 @@ continent_summary <-
   summarise(gdpPercap = weighted.mean(gdpPercap, pop),
             lifeExp = weighted.mean(lifeExp, pop),
             pop = sum(pop)) %>% 
-  gather(metric, value, 3:5) %>% 
-  mutate(year = as.Date(glue("{year}-01-01")))
+  ungroup() %>% 
+  gather(metric, value, 3:5)
 ```
 
+Then visually animate the progress over time... 
 
-Making the switch to doing your data work with R can be daunting, but with the combination of <a href="https://www.rstudio.com/products/RStudio/" target="_blank">RStudio</a> as your 'integrated development environment', the <a href="https://www.tidyverse.org/" target="_blank">tidyverse packages</a> for data analysis, and <a href="https://rmarkdown.rstudio.com/" target="_blank">rmarkdown</a> for producing reports in just about any format you'd like (HTML, PDF, Word, PowerPoint, Dashboard, even entire websites like this one!), along with a really great and welcoming community of R users online, there has never been a better time to make the leap and start your journey on the path to data programming nirvana.
+```{r echo=FALSE, fig.height=7}
+ggplot(continent_summary, aes(year, value, group = continent)) +
+  facet_wrap(~metric, ncol = 1, scales = "free_y") +
+  geom_line(aes(colour = continent)) +
+  geom_segment(aes(xend = 2007, yend = value), linetype = 2, colour = 'grey') + 
+  geom_point(size = 2, colour = "white") + 
+  geom_text(aes(x = 2007.1, label = continent), hjust = 0) + 
+  transition_reveal(continent, year) + 
+  coord_cartesian(clip = 'off') + 
+  labs(title = "Continental Progress", y = NULL, 
+       caption = "@paulcampbell91 | Culture of Insight | Source: Gapminder") +
+  theme(plot.margin = margin(5.5, 40, 5.5, 5.5), legend.position = "none")
+```
+
+All credit to [Thomas Lin Pedersen](https://twitter.com/thomasp85)'s outstanding new [`gganimate`](https://github.com/thomasp85/gganimate/) package for making charts like the above so intuitively simple to make.
+
+---
+
+## Fin
+
+To sum up, we now have an `rmarkdown` script that is capable of combining data from excel tabs into a single data frame, computing new variables + summaries of the data, and visualing the results in interactive, static and animated charts! If gapminder ever get round to adding some post-2007 data we can run the function we built above passing in each continent parameter and batch produce a report for each at the touch of a button.
+
+In a real-world scenario you'd most likely want to add some distinct narrative in each report, but letting R take care of all the data processing and visualisation for you is going to give you much more time to dig out the real insights and find a solution to all global population, wealth and health probelms! `r emo::ji("sweat_smile")`
+
+---
+
+## Learning
+
+Making the switch to doing your data work with R can be daunting, but with the combination of <a href="https://www.rstudio.com/products/RStudio/" target="_blank">RStudio</a> as your 'integrated development environment', the <a href="https://www.tidyverse.org/" target="_blank">tidyverse packages</a> for data analysis, and <a href="https://rmarkdown.rstudio.com/" target="_blank">rmarkdown</a> for producing reports in just about any format you'd like (HTML, PDF, Word, PowerPoint, Dashboard, even entire websites like this one!), there has never been a better time to make the leap and start your journey to better data reporting workflows. There's also a really great and welcoming community of R users online who are always happy to help new users feel at home.
+
+If you'd like some help getting started, we're currently running a 1-day 'Master Data with Code' workshop where you'll learn how to import, manipulate, join and transform data using the `tidyverse` in the RStudio IDE.
+
+We also offer bespoke in-house training for teams where we focus on your own specific data tasks and how you can use R for greater accuracy and efficiency in data processing, and engagement in your communicated insights.
+
+For more information get in touch via our [Contact Page](https://cultureofinsight.com/contact/).
+
+Thanks for reading!

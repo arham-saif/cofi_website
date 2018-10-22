@@ -28,8 +28,6 @@ knitr::opts_chunk$set(fig.width = 9,
                       )
 ```
 
-<base target="_blank">
-
 A lot of data analysts will find themselves doing repetitive manual tasks on a data set every day/week/month in Excel, then copying and pasting their updated pivot tables and charts into Word or PowerPoint reports for their stakeholders. If this sounds like your job description, you may want to consider switching to a programming language like R. 
 
 Writing scripts will allow you to automate the majority of these processes; from importing your data all the way through to emailing your boss the final report. They'll never know you were actually in the pub the whole time.
@@ -289,7 +287,7 @@ The sad truth is that most managers just really love Microsoft Office or PDF rep
 
 The chart below combines all three metrics in our data into one chart - a la Hans Rosling (RIP) - for our latest wave of data. The position of the country annotations are automated with the [`ggrepel`](https://github.com/slowkow/ggrepel) package and computed to repel overlapping text labels away from each other.
 
-```{r echo=FALSE, dev="svg", dpi=300}
+```{r echo=FALSE, dpi=300}
 p <- filtered_data %>% 
   filter(year == max(year)) %>% 
   ggplot(aes(gdpPercap, lifeExp, label = country)) +
@@ -321,7 +319,7 @@ continent_summary <-
 
 Then visually animate the progress over time... 
 
-```{r echo=FALSE, fig.height=7}
+```{r echo=FALSE, fig.height=7, cache=TRUE}
 ggplot(continent_summary, aes(year, value, group = continent)) +
   facet_wrap(~metric, ncol = 1, scales = "free_y") +
   geom_line(aes(colour = continent)) +

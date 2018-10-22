@@ -334,15 +334,6 @@ params:
 <pre class="r"><code>filtered_data &lt;- combined_data %&gt;% 
   filter(continent == params$continent)</code></pre>
 <p>Once we have our full report script ready to be executed, all we have to do to get a report from one continent to the next is change the value of the continent param at the top of the script.</p>
-<p>Or if we’re being really clever about it, we can turn our report rendering call into an R function and pass it to a <code>purrr::walk</code> call that will iterate over each continent, render the report for each, then save the appropriately named time-stamped files to a directory of your choosing ready to be shared with all relevant stake holders:</p>
-<pre class="r"><code>continents &lt;- c(&quot;Asia&quot;, &quot;Europe&quot;, &quot;Africa&quot;, &quot;Americas&quot;, &quot;Oceania&quot;)
-
-renderMyReport &lt;- function(continent) {
-  rmarkdown::render(&quot;MyReport.Rmd&quot;, output_file = glue(&quot;{continent}_report_{Sys.Date()}.html&quot;), 
-                    params = list(continent = continent))
-}
-
-purrr::walk(continents, ~ renderMyReport)</code></pre>
 <p>But before we do that we need to code out the basis of the analysis we want contained in our reports. So here are a few examples of the type of data visualisations that would help a stakeholder understand the latest metrics and insights from the data.</p>
 <p>For the sake of brevity I’m not including all the code for the charts and tables. But like the data importing and tidying code, once it is setup and working no amendments are required for each new wave of data we get to report on. They’ll automatically include the latest metrics for the data we have just processed.</p>
 <p>If you’re interested in seeing the full code for this report you can check it out over on <a href="https://github.com/PaulC91/cofi_website/blob/master/content/blog/2018-08-20-automated-data-reports-with-r.Rmd">github</a>.</p>
@@ -375,14 +366,14 @@ latest_figs &lt;- p_change %&gt;%
 <h2>Searchable Data Tables</h2>
 <p>We can also view the same set of data in an interactive data tables with search functionality and column sorting to allow users to quickly find the numbers they are looking for. Clicking on column headers will sort the data ascending or descending.</p>
 <div id="htmlwidget-2" style="width:100%;height:500px;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-2">{"x":{"url":"/blog/2018-08-20-automated-data-reports-with-r_files/figure-html//widgets/widget_unnamed-chunk-8.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"url":"/blog/2018-08-20-automated-data-reports-with-r_files/figure-html//widgets/widget_unnamed-chunk-7.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 <hr />
 </div>
 <div id="static-charts-with-ggplot2" class="section level2">
 <h2>Static Charts with ggplot2</h2>
 <p>The sad truth is that most managers just really love Microsoft Office or PDF reports. Fear not though, because with <code>ggplot2</code> we have the world’s best static charting library at our disposal and getting these charts in an automated Word, PowerPoint, or PDF report with <code>rmarkdown</code> is a walk in the park.</p>
 <p>The chart below combines all three metrics in our data into one chart - a la Hans Rosling (RIP) - for our latest wave of data. The position of the country annotations are automated with the <a href="https://github.com/slowkow/ggrepel"><code>ggrepel</code></a> package and computed to repel overlapping text labels away from each other.</p>
-<p><img src="/blog/2018-08-20-automated-data-reports-with-r_files/figure-html/unnamed-chunk-9-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p><img src="/blog/2018-08-20-automated-data-reports-with-r_files/figure-html/unnamed-chunk-8-1.png" width="2700" style="display: block; margin: auto;" /></p>
 <hr />
 </div>
 <div id="animated-charts" class="section level2">
@@ -397,13 +388,31 @@ latest_figs &lt;- p_change %&gt;%
   ungroup() %&gt;% 
   gather(metric, value, 3:5)</code></pre>
 <p>Then visually animate the progress over time…</p>
-<p><img src="/blog/2018-08-20-automated-data-reports-with-r_files/figure-html/unnamed-chunk-11-1.gif" style="display: block; margin: auto;" /></p>
+<p><img src="/blog/2018-08-20-automated-data-reports-with-r_files/figure-html/unnamed-chunk-10-1.gif" style="display: block; margin: auto;" /></p>
 <p>All credit to <a href="https://twitter.com/thomasp85">Thomas Lin Pedersen</a>’s outstanding new <a href="https://github.com/thomasp85/gganimate/"><code>gganimate</code></a> package for making charts like the above so intuitively simple to make.</p>
 <hr />
 </div>
 <div id="fin" class="section level2">
 <h2>Fin</h2>
-<p>To sum up, we now have an <code>rmarkdown</code> script that is capable of combining data from excel tabs into a single data frame, computing new variables + summaries of the data, and visualing the results in interactive, static and animated charts! If gapminder ever get round to adding some post-2007 data we can run the function we built above passing in each continent parameter and batch produce a report for each at the touch of a button.</p>
+<p>To sum up, we now have an <code>rmarkdown</code> script that is capable of:</p>
+<ol style="list-style-type: decimal">
+<li>combining data from excel tabs into a single data frame</li>
+<li>filtering it by a paramerter we supply</li>
+<li>computing new variables + summaries of the data</li>
+<li>visualing the results in interactive, static and animated charts</li>
+</ol>
+<p>To be super efficient, we can batch produce all 5 reports (one for each continent) with a single function! The code below sets the list of parameters we want to iterate over, creates an <code>rmarkdown::render</code> function to generate the html report from the script, then renders the report for each continent with <code>purrr::walk</code> (applies the function to each item in the continents list).</p>
+<pre class="r"><code>continents &lt;- c(&quot;Asia&quot;, &quot;Europe&quot;, &quot;Africa&quot;, &quot;Americas&quot;, &quot;Oceania&quot;)
+
+renderMyReport &lt;- function(continent) {
+  rmarkdown::render(&quot;report.Rmd&quot;, 
+                    output_file = paste0(continent,&quot;_report_&quot;, Sys.Date(), &quot;.html&quot;),
+                    params = list(continent = continent), 
+                    output_options = list(self_contained = FALSE, lib_dir = &quot;libs&quot;))
+}
+
+purrr::walk(continents, renderMyReport)</code></pre>
+<p>You can see all the outputs of the above code using a cutdown version of this report script <a href="https://paulc91.github.io/gapminder_reports/">over here</a>.</p>
 <p>In a real-world scenario you’d most likely want to add some distinct narrative in each report, but letting R take care of all the data processing and visualisation for you is going to give you much more time to dig out the real insights and find a solution to all global population, wealth and health probelms! 😅</p>
 <hr />
 </div>

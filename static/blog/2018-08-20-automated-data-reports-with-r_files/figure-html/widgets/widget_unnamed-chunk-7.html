@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<script src="datatables_libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="datatables_libs/jquery/jquery.min.js"></script>
+<link href="datatables_libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+<script src="datatables_libs/datatables-binding/datatables.js"></script>
+<script src="datatables_libs/pymjs/pym.v1.min.js"></script>
+<link href="datatables_libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="datatables_libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="datatables_libs/dt-core/js/jquery.dataTables.min.js"></script>
+<link href="datatables_libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="datatables_libs/crosstalk/js/crosstalk.min.js"></script>
+  <title>datatables</title>
+</head>
+<body style="background-color:white;">
+<div id="htmlwidget_container">
+  <div id="htmlwidget-3df86fbee38c2a4ae083" style="width:100%;height:500px;" class="datatables html-widget"></div>
+  <script>HTMLWidgets.pymChild = new pym.Child();HTMLWidgets.addPostRenderHandler(function(){
+                                setTimeout(function(){HTMLWidgets.pymChild.sendHeight();},100);
+                            });</script>
+</div>
+<script type="application/json" data-for="htmlwidget-3df86fbee38c2a4ae083">{"x":{"filter":"none","caption":"<caption>Latest Period Figures (2007) &amp; % Changes (2002-2007)<\/caption>","data":[["Albania","Austria","Belgium","Bosnia and Herzegovina","Bulgaria","Croatia","Czech Republic","Denmark","Finland","France","Germany","Greece","Hungary","Iceland","Ireland","Italy","Montenegro","Netherlands","Norway","Poland","Portugal","Romania","Serbia","Slovak Republic","Slovenia","Spain","Sweden","Switzerland","United Kingdom"],[5937.029526,36126.4927,33692.60508,7446.298803,10680.79282,14619.22272,22833.30851,35278.41874,33207.0844,30470.0167,32170.37442,27538.41188,18008.94444,36180.78919,40675.99635,28569.7197,9253.896111,36797.93332,49357.19017,15389.92468,20509.64777,10808.47561,9786.534714,18678.31435,25768.25759,28821.0637,33859.74835,37506.41907,33203.26128],[0.28947795304228,0.114409583997282,0.105187087777962,0.237137304495231,0.387696670167255,0.257201043313915,0.297626490279564,0.09674408699098,0.177364525735074,0.0533769838134668,0.071067602637058,0.22315449143802,0.213218985437309,0.161010002644799,0.193647838592988,0.0215109917858244,0.411258491517119,0.091125207185995,0.104583687862462,0.282254467472248,0.0269762348064951,0.370701591173158,0.352464474805943,0.369500540538515,0.247252344781927,0.160479820740397,0.153983172604782,0.0877429619399049,0.126336110191399],[76.423,79.829,79.441,74.852,73.005,75.748,76.486,78.332,79.313,80.657,79.406,79.483,73.338,81.757,78.885,80.546,74.543,79.762,80.196,75.563,78.098,72.476,74.002,74.663,77.926,80.941,80.884,81.701,79.425],[0.0102047560508124,0.0107495568498353,0.0143130745658837,0.0102847887704144,0.0119905738841142,0.0116459212564774,0.0129254403390279,0.0149261466701216,0.0120326655608013,0.0134062068099007,0.00935553578238216,0.0156793089347782,0.0103044496487118,0.0156149068322982,0.0141676201740741,0.00381355932203404,0.00759654505886663,0.0156882719979626,0.0144971537001898,0.0119592875318066,0.0104541337818604,0.0161801407700288,0.0107767746165299,0.0116937669376694,0.0165144795199583,0.0145525194284282,0.0105447276361818,0.013408583478045,0.0121573574951255],["3.60 M","8.20 M","10.39 M","4.55 M","7.32 M","4.49 M","10.23 M","5.47 M","5.24 M","61.08 M","82.40 M","10.71 M","9.96 M","0.30 M","4.11 M","58.15 M","0.68 M","16.57 M","4.63 M","38.52 M","10.64 M","22.28 M","10.15 M","5.45 M","2.01 M","40.45 M","9.03 M","7.55 M","60.78 M"],[0.02622507775376,0.00631676843007484,0.00778279998875094,0.092855551522345,-0.0442377827974866,0.0027431254491165,-0.00268625268676457,0.0173827602804476,0.0087465162499261,0.0193388456093517,0.000611106131727816,0.00965940431331487,-0.0126153973401401,0.0482623337846752,0.0592734757956307,0.00381055472941037,-0.0492814795273732,0.0277732259162939,0.0203578761841621,-0.0027891851846022,0.0200279532027771,-0.00572572176538855,0.00382789637087614,0.00692229945294426,-0.00111956418528091,0.007363772487787,0.00858962439309037,0.0262035272286222,0.0144178259099518]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Country<\/th>\n      <th>GDP Per Capita<\/th>\n      <th>+/-<\/th>\n      <th>Life Expectancy<\/th>\n      <th>+/-<\/th>\n      <th>Population<\/th>\n      <th>+/-<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"ftip","columnDefs":[{"className":"dt-center","targets":[1,3,5]},{"className":"dt-right","targets":[2,4,6]}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data) {\nDTWidget.formatPercentage(this, row, data, 2, 0, 3, ',', '.');\nDTWidget.formatPercentage(this, row, data, 4, 0, 3, ',', '.');\nDTWidget.formatPercentage(this, row, data, 6, 0, 3, ',', '.');\nDTWidget.formatRound(this, row, data, 3, 1, 3, ',', '.');\nDTWidget.formatCurrency(this, row, data, 1, '$', 2, 3, ',', '.', true);\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+<script type="application/htmlwidget-sizing" data-for="htmlwidget-3df86fbee38c2a4ae083">{"viewer":{"width":"100%","height":"500px","padding":0,"fill":false},"browser":{"width":"100%","height":"500px","padding":0,"fill":false}}</script>
+</body>
+</html>

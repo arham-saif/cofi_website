@@ -17,6 +17,19 @@ params:
   continent: Europe
 ---
 
+```{r include=FALSE}
+knitr::opts_chunk$set(fig.width = 9, 
+                      fig.height = 5,
+                      fig.align = "center", 
+                      cache = FALSE,
+                      message=FALSE, 
+                      warning=FALSE, 
+                      echo=TRUE
+                      )
+```
+
+<base target="_blank">
+
 A lot of data analysts will find themselves doing repetitive manual tasks on a data set every day/week/month in Excel, then copying and pasting their updated pivot tables and charts into Word or PowerPoint reports for their stakeholders. If this sounds like your job description, you may want to consider switching to a programming language like R. 
 
 Writing scripts will allow you to automate the majority of these processes; from importing your data all the way through to emailing your boss the final report. They'll never know you were actually in the pub the whole time.
@@ -50,18 +63,6 @@ As you can see from the Excel file, each tab contains data for the year denoted 
 So let's begin with the code! If you're brand new to R don't worry if you don't know the ins and outs of the syntax. Hopefully you will see that we can get a lot done with not a lot of code!
 
 ---
-
-```{r include=FALSE}
-knitr::opts_chunk$set(fig.retina = 2,
-                      fig.width = 9, 
-                      fig.height = 5,
-                      fig.align = "center", 
-                      cache = FALSE,
-                      message=FALSE, 
-                      warning=FALSE, 
-                      echo=TRUE
-                      )
-```
 
 ## Load the Libraries
 
@@ -156,19 +157,6 @@ filtered_data <- combined_data %>%
 ```
 
 Once we have our full report script ready to be executed, all we have to do to get a report from one continent to the next is change the value of the continent param at the top of the script. 
-
-Or if we're being really clever about it, we can turn our report rendering call into an R function and pass it to a `purrr::walk` call that will iterate over each continent, render the report for each, then save the appropriately named time-stamped files to a directory of your choosing ready to be shared with all relevant stake holders:
-
-```{r eval=FALSE}
-continents <- c("Asia", "Europe", "Africa", "Americas", "Oceania")
-
-renderMyReport <- function(continent) {
-  rmarkdown::render("MyReport.Rmd", output_file = glue("{continent}_report_{Sys.Date()}.html"), 
-                    params = list(continent = continent))
-}
-
-purrr::walk(continents, ~ renderMyReport)
-```
 
 But before we do that we need to code out the basis of the analysis we want contained in our reports. So here are a few examples of the type of data visualisations that would help a stakeholder understand the latest metrics and insights from the data.
 
@@ -301,7 +289,7 @@ The sad truth is that most managers just really love Microsoft Office or PDF rep
 
 The chart below combines all three metrics in our data into one chart - a la Hans Rosling (RIP) - for our latest wave of data. The position of the country annotations are automated with the [`ggrepel`](https://github.com/slowkow/ggrepel) package and computed to repel overlapping text labels away from each other.
 
-```{r echo=FALSE}
+```{r echo=FALSE, dev="svg", dpi=300}
 p <- filtered_data %>% 
   filter(year == max(year)) %>% 
   ggplot(aes(gdpPercap, lifeExp, label = country)) +
@@ -353,7 +341,29 @@ All credit to [Thomas Lin Pedersen](https://twitter.com/thomasp85)'s outstanding
 
 ## Fin
 
-To sum up, we now have an `rmarkdown` script that is capable of combining data from excel tabs into a single data frame, computing new variables + summaries of the data, and visualing the results in interactive, static and animated charts! If gapminder ever get round to adding some post-2007 data we can run the function we built above passing in each continent parameter and batch produce a report for each at the touch of a button.
+To sum up, we now have an `rmarkdown` script that is capable of:
+
+1. combining data from excel tabs into a single data frame
+2. filtering it by a paramerter we supply
+3. computing new variables + summaries of the data
+4. visualing the results in interactive, static and animated charts 
+
+To be super efficient, we can batch produce all 5 reports (one for each continent) with a single function! The code below sets the list of parameters we want to iterate over, creates an `rmarkdown::render` function to generate the html report from the script, then renders the report for each continent with `purrr::walk` (applies the function to each item in the continents list).
+
+```{r eval=FALSE}
+continents <- c("Asia", "Europe", "Africa", "Americas", "Oceania")
+
+renderMyReport <- function(continent) {
+  rmarkdown::render("report.Rmd", 
+                    output_file = paste0(continent,"_report_", Sys.Date(), ".html"),
+                    params = list(continent = continent), 
+                    output_options = list(self_contained = FALSE, lib_dir = "libs"))
+}
+
+purrr::walk(continents, renderMyReport)
+```
+
+You can see all the outputs of the above code using a cutdown version of this report script [over here](https://paulc91.github.io/gapminder_reports/).
 
 In a real-world scenario you'd most likely want to add some distinct narrative in each report, but letting R take care of all the data processing and visualisation for you is going to give you much more time to dig out the real insights and find a solution to all global population, wealth and health probelms! `r emo::ji("sweat_smile")`
 

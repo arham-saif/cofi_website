@@ -1,0 +1,11 @@
+.plotly {
+  width: 100% !important;
+  height: 800px !important;
+}
+
+.highchart {
+  width: 10%;
+  height: 600px !important;
+}
+
+h1,h2 {padding-top: 25px;}

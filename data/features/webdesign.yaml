@@ -1,4 +1,5 @@
-weight: 1
-name: "Data Cleaning"
-icon: "fa fa-table"
-description: "We write code to break your data out of messy spreadsheets, Excel files or SPSS, and get it into shape for further analysis/visualisation."
+weight: 2
+name: "Training"
+icon: "fas fa-graduation-cap"
+description: "As data size increases, the limits of traditional tools like Excel become more apparent. We teach our clients how to master their data with code using the R programming language."
+#description: "We write code to break your data out of messy spreadsheets, Excel files or SPSS, and get it into shape for further analysis/visualisation."

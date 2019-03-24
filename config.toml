@@ -82,7 +82,7 @@ paginate = 10
 [[menu.topbar]]
     weight = 4
     name = "Email"
-    url = "mailto:paul@cultureofinsight.com"
+    url = "mailto:james@cultureofinsight.com"
     pre = "<i class='fa fa-2x fa-envelope'></i>"
 
 [params]
@@ -110,7 +110,7 @@ paginate = 10
     # - you're done. Happy mailing!
     #
     # Enable the contact form by entering your Formspree.io email
-    email = "paul@cultureofinsight.com"
+    email = "james@cultureofinsight.com"
 
     about_us = "<p>Getting you to Insight faster in 2019</p>"
     copyright = "&copy; 2019 Culture of Insight. All Rights Reserved."
